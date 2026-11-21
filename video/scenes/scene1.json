@@ -1,0 +1,29 @@
+{
+  "title": "Scene 1 — The List Said Two",
+  "duration": 28.5,
+  "voice": "am_michael",
+  "speed": 0.9,
+  "narration": [
+    { "t": 0.8,  "text": "Every server has a player list." },
+    { "t": 3.6,  "text": "It tells you exactly who's there." },
+    { "t": 7.4,  "text": "That night, Max was alone. One out of one." },
+    { "t": 11.6, "text": "Then the list said two." },
+    { "t": 14.6, "text": "Someone was standing at the edge of the map." },
+    { "t": 18.4, "text": "No name. No face." },
+    { "t": 21.2, "text": "And every time Max looked away..." },
+    { "t": 23.9, "text": "it got closer." }
+  ],
+  "sfx": [
+    { "t": 0,    "type": "wind",   "dur": 28, "gain": 0.35 },
+    { "t": 0,    "type": "drone",  "dur": 25, "gain": 0.30 },
+    { "t": 7.0,  "type": "steps",  "dur": 3.5, "gain": 0.4 },
+    { "t": 10.8, "type": "join",   "gain": 0.6 },
+    { "t": 11.2, "type": "glitch", "dur": 0.5, "gain": 0.5 },
+    { "t": 14.0, "type": "whoosh", "gain": 0.6 },
+    { "t": 17.6, "type": "glitch", "dur": 0.7, "gain": 0.55 },
+    { "t": 21.0, "type": "heartbeat", "dur": 4, "gain": 0.7 },
+    { "t": 23.8, "type": "hit",    "gain": 0.9 },
+    { "t": 25.4, "type": "glitch", "dur": 1.0, "gain": 0.6 },
+    { "t": 25.6, "type": "hit",    "gain": 0.8 }
+  ]
+}
