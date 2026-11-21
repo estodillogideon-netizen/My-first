@@ -1,4 +1,27 @@
-# The Player Who Wasn't in the Server
+# THE PLAYER WHO WASN'T IN THE SERVER
+
+**Finished 60-second Short:** `the_player_who_wasnt_in_the_server.mp4` (vertical 9:16, 62 s, narration + music + SFX + subtitles).
+It's one continuous render; the 7 scenes are timed shots inside `video/scenes/lostplayer.js`:
+
+| Time | Scene | What happens on screen |
+|------|-------|------------------------|
+| 0–5 s | Hook | Player list shows 1 player → LOSTPLAYER joins; camera snaps in on Jay's shocked face |
+| 5–12 s | 2 | Crane shot over the abandoned town; LOSTPLAYER spawns in a light beam; "Do you still remember me?"; Jay freezes |
+| 12–22 s | 3 | Jay types "Who are you?" → "You left me here."; sky turns red, buildings glitch and sink, debris floats |
+| 22–35 s | 4 | LEAVING SERVER… → FAILED.; player list shows 3 players, one hidden |
+| 35–47 s | 5 | Footsteps; Jay turns; his smiling double stares; "That's not you."; the double walks toward him |
+| 47–56 s | 6 | Chase shot; "YOU WERE NEVER THE FIRST PLAYER."; daytime flashback of Jay and his friend building "OUR GAME" |
+| 56–62 s | 7 | Camera sinks through the floor into a hidden room: two avatars sitting motionless; fade; whisper "Now you remember." |
+
+**Cast:** JayBuilds (blue shirt, brown hair), LOSTPLAYER (green hoodie, black cap, red name), the Double (identical to Jay, hidden name, frozen wide-eyed smile). Defined once in `video/lib/characters.js`.
+
+**Rebuild:** `cd video && python3 audio.py lostplayer && node render.mjs lostplayer`
+**Quick preview stills:** `SNAP="5,20,40" node render.mjs lostplayer` → `video/out/snap_*.png`
+
+---
+
+# Earlier test: Scene 1 of a longer version
+
 
 An animated, Roblox-style horror-mystery short, made scene by scene. Format: vertical 9:16 (720×1280, 30 fps), for TikTok, YouTube Shorts and Reels.
 

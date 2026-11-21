@@ -26,6 +26,14 @@ await page.goto(`http://localhost:${port}/engine.html?scene=${scene}`);
 await page.waitForFunction(() => window.__ready, null, { timeout: 60000 });
 const duration = await page.evaluate(() => window.__duration);
 const frames = Math.round(duration * fps);
+if (process.env.SNAP) { // quick check: SNAP="1,5.5,9" node render.mjs scene → out/snap_<t>.png
+  fs.mkdirSync(path.join(root, 'out'), { recursive: true });
+  for (const t of process.env.SNAP.split(',').map(Number)) {
+    await page.evaluate(t => window.__render(t), t);
+    await (await page.$('#stage')).screenshot({ path: path.join(root, 'out', `snap_${t}.png`) });
+  }
+  await browser.close(); server.close(); process.exit(0);
+}
 
 fs.mkdirSync(path.join(root, 'out'), { recursive: true });
 const out = path.join(root, 'out', `${scene}.mp4`);
