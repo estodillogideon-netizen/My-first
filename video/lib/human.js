@@ -23,6 +23,21 @@ export const DESIGNS = {
     top: { kind: 'suit', color: 0x23262d, trim: 0xf2f2f2 }, pants: { color: 0x23262d }, shoes: 0x111111,
     face: { eyes: 'open', brows: 'angry', mouth: 'neutral' },
   },
+  mom: {
+    skin: 0xf0c7a0, hair: { style: 'long', color: 0x4a2c1a },
+    top: { kind: 'cardigan', color: 0x9c5b6b, trim: 0xf2e6d8 }, pants: { color: 0x3a3f55 }, shoes: 0x5a3a2a,
+    face: { eyes: 'open', brows: 'worried', mouth: 'neutral' },
+  },
+  teacher: {
+    skin: 0xe2b48c, hair: { style: 'slick', color: 0x3a3a3a }, glasses: true, mustache: 0x3a3a3a,
+    top: { kind: 'suit', color: 0x5a4a3a, trim: 0xf2f2f2 }, pants: { color: 0x4a3c30 }, shoes: 0x1a1a1a,
+    face: { eyes: 'open', brows: 'calm', mouth: 'smile' },
+  },
+  leo: { // Alex's best friend
+    skin: 0xa8714f, hair: { style: 'beanie', color: 0x8a8f99 },
+    top: { kind: 'jacket', color: 0x2f5a3a, trim: 0xf4f4f4 }, pants: { color: 0x2c4a78 }, shoes: 0xd8d8d8,
+    face: { eyes: 'open', brows: 'calm', mouth: 'neutral' },
+  },
   police: {
     skin: 0xc99a74, hair: { style: 'policecap', color: 0x1a2340 },
     top: { kind: 'uniform', color: 0x1f2d55, trim: 0xf1c40f }, pants: { color: 0x141b33 }, shoes: 0x111111,
@@ -117,6 +132,11 @@ export function makeHuman(spec, opts = {}) {
     part(torso, RB(0.16, 1.0, 0.06, 0.02), M(0x7a0f14, 0.6), 0, 0.3, 0.54); // tie
     part(torso, RB(0.06, 1.6, 0.06, 0.02), M(0x15171c), -0.32, 0.1, 0.52);
     part(torso, RB(0.06, 1.6, 0.06, 0.02), M(0x15171c), 0.32, 0.1, 0.52);
+  } else if (spec.top.kind === 'jacket' || spec.top.kind === 'cardigan') {
+    part(torso, RB(0.8, 1.9, 0.06, 0.03), trimM, 0, -0.02, 0.51);          // shirt underneath
+    part(torso, RB(2.06, 0.22, 1.06, 0.06), M(spec.top.color, 0.7), 0, 0.92, 0); // collar
+    if (spec.top.kind === 'jacket') { part(torso, RB(0.06, 1.8, 0.06, 0.02), M(0xb8b8b8, 0.3), 0.42, 0, 0.53); part(torso, RB(2.06, 0.2, 1.06, 0.05), M(0x1f3a26), 0, -0.9, 0); }
+    else for (const by of [0.4, 0, -0.4]) part(torso, RB(0.1, 0.1, 0.05, 0.03), M(0xe8d8b0), 0.48, by, 0.53);
   } else if (spec.top.kind === 'uniform') {
     part(torso, RB(0.32, 0.38, 0.06, 0.04), trimM, -0.5, 0.45, 0.52);      // badge
     part(torso, RB(2.04, 0.2, 1.04, 0.05), M(0x111111), 0, -0.85, 0);      // belt
@@ -134,6 +154,11 @@ export function makeHuman(spec, opts = {}) {
   const head = new THREE.Mesh(RB(1.25, 1.25, 1.25, 0.28), [skin, skin, skin, skin, faceMat, skin]);
   head.position.y = 0.66; head.castShadow = true; headPivot.add(head);
   hair(headPivot, spec.hair);
+  if (spec.glasses) { const gm = M(0x111111, 0.3);
+    for (const gx of [-0.3, 0.3]) { part(headPivot, RB(0.42, 0.06, 0.04, 0.02), gm, gx, 0.83, 0.64); part(headPivot, RB(0.42, 0.06, 0.04, 0.02), gm, gx, 0.55, 0.64);
+      part(headPivot, RB(0.06, 0.3, 0.04, 0.02), gm, gx - 0.19, 0.69, 0.64); part(headPivot, RB(0.06, 0.3, 0.04, 0.02), gm, gx + 0.19, 0.69, 0.64); }
+    part(headPivot, RB(0.2, 0.05, 0.04, 0.02), gm, 0, 0.8, 0.64); }
+  if (spec.mustache) part(headPivot, RB(0.5, 0.1, 0.05, 0.04), M(spec.mustache), 0, 0.36, 0.64);
   // limbs
   const limb = (x, y, isArm) => {
     const p = new THREE.Group(); p.position.set(x, y, 0); body.add(p);
@@ -174,6 +199,9 @@ function hair(hp, h) {
     part(hp, RB(0.22, 1.2, 1.1, 0.08), m, -0.66, 0.75, -0.05); part(hp, RB(0.22, 1.2, 1.1, 0.08), m, 0.66, 0.75, -0.05);
   } else if (h.style === 'bun') {
     part(hp, RB(1.34, 0.36, 1.34, 0.15), m, 0, 1.34, 0); part(hp, RB(0.6, 0.6, 0.6, 0.25), m, 0, 1.7, -0.35);
+  } else if (h.style === 'beanie') {
+    part(hp, RB(1.4, 0.65, 1.4, 0.25), m, 0, 1.45, -0.02); part(hp, RB(1.42, 0.2, 1.42, 0.08), M(0x6a6f78), 0, 1.15, -0.02);
+    part(hp, RB(1.34, 0.6, 0.24, 0.08), M(0x1a1a1a), 0, 0.95, -0.58);
   } else if (h.style === 'policecap') {
     part(hp, RB(1.4, 0.45, 1.4, 0.12), m, 0, 1.4, 0); part(hp, RB(1.3, 0.08, 0.6, 0.03), M(0x0b0b0b), 0, 1.2, 0.85);
     part(hp, RB(0.3, 0.3, 0.05, 0.03), M(0xf1c40f, 0.3), 0, 1.45, 0.71);
@@ -205,3 +233,6 @@ export function sitPose(a) { const u = a.userData; reset(u); u.legL.rotation.x =
 export function liePose(a) { const u = a.userData; reset(u); } // whole root is rotated by the caller
 export function reach(a, t, k = 1) { const u = a.userData; u.armR.rotation.x = -1.4 * k; u.armR.rotation.z = 0.1 * k; }
 export function look(a, yaw = 0, pitch = 0) { const h = a.userData.headPivot.rotation; h.y = yaw; h.x = pitch; }
+
+export function talk(t) { return ['flat', 'o', 'open', 'neutral', 'o', 'flat'][Math.floor(t * 10) % 6]; }
+export function point(a, k = 1) { const u = a.userData; u.armR.rotation.x = -1.5 * k; u.armR.rotation.z = 0.05; }

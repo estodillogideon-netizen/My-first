@@ -1,0 +1,517 @@
+{
+ "title": "IN THIS TOWN, YOU GET ARRESTED FOR TELLING THE TRUTH",
+ "duration": 60,
+ "layout": "auto",
+ "captions": "words",
+ "voice": "am_onyx",
+ "speed": 1.17,
+ "duck": 0.75,
+ "bed_gain": 0.42,
+ "narration": [
+  {
+   "gap": 0.1,
+   "text": "In this town, telling the truth was illegal.",
+   "voice": "am_onyx",
+   "speed": 1.22,
+   "hl": [
+    "the",
+    "truth",
+    "illegal."
+   ]
+  },
+  {
+   "gap": 0.12,
+   "text": "Every citizen was required to lie at least once a day.",
+   "voice": "am_onyx",
+   "speed": 1.22
+  },
+  {
+   "gap": 0.12,
+   "text": "If you told the truth, the police would immediately know.",
+   "voice": "am_onyx",
+   "speed": 1.22,
+   "hl": [
+    "the",
+    "truth,"
+   ]
+  },
+  {
+   "gap": 0.18,
+   "text": "Mom, why do we have to lie?",
+   "voice": "am_puck",
+   "speed": 1.1,
+   "who": "ALEX"
+  },
+  {
+   "gap": 0.18,
+   "text": "Because the truth gets people taken away.",
+   "voice": "af_nicole",
+   "speed": 1.05,
+   "who": "MOM",
+   "hl": [
+    "the",
+    "truth"
+   ]
+  },
+  {
+   "gap": 0.18,
+   "text": "Alex never believed her.",
+   "voice": "am_onyx",
+   "speed": 1.22
+  },
+  {
+   "gap": 0.1,
+   "text": "Until one morning, his teacher asked the entire class a simple question.",
+   "voice": "am_onyx",
+   "speed": 1.22
+  },
+  {
+   "gap": 0.18,
+   "text": "Who stole the money from my desk?",
+   "voice": "bm_george",
+   "speed": 1.08,
+   "who": "TEACHER"
+  },
+  {
+   "gap": 0.15,
+   "text": "Everyone blamed someone else.",
+   "voice": "am_onyx",
+   "speed": 1.22
+  },
+  {
+   "gap": 0.12,
+   "text": "But Alex stood up.",
+   "voice": "am_onyx",
+   "speed": 1.22
+  },
+  {
+   "gap": 0.18,
+   "text": "It was you, sir. I saw you take it.",
+   "voice": "am_puck",
+   "speed": 1.1,
+   "who": "ALEX"
+  },
+  {
+   "gap": 0.22,
+   "text": "The classroom suddenly went silent.",
+   "voice": "am_onyx",
+   "speed": 1.22
+  },
+  {
+   "gap": 0.1,
+   "text": "The teacher's smile disappeared.",
+   "voice": "am_onyx",
+   "speed": 1.22
+  },
+  {
+   "gap": 0.18,
+   "text": "Did you just tell the truth?",
+   "voice": "bm_george",
+   "speed": 1.08,
+   "who": "TEACHER",
+   "hl": [
+    "the",
+    "truth?"
+   ]
+  },
+  {
+   "gap": 0.15,
+   "text": "Within seconds, police surrounded the school.",
+   "voice": "am_onyx",
+   "speed": 1.22
+  },
+  {
+   "gap": 0.1,
+   "text": "Alex ran through the hallway, but every door was locked.",
+   "voice": "am_onyx",
+   "speed": 1.22
+  },
+  {
+   "gap": 0.1,
+   "text": "Then his best friend grabbed his arm.",
+   "voice": "am_onyx",
+   "speed": 1.22
+  },
+  {
+   "gap": 0.15,
+   "text": "Don't worry. I know a way out.",
+   "voice": "am_liam",
+   "speed": 1.12,
+   "who": "LEO"
+  },
+  {
+   "gap": 0.15,
+   "text": "Why are you helping me?",
+   "voice": "am_puck",
+   "speed": 1.1,
+   "who": "ALEX"
+  },
+  {
+   "gap": 0.15,
+   "text": "Because I was arrested yesterday.",
+   "voice": "am_liam",
+   "speed": 1.12,
+   "who": "LEO",
+   "hl": [
+    "arrested"
+   ]
+  },
+  {
+   "gap": 0.18,
+   "text": "Alex stared at him.",
+   "voice": "am_onyx",
+   "speed": 1.22
+  },
+  {
+   "gap": 0.15,
+   "text": "And I discovered something. The police aren't arresting people for telling the truth.",
+   "voice": "am_liam",
+   "speed": 1.12,
+   "who": "LEO",
+   "hl": [
+    "arresting",
+    "the",
+    "truth."
+   ]
+  },
+  {
+   "gap": 0.15,
+   "text": "Then why?",
+   "voice": "am_puck",
+   "speed": 1.1,
+   "who": "ALEX"
+  },
+  {
+   "gap": 0.15,
+   "text": "Because the truth reveals who's actually controlling this town.",
+   "voice": "am_liam",
+   "speed": 1.12,
+   "who": "LEO",
+   "hl": [
+    "the",
+    "truth",
+    "controlling"
+   ]
+  },
+  {
+   "gap": 0.18,
+   "text": "Suddenly, every screen turned on.",
+   "voice": "am_onyx",
+   "speed": 1.22
+  },
+  {
+   "gap": 0.1,
+   "text": "And Alex's face appeared.",
+   "voice": "am_onyx",
+   "speed": 1.22
+  },
+  {
+   "gap": 0.18,
+   "text": "THE NEXT MAYOR HAS BEEN FOUND.",
+   "voice": "am_onyx",
+   "speed": 1.22,
+   "hl": [
+    "THE",
+    "NEXT",
+    "MAYOR"
+   ],
+   "say": "The next mayor has been found."
+  },
+  {
+   "gap": 0.22,
+   "text": "What does that mean?",
+   "voice": "am_puck",
+   "speed": 1.1,
+   "who": "ALEX"
+  }
+ ],
+ "sfx": [
+  {
+   "t": 0.0,
+   "type": "hit",
+   "gain": 0.6
+  },
+  {
+   "t": 0.0,
+   "type": "siren",
+   "dur": 2.6,
+   "gain": 0.3
+  },
+  {
+   "t": 0.0,
+   "type": "wind",
+   "dur": 8,
+   "gain": 0.12
+  },
+  {
+   "t": 1.5,
+   "type": "whoosh",
+   "gain": 0.55
+  },
+  {
+   "t": 1.95,
+   "type": "sub",
+   "gain": 0.4
+  },
+  {
+   "t": 5.5,
+   "type": "static",
+   "dur": 0.9,
+   "gain": 0.2
+  },
+  {
+   "t": 5.6,
+   "type": "ping",
+   "gain": 0.4
+  },
+  {
+   "t": 6.3,
+   "type": "ping",
+   "gain": 0.35
+  },
+  {
+   "t": 8.0,
+   "type": "tick",
+   "dur": 6.0,
+   "gain": 0.18
+  },
+  {
+   "t": 9.3,
+   "type": "siren",
+   "dur": 2.4,
+   "gain": 0.3
+  },
+  {
+   "t": 10.9,
+   "type": "whoosh",
+   "gain": 0.25
+  },
+  {
+   "t": 14.0,
+   "type": "crowd",
+   "dur": 6.0,
+   "gain": 0.14
+  },
+  {
+   "t": 16.2,
+   "type": "door",
+   "gain": 0.35
+  },
+  {
+   "t": 20.0,
+   "type": "crowd",
+   "dur": 1.9,
+   "gain": 0.45
+  },
+  {
+   "t": 21.95,
+   "type": "creak",
+   "gain": 0.3
+  },
+  {
+   "t": 25.08,
+   "type": "hit",
+   "gain": 0.75
+  },
+  {
+   "t": 28.4,
+   "type": "heartbeat",
+   "dur": 2.4,
+   "gain": 0.45
+  },
+  {
+   "t": 30.82,
+   "type": "hit",
+   "gain": 0.8
+  },
+  {
+   "t": 30.82,
+   "type": "siren",
+   "dur": 2.4,
+   "gain": 0.5
+  },
+  {
+   "t": 30.85,
+   "type": "whoosh",
+   "gain": 0.4
+  },
+  {
+   "t": 32.3,
+   "type": "crowd",
+   "dur": 0.8,
+   "gain": 0.4
+  },
+  {
+   "t": 33.0,
+   "type": "steps",
+   "dur": 1.5,
+   "rate": 0.2,
+   "gain": 0.5
+  },
+  {
+   "t": 33.0,
+   "type": "siren",
+   "dur": 4.5,
+   "gain": 0.22
+  },
+  {
+   "t": 34.55,
+   "type": "door",
+   "gain": 0.55
+  },
+  {
+   "t": 34.85,
+   "type": "door",
+   "gain": 0.5
+  },
+  {
+   "t": 35.2,
+   "type": "door",
+   "gain": 0.55
+  },
+  {
+   "t": 35.95,
+   "type": "whoosh",
+   "gain": 0.45
+  },
+  {
+   "t": 40.86,
+   "type": "creak",
+   "gain": 0.45
+  },
+  {
+   "t": 41.8,
+   "type": "steps",
+   "dur": 1.0,
+   "rate": 0.2,
+   "gain": 0.4
+  },
+  {
+   "t": 42.9,
+   "type": "hum",
+   "dur": 9.7,
+   "gain": 0.15
+  },
+  {
+   "t": 52.59,
+   "type": "flicker",
+   "dur": 1.5,
+   "gain": 0.4
+  },
+  {
+   "t": 52.6,
+   "type": "glitch",
+   "dur": 0.6,
+   "gain": 0.35
+  },
+  {
+   "t": 52.6,
+   "type": "static",
+   "dur": 1.8,
+   "gain": 0.3
+  },
+  {
+   "t": 54.44,
+   "type": "hit",
+   "gain": 0.8
+  },
+  {
+   "t": 55.3,
+   "type": "static",
+   "dur": 0.6,
+   "gain": 0.4
+  },
+  {
+   "t": 55.3,
+   "type": "siren",
+   "dur": 1.0,
+   "gain": 0.25
+  },
+  {
+   "t": 56.23,
+   "type": "sub",
+   "gain": 0.55
+  },
+  {
+   "t": 56.23,
+   "type": "hit",
+   "gain": 0.6
+  },
+  {
+   "t": 59.0,
+   "type": "heartbeat",
+   "dur": 0.6,
+   "gain": 0.5
+  },
+  {
+   "t": 59.55,
+   "type": "hit",
+   "gain": 1.0
+  },
+  {
+   "t": 59.55,
+   "type": "sub",
+   "gain": 0.7
+  }
+ ],
+ "music": [
+  {
+   "t": 0.0,
+   "dur": 14.0,
+   "kind": "tension",
+   "gain": 0.2,
+   "rise": [
+    0,
+    0.25,
+    14,
+    0.4
+   ]
+  },
+  {
+   "t": 14.0,
+   "dur": 16.9,
+   "kind": "tension",
+   "gain": 0.24,
+   "rise": [
+    0,
+    0.4,
+    9,
+    0.55,
+    16.9,
+    0.8
+   ]
+  },
+  {
+   "t": 30.8,
+   "dur": 12.0,
+   "kind": "tension",
+   "gain": 0.3,
+   "rise": [
+    0,
+    0.9,
+    12,
+    1.0
+   ]
+  },
+  {
+   "t": 42.8,
+   "dur": 16.75,
+   "kind": "tension",
+   "gain": 0.27,
+   "rise": [
+    0,
+    0.45,
+    9.5,
+    0.7,
+    16.75,
+    1.0
+   ]
+  }
+ ],
+ "mute": [
+  {
+   "t": 25.45,
+   "dur": 1.4
+  }
+ ]
+}

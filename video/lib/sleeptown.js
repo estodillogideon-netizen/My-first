@@ -16,7 +16,7 @@ export function canvasTex(w, h, draw) {
   const c = document.createElement('canvas'); c.width = w; c.height = h; draw(c.getContext('2d'), w, h);
   const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 4; return t;
 }
-function noiseTex(base, amt, rep = 1, seed = 3) {
+export function noiseTex(base, amt, rep = 1, seed = 3) {
   const r = R(seed);
   const t = canvasTex(256, 256, (g) => {
     g.fillStyle = base; g.fillRect(0, 0, 256, 256);
@@ -24,7 +24,7 @@ function noiseTex(base, amt, rep = 1, seed = 3) {
   });
   t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(rep, rep); return t;
 }
-function woodTex(rep = 4) {
+export function woodTex(rep = 4) {
   const r = R(9);
   const t = canvasTex(256, 256, g => {
     for (let i = 0; i < 8; i++) { const v = 70 + r() * 25; g.fillStyle = `rgb(${v + 30},${v},${v - 20})`; g.fillRect(0, i * 32, 256, 32);
@@ -32,7 +32,7 @@ function woodTex(rep = 4) {
   });
   t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(rep, rep); return t;
 }
-function windowsTex(seed, lit) { // building facade with window grid
+export function windowsTex(seed, lit) { // building facade with window grid
   const r = R(seed);
   const t = canvasTex(128, 256, g => {
     g.fillStyle = '#000'; g.fillRect(0, 0, 128, 256);
