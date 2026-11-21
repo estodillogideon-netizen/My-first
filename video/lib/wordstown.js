@@ -41,7 +41,7 @@ function bedroom() {
   poster(-0.6, 6.2, '#d03a3a', 'OBBY'); poster(1.8, 6.6, '#2a6ad0', 'GG');
   plane(g, 4.4, 4, M(0xfff4d8, { emissive: 0xfff0c8, emissiveIntensity: 1 }), 8.95, 5.5, -1, -Math.PI / 2);
   g.add(new THREE.HemisphereLight(0xfff6e8, 0x6a6a7a, 1.1));
-  const sun = new THREE.SpotLight(0xfff0d0, 330, 50, 0.6, 0.6, 1.1); sun.position.set(18, 10, -1); sun.target.position.set(-3, 1, -2); g.add(sun, sun.target); sun.castShadow = true;
+  const sun = new THREE.SpotLight(0xfff0d0, 140, 50, 0.6, 0.6, 1.1); sun.position.set(18, 10, -1); sun.target.position.set(-3, 1, -2); g.add(sun, sun.target); sun.castShadow = true;
   return { g, blanket };
 }
 

@@ -315,8 +315,8 @@ function buildShots() {
     kitchenState(t, true, true); lucasIn(-2.2, -1.8, Math.PI, t); lucasPhone.visible = true; lucas.userData.armR.rotation.x = -1.4;
     setFace(lucas, { eyes: 'wide', brows: 'worried', mouth: 'flat', look: [0, 0.5] }); look(lucas, 0, 0.2);
     phoneUI(t < N(13) + 1.4 ? 'playing' : null, t);
-    cyanLight.intensity = 25; cyanLight.position.set(OFF.kitchen - 2.2, 4.4, -2.8);
-    cam(c, V(-2.2, 4.75, -4.4), V(-2.2, 4.75, -3.5), ease(k), V(-2.2, 4.7, -1.8), null, 46);
+    cyanLight.intensity = 2.5; cyanLight.position.set(OFF.kitchen - 2.2, 4.4, -3.2);
+    cam(c, V(-2.0, 4.85, -5.6), V(-2.05, 4.8, -4.8), ease(k), V(-2.2, 4.6, -1.8), null, 46);
   }, { glitchAt: [N(13), N(13) + 2.6] });
   S(E(13) + 0.12, N(15) - 2.1, 'kitchen', (t, k, c) => {
     kitchenState(t, true, true); lucasIn(-2.2, -1.8, Math.PI, t);

@@ -1,3 +1,14 @@
+# IN THIS TOWN, YOU HAD TO PAY FOR EVERY WORD
+
+**Final video:** `pay_for_every_word.mp4` (1080×1920, 9:16, 1:54, 30 fps, H.264 + AAC). Checked: 3420 frames, plays through with no errors.
+
+- Lucas uses the same model as Alex (`DESIGNS.lucas`). Mom, the Mayor (black suit, red tie), police and about 40 citizens.
+- Voices: narrator, Lucas, Mom, the Mayor, two citizens, and the distorted "???" speaker, who switches to Lucas's warped voice at the end.
+- Every word a character says makes a coin fly off their head, with a wallet counter and a coin sound. The Mayor's words cost nothing (a clue).
+- Files: `video/scenes/words.json` (voices, sound, music), `video/scenes/words.js` (shots), `video/lib/wordstown.js` (square, alley, bedroom).
+
+---
+
 # IN THIS TOWN, YOU GET ARRESTED FOR TELLING THE TRUTH
 
 **Final video:** `truth_is_illegal.mp4` (1080×1920, 9:16, exactly 60.0 s, 30 fps, H.264 + AAC 192k). Checked: 1800 frames, plays through with no errors.
