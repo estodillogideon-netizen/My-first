@@ -1,3 +1,26 @@
+# IN THIS TOWN, NOBODY IS ALLOWED TO SLEEP
+
+**Final video:** `nobody_is_allowed_to_sleep.mp4` (1080×1920, 9:16, 60 s, 30 fps, AAC audio). Deep narrator voice, word-synced captions with yellow keywords, music, and sound effects.
+
+| Time | Scene | On screen |
+|------|-------|-----------|
+| 0–4 s | 1 Hook | A sleeper in moonlight vanishes into particles; the blanket drops; fast zoom into the empty bed |
+| 4–9 s | 2 Mystery | Drone shot over the town at dawn; police at a house; untouched dinner |
+| 9–17 s | 3 Panic | Empty bed, plates, a toy on the floor; STAY AWAKE emergency billboard; crowd with coffee; police car; ticking clock; yawning man |
+| 17–22 s | 4 Bus | Bus in the rain; Alex by the window; eyes get heavy and close; cut to black and silence |
+| 22–29 s | 5 Empty city | Alex wakes up; empty bus, no driver; bus drifts through the dark city; traffic light changes for no one |
+| 29–36 s | 6 Basement | Alex gets off and runs to a house, opens the door and then the basement door; lights flicker on over rows of beds |
+| 36–40 s | 7 His face | The sleepers all have Alex's face |
+| 40–47 s | 8 Experiment 438 | A TV turns on; a man in a suit on a surveillance feed: EXPERIMENT 438 / SUBJECT AWAKENED |
+| 47–60 s | 9 Twist | "Begin the final test."; every clone opens its eyes and turns to look; another Alex stands at the top of the stairs; lights out; Alex's eyes in the dark |
+
+**Alex** is defined once in `video/lib/human.js` (`DESIGNS.alex`): messy, spiky black hair, black oversized hoodie with drawstrings and a pocket, gray cargo pants, white sneakers, black crossbody bag. The same model is used for every clone.
+
+**Files:** `video/scenes/sleep.json` (narration, music, SFX), `video/scenes/sleep.js` (shots and camera), `video/lib/sleeptown.js` (bedroom, suburb, house, city, bus, basement, TV studio).
+**Rebuild:** `cd video && python3 audio.py sleep && SCALE=1.5 node render.mjs sleep`
+
+---
+
 # THE PLAYER WHO WASN'T IN THE SERVER
 
 **Finished 60-second Short:** `the_player_who_wasnt_in_the_server.mp4` (vertical 9:16, 62 s, narration + music + SFX + subtitles).

@@ -1,0 +1,434 @@
+{
+ "title": "IN THIS TOWN, NOBODY IS ALLOWED TO SLEEP",
+ "duration": 60,
+ "layout": "auto",
+ "captions": "words",
+ "voice": "am_onyx",
+ "speed": 1.19,
+ "narration": [
+  {
+   "gap": 0.15,
+   "text": "In this town, falling asleep for even one second could make you disappear forever.",
+   "hl": [
+    "disappear",
+    "forever."
+   ]
+  },
+  {
+   "gap": 0.12,
+   "text": "Nobody knew why it started."
+  },
+  {
+   "gap": 0.1,
+   "text": "But every morning, another house would be found empty.",
+   "hl": [
+    "empty."
+   ]
+  },
+  {
+   "gap": 0.12,
+   "text": "The beds were still warm. The food was still on the table. But the people were gone.",
+   "hl": [
+    "gone."
+   ]
+  },
+  {
+   "gap": 0.12,
+   "text": "The government ordered everyone to stay awake, and the entire town became desperate.",
+   "hl": [
+    "stay",
+    "awake,"
+   ]
+  },
+  {
+   "gap": 0.12,
+   "text": "One night, a seventeen-year-old boy named Alex was riding the bus home when his eyes suddenly closed.",
+   "say": "One night, a seventeen year old boy named Alex was riding the bus home, when his eyes suddenly closed.",
+   "hl": [
+    "Alex"
+   ]
+  },
+  {
+   "gap": 0.38,
+   "text": "When he woke up, the bus was moving through an empty city.",
+   "hl": [
+    "empty"
+   ]
+  },
+  {
+   "gap": 0.1,
+   "text": "Every street was deserted. Every building was dark. Even the radio had stopped working."
+  },
+  {
+   "gap": 0.1,
+   "text": "He jumped off and ran to the nearest house."
+  },
+  {
+   "gap": 0.1,
+   "text": "But when he opened the basement door, he found hundreds of people sleeping inside.",
+   "hl": [
+    "hundreds"
+   ]
+  },
+  {
+   "gap": 0.25,
+   "text": "Then he noticed something."
+  },
+  {
+   "gap": 0.12,
+   "text": "Every person in those beds had his face.",
+   "hl": [
+    "his",
+    "face."
+   ]
+  },
+  {
+   "gap": 0.12,
+   "text": "Suddenly, a television turned on. A man wearing a suit appeared and said…"
+  },
+  {
+   "gap": 0.1,
+   "text": "“Experiment 438. The subject has awakened.”",
+   "say": "Experiment four thirty-eight. The subject has awakened.",
+   "voice": "bm_lewis",
+   "speed": 1.02,
+   "fx": "tv",
+   "hl": [
+    "438."
+   ]
+  },
+  {
+   "gap": 0.1,
+   "text": "Alex stepped backward. Then the man continued…"
+  },
+  {
+   "gap": 0.1,
+   "text": "“Begin the final test.”",
+   "say": "Begin the final test.",
+   "voice": "bm_lewis",
+   "speed": 0.95,
+   "fx": "tv",
+   "hl": [
+    "final",
+    "test.”"
+   ]
+  },
+  {
+   "gap": 0.1,
+   "text": "And suddenly, every sleeping version of Alex opened their eyes."
+  },
+  {
+   "gap": 0.1,
+   "text": "But the real Alex was standing outside the room."
+  },
+  {
+   "gap": 0.55,
+   "text": "So… who was actually dreaming?",
+   "say": "So... who was actually dreaming?",
+   "hl": [
+    "who",
+    "was",
+    "actually",
+    "dreaming?"
+   ]
+  }
+ ],
+ "music": [
+  {
+   "t": 0.0,
+   "dur": 21.62,
+   "kind": "tension",
+   "gain": 0.24,
+   "rise": [
+    0,
+    0.35,
+    8,
+    0.5,
+    16.7,
+    0.65,
+    21.6,
+    0.8
+   ]
+  },
+  {
+   "t": 22.0,
+   "dur": 34.95,
+   "kind": "tension",
+   "gain": 0.28,
+   "rise": [
+    0,
+    0.3,
+    9,
+    0.45,
+    12.5,
+    0.75,
+    24,
+    0.9,
+    34.95,
+    1.0
+   ]
+  },
+  {
+   "t": 57.4,
+   "dur": 2.4,
+   "kind": "pad",
+   "gain": 0.22
+  }
+ ],
+ "mute": [
+  {
+   "t": 21.63,
+   "dur": 0.36
+  },
+  {
+   "t": 56.95,
+   "dur": 0.45
+  }
+ ],
+ "sfx": [
+  {
+   "t": 0.0,
+   "type": "hit",
+   "gain": 0.7
+  },
+  {
+   "t": 0.0,
+   "type": "tick",
+   "dur": 4.2,
+   "gain": 0.35
+  },
+  {
+   "t": 1.9,
+   "type": "vanish",
+   "gain": 0.65
+  },
+  {
+   "t": 2.85,
+   "type": "sub",
+   "gain": 0.45
+  },
+  {
+   "t": 4.2,
+   "type": "wind",
+   "dur": 12.4,
+   "gain": 0.22
+  },
+  {
+   "t": 4.2,
+   "type": "siren",
+   "dur": 4.6,
+   "gain": 0.3
+  },
+  {
+   "t": 6.55,
+   "type": "steps",
+   "dur": 1.3,
+   "rate": 0.42,
+   "gain": 0.3
+  },
+  {
+   "t": 7.45,
+   "type": "creak",
+   "gain": 0.3
+  },
+  {
+   "t": 8.77,
+   "type": "tick",
+   "dur": 3.8,
+   "gain": 0.22
+  },
+  {
+   "t": 12.59,
+   "type": "alarm",
+   "dur": 2.1,
+   "gain": 0.22
+  },
+  {
+   "t": 12.59,
+   "type": "crowd",
+   "dur": 4.1,
+   "gain": 0.35
+  },
+  {
+   "t": 14.71,
+   "type": "siren",
+   "dur": 2.0,
+   "gain": 0.35
+  },
+  {
+   "t": 16.7,
+   "type": "rain",
+   "dur": 4.92,
+   "gain": 0.3
+  },
+  {
+   "t": 16.7,
+   "type": "engine",
+   "dur": 4.92,
+   "gain": 0.45
+  },
+  {
+   "t": 22.0,
+   "type": "engine",
+   "dur": 4.2,
+   "gain": 0.35
+  },
+  {
+   "t": 22.0,
+   "type": "hit",
+   "gain": 0.45
+  },
+  {
+   "t": 26.17,
+   "type": "rain",
+   "dur": 9.5,
+   "gain": 0.3
+  },
+  {
+   "t": 26.17,
+   "type": "wind",
+   "dur": 9.5,
+   "gain": 0.2
+  },
+  {
+   "t": 27.85,
+   "type": "static",
+   "dur": 0.85,
+   "gain": 0.35
+  },
+  {
+   "t": 29.45,
+   "type": "steps",
+   "dur": 2.2,
+   "rate": 0.22,
+   "gain": 0.45
+  },
+  {
+   "t": 31.66,
+   "type": "door",
+   "gain": 0.5
+  },
+  {
+   "t": 31.7,
+   "type": "creak",
+   "gain": 0.4
+  },
+  {
+   "t": 32.5,
+   "type": "creak",
+   "gain": 0.5
+  },
+  {
+   "t": 33.4,
+   "type": "steps",
+   "dur": 1.1,
+   "rate": 0.45,
+   "gain": 0.35
+  },
+  {
+   "t": 33.8,
+   "type": "flicker",
+   "dur": 1.2,
+   "gain": 0.4
+  },
+  {
+   "t": 33.85,
+   "type": "hum",
+   "dur": 23.0,
+   "gain": 0.16
+  },
+  {
+   "t": 35.8,
+   "type": "steps",
+   "dur": 1.5,
+   "rate": 0.5,
+   "gain": 0.3
+  },
+  {
+   "t": 38.8,
+   "type": "hit",
+   "gain": 0.85
+  },
+  {
+   "t": 38.8,
+   "type": "sub",
+   "gain": 0.5
+  },
+  {
+   "t": 39.0,
+   "type": "heartbeat",
+   "dur": 1.6,
+   "gain": 0.45
+  },
+  {
+   "t": 40.69,
+   "type": "tvon",
+   "gain": 0.6
+  },
+  {
+   "t": 40.69,
+   "type": "static",
+   "dur": 1.7,
+   "gain": 0.3
+  },
+  {
+   "t": 45.9,
+   "type": "steps",
+   "dur": 1.0,
+   "rate": 0.5,
+   "gain": 0.3
+  },
+  {
+   "t": 47.15,
+   "type": "steps",
+   "dur": 2.3,
+   "rate": 0.55,
+   "gain": 0.3
+  },
+  {
+   "t": 49.45,
+   "type": "static",
+   "dur": 0.2,
+   "gain": 0.3
+  },
+  {
+   "t": 53.37,
+   "type": "hit",
+   "gain": 0.95
+  },
+  {
+   "t": 53.37,
+   "type": "sub",
+   "gain": 0.6
+  },
+  {
+   "t": 53.4,
+   "type": "glitch",
+   "dur": 0.25,
+   "gain": 0.3
+  },
+  {
+   "t": 53.6,
+   "type": "heartbeat",
+   "dur": 3.3,
+   "gain": 0.55
+  },
+  {
+   "t": 54.5,
+   "type": "creak",
+   "gain": 0.3
+  },
+  {
+   "t": 56.9,
+   "type": "door",
+   "gain": 0.7
+  },
+  {
+   "t": 59.2,
+   "type": "sub",
+   "gain": 0.5
+  }
+ ],
+ "duck": 0.75,
+ "bed_gain": 0.42
+}

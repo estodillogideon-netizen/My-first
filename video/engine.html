@@ -18,6 +18,12 @@
   #vig{inset:0;background:radial-gradient(ellipse at center,transparent 50%,rgba(0,0,0,.75) 100%)}
   #fade{inset:0;background:#000;opacity:0}
   #flash{inset:0;background:#fff;opacity:0}
+  #cap{left:30px;right:30px;bottom:330px;text-align:center;font-family:'Inter',sans-serif;font-weight:900;font-size:58px;line-height:1.12;color:#fff;
+       letter-spacing:-0.5px;text-shadow:0 4px 14px rgba(0,0,0,.65);-webkit-text-stroke:7px #000;paint-order:stroke fill}
+  #cap .hl{color:#ffd23f}
+  #cap .w{display:inline-block;margin:0 7px;white-space:nowrap}
+  #cap .long{font-size:44px}
+  #grade{inset:0;mix-blend-mode:multiply;opacity:0}
   #chat{top:40px;left:24px;width:330px;background:rgba(20,20,28,.6);border-radius:10px;color:#fff;font-size:24px;padding:10px 14px;display:none;line-height:1.35}
   #chat .n{font-weight:800}
   #bubbles{inset:0}
@@ -37,22 +43,41 @@
   <div class="ov" id="scan"></div>
   <div class="ov" id="sub"></div>
   <div class="ov" id="title"></div>
+  <div class="ov" id="grade"></div>
+  <div class="ov" id="cap"></div>
   <div class="ov" id="fade"></div>
   <div class="ov" id="flash"></div>
 </div>
+<script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js"}}</script>
 <script type="module">
 import * as THREE from './node_modules/three/build/three.module.js';
 const params = new URLSearchParams(location.search);
 const sceneName = params.get('scene') || 'scene1';
 const W = 720, H = 1280;
 const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
-renderer.setSize(W, H); renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.setPixelRatio(window.devicePixelRatio || 1); renderer.setSize(W, H); renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
 document.getElementById('stage').prepend(renderer.domElement);
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(50, W / H, 0.1, 500);
 const timeline = await (await fetch(`./scenes/${sceneName}.json`)).json();
-try { const tm = await (await fetch(`./out/${sceneName}.timing.json`)).json(); timeline.narration.forEach((n, i) => n.dur = tm[i]); } catch (e) {}
+if (timeline.captions === 'words') {
+  const ln = await (await fetch(`./out/${sceneName}.lines.json`)).json();
+  timeline.narration.forEach((n, i) => Object.assign(n, ln[i]));
+  // build caption chunks (max 3 words, break after punctuation)
+  timeline.chunks = [];
+  timeline.narration.forEach((n, li) => {
+    let cur = [];
+    const hl = new Set(n.hl || []);
+    n.words.forEach((w, wi) => {
+      cur.push({ ...w, hl: hl.has(w.w) });
+      const end = /[.,?!…”]$/.test(w.w) || cur.length === 3 || wi === n.words.length - 1;
+      if (end) { timeline.chunks.push({ words: cur, t0: cur[0].t0, line: li }); cur = []; }
+    });
+  });
+  timeline.chunks.forEach((c, i) => { const nx = timeline.chunks[i + 1]; const lineEnd = timeline.narration[c.line].t + timeline.narration[c.line].dur;
+    c.t1 = nx && nx.line === c.line ? nx.t0 : lineEnd + 0.25; });
+} else try { const tm = await (await fetch(`./out/${sceneName}.timing.json`)).json(); timeline.narration.forEach((n, i) => n.dur = tm[i]); } catch (e) {}
 const mod = await import(`./scenes/${sceneName}.js`);
 const $ = id => document.getElementById(id);
 const ctx = { THREE, scene, camera, renderer, timeline, $, W, H };
@@ -63,8 +88,16 @@ function subtitleAt(t) {
   return n ? n.text : '';
 }
 window.__duration = timeline.duration;
+function captionAt(t) {
+  const c = timeline.chunks.find(c => t >= c.t0 && t < c.t1);
+  if (!c) return '';
+  const k = Math.min(1, (t - c.t0) / 0.12);
+  const sc = 0.82 + 0.18 * (1 - Math.pow(1 - k, 3));
+  return `<div class="${c.words.some(w => w.w.length > 11) ? 'long' : ''}" style="transform:scale(${sc});opacity:${0.4 + 0.6 * k}">` + c.words.map(w => `<span class="w${w.hl ? ' hl' : ''}">${w.w.replace(/[“”"]/g, '').toUpperCase() === w.w.toUpperCase() ? w.w.toUpperCase() : w.w.toUpperCase()}</span>`).join('') + '</div>';
+}
 window.__render = (t) => {
-  $('sub').textContent = subtitleAt(t);
+  if (timeline.captions === 'words') { if (!window.__noCaps) $('cap').innerHTML = captionAt(t); }
+  else $('sub').textContent = subtitleAt(t);
   mod.frame(t, ctx);
   renderer.render(scene, camera);
   return true;

@@ -20,7 +20,7 @@ const server = http.createServer((req, res) => {
 const port = server.address().port;
 
 const browser = await chromium.launch({ args: ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader'] });
-const page = await browser.newPage({ viewport: { width: 720, height: 1280 } });
+const page = await browser.newPage({ viewport: { width: 720, height: 1280 }, deviceScaleFactor: Number(process.env.SCALE || 1) });
 page.on('pageerror', e => console.error('PAGE ERROR', e));
 await page.goto(`http://localhost:${port}/engine.html?scene=${scene}`);
 await page.waitForFunction(() => window.__ready, null, { timeout: 60000 });
