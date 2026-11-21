@@ -95,7 +95,7 @@ function captionAt(t) {
   const k = Math.min(1, (t - c.t0) / 0.12);
   const sc = 0.82 + 0.18 * (1 - Math.pow(1 - k, 3));
   const who = timeline.narration[c.line].who;
-  const WC = { ALEX: '#7fd0ff', MOM: '#ffb0c8', TEACHER: '#ff8a6a', LEO: '#8af0a0' };
+  const WC = { ALEX: '#7fd0ff', LUCAS: '#7fd0ff', MOM: '#ffb0c8', TEACHER: '#ff8a6a', LEO: '#8af0a0', MAYOR: '#ff6a6a', CITIZEN: '#ffd96a', '???': '#c08aff' };
   return (who ? `<span class="who" style="color:${WC[who] || '#ddd'}">${who}</span>` : '') + `<div class="${c.words.some(w => w.w.length > 11) ? 'long' : ''}" style="transform:scale(${sc});opacity:${0.4 + 0.6 * k}">` + c.words.map(w => `<span class="w${w.hl ? ' hl' : ''}">${w.w.replace(/[“”"]/g, '').toUpperCase() === w.w.toUpperCase() ? w.w.toUpperCase() : w.w.toUpperCase()}</span>`).join('') + '</div>';
 }
 window.__render = (t) => {

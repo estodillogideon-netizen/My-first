@@ -38,6 +38,11 @@ export const DESIGNS = {
     top: { kind: 'jacket', color: 0x2f5a3a, trim: 0xf4f4f4 }, pants: { color: 0x2c4a78 }, shoes: 0xd8d8d8,
     face: { eyes: 'open', brows: 'calm', mouth: 'neutral' },
   },
+  mayor: {
+    skin: 0xe8bd94, hair: { style: 'slick', color: 0x9a9a9a },
+    top: { kind: 'suit', color: 0x121317, trim: 0xf6f6f6 }, pants: { color: 0x121317 }, shoes: 0x0a0a0a,
+    face: { eyes: 'half', brows: 'suspicious', mouth: 'smile' },
+  },
   police: {
     skin: 0xc99a74, hair: { style: 'policecap', color: 0x1a2340 },
     top: { kind: 'uniform', color: 0x1f2d55, trim: 0xf1c40f }, pants: { color: 0x141b33 }, shoes: 0x111111,
@@ -236,3 +241,7 @@ export function look(a, yaw = 0, pitch = 0) { const h = a.userData.headPivot.rot
 
 export function talk(t) { return ['flat', 'o', 'open', 'neutral', 'o', 'flat'][Math.floor(t * 10) % 6]; }
 export function point(a, k = 1) { const u = a.userData; u.armR.rotation.x = -1.5 * k; u.armR.rotation.z = 0.05; }
+
+DESIGNS.lucas = DESIGNS.alex; // Lucas uses the exact same model sheet
+export function wave(a, t) { const u = a.userData; u.armR.rotation.z = 2.6 + Math.sin(t * 10) * 0.35; }
+export function cover(a) { const u = a.userData; u.armR.rotation.x = -2.5; u.armR.rotation.z = 0.55; u.armL.rotation.x = -2.5; u.armL.rotation.z = -0.55; }

@@ -1,0 +1,1280 @@
+{
+ "title": "IN THIS TOWN, YOU HAD TO PAY FOR EVERY WORD",
+ "duration": 114,
+ "layout": "auto",
+ "captions": "words",
+ "voice": "am_michael",
+ "speed": 1.12,
+ "duck": 0.75,
+ "bed_gain": 0.45,
+ "narration": [
+  {
+   "gap": 0.08,
+   "text": "In this town, every word you said cost money.",
+   "voice": "am_michael",
+   "speed": 1.12,
+   "hl": [
+    "money."
+   ]
+  },
+  {
+   "gap": 0.12,
+   "text": "Say hello? One coin.",
+   "voice": "am_michael",
+   "speed": 1.12,
+   "hl": [
+    "One",
+    "coin."
+   ]
+  },
+  {
+   "gap": 0.12,
+   "text": "Say I love you? TEN!",
+   "voice": "am_michael",
+   "speed": 1.12,
+   "hl": [
+    "TEN!"
+   ],
+   "say": "Say I love you? Ten!"
+  },
+  {
+   "gap": 0.12,
+   "text": "And if you went broke… you could never speak again!",
+   "voice": "am_michael",
+   "speed": 1.12,
+   "hl": [
+    "broke…",
+    "never",
+    "speak"
+   ],
+   "say": "And if you went broke... you could never speak again!"
+  },
+  {
+   "gap": 0.2,
+   "text": "HEY! WATCH WHERE YOU'RE GOING!",
+   "voice": "am_eric",
+   "speed": 1.15,
+   "who": "CITIZEN",
+   "say": "Hey! Watch where you're going!"
+  },
+  {
+   "gap": 0.3,
+   "text": "OH COME ON! THAT WAS THREE WORDS!",
+   "voice": "am_eric",
+   "speed": 1.15,
+   "who": "CITIZEN",
+   "hl": [
+    "THREE"
+   ],
+   "say": "Oh come on! That was three words!"
+  },
+  {
+   "gap": 1.4,
+   "text": "THREE COINS?! That's literally all I have!",
+   "voice": "am_puck",
+   "speed": 1.1,
+   "who": "LUCAS",
+   "hl": [
+    "THREE",
+    "COINS?!"
+   ],
+   "say": "Three coins?! That's literally all I have!"
+  },
+  {
+   "gap": 0.4,
+   "text": "Mom, can I have some money?",
+   "voice": "am_puck",
+   "speed": 1.1,
+   "who": "LUCAS"
+  },
+  {
+   "gap": 0.15,
+   "text": "No! You spent everything yesterday!",
+   "voice": "af_heart",
+   "speed": 1.02,
+   "who": "MOM",
+   "hl": [
+    "everything"
+   ]
+  },
+  {
+   "gap": 0.15,
+   "text": "But I barely even talked yesterday!",
+   "voice": "am_puck",
+   "speed": 1.1,
+   "who": "LUCAS",
+   "hl": [
+    "barely"
+   ]
+  },
+  {
+   "gap": 0.7,
+   "text": "Then… who was talking for you?",
+   "voice": "af_heart",
+   "speed": 1.02,
+   "who": "MOM",
+   "hl": [
+    "who"
+   ],
+   "say": "Then... who was talking for you?"
+  },
+  {
+   "gap": 1.4,
+   "text": "Lucas checked his phone. Hundreds of voice messages had been sent from his account… but he never recorded a single one.",
+   "voice": "am_michael",
+   "speed": 1.18,
+   "hl": [
+    "Hundreds",
+    "never"
+   ],
+   "say": "Lucas checked his phone. Hundreds of voice messages had been sent from his account... but he never recorded a single one."
+  },
+  {
+   "gap": 0.15,
+   "text": "What the heck?! I didn't send these!",
+   "voice": "am_puck",
+   "speed": 1.1,
+   "who": "LUCAS"
+  },
+  {
+   "gap": 0.8,
+   "text": "Tomorrow, don't talk to anyone. Especially the mayor.",
+   "voice": "am_echo",
+   "speed": 0.88,
+   "who": "???",
+   "hl": [
+    "mayor."
+   ],
+   "fx": "ghost"
+  },
+  {
+   "gap": 0.2,
+   "text": "WHAT?!",
+   "voice": "am_puck",
+   "speed": 1.1,
+   "who": "LUCAS",
+   "hl": [
+    "WHAT?!"
+   ],
+   "say": "What?!"
+  },
+  {
+   "gap": 2.2,
+   "text": "Citizens! Someone has been stealing words without paying! And today… we're finding them!",
+   "voice": "am_onyx",
+   "speed": 0.98,
+   "who": "MAYOR",
+   "hl": [
+    "stealing"
+   ],
+   "say": "Citizens! Someone has been stealing words without paying! And today... we're finding them!"
+  },
+  {
+   "gap": 0.15,
+   "text": "WHAT'S HAPPENING TO MY MONEY?!",
+   "voice": "am_eric",
+   "speed": 1.15,
+   "who": "CITIZEN",
+   "hl": [
+    "MONEY?!"
+   ],
+   "say": "What's happening to my money?!"
+  },
+  {
+   "gap": 0.1,
+   "text": "I CAN'T AFFORD TO SAY THAT!",
+   "voice": "bf_emma",
+   "speed": 1.15,
+   "who": "CITIZEN",
+   "hl": [
+    "AFFORD"
+   ],
+   "say": "I can't afford to say that!"
+  },
+  {
+   "gap": 0.6,
+   "text": "IT'S THE MAYOR!",
+   "voice": "am_puck",
+   "speed": 1.1,
+   "who": "LUCAS",
+   "hl": [
+    "MAYOR!"
+   ],
+   "say": "It's the mayor!"
+  },
+  {
+   "gap": 0.4,
+   "text": "Interesting…",
+   "voice": "am_onyx",
+   "speed": 0.98,
+   "who": "MAYOR",
+   "say": "Interesting..."
+  },
+  {
+   "gap": 0.35,
+   "text": "Bring that boy to me.",
+   "voice": "am_onyx",
+   "speed": 0.98,
+   "who": "MAYOR"
+  },
+  {
+   "gap": 0.12,
+   "text": "WAIT! WHY ME?!",
+   "voice": "am_puck",
+   "speed": 1.1,
+   "who": "LUCAS",
+   "say": "Wait! Why me?!"
+  },
+  {
+   "gap": 0.15,
+   "text": "Because you've been speaking for free.",
+   "voice": "am_onyx",
+   "speed": 0.98,
+   "who": "MAYOR",
+   "hl": [
+    "free."
+   ]
+  },
+  {
+   "gap": 0.12,
+   "text": "I DIDN'T DO ANYTHING!",
+   "voice": "am_puck",
+   "speed": 1.1,
+   "who": "LUCAS",
+   "say": "I didn't do anything!"
+  },
+  {
+   "gap": 0.5,
+   "text": "That's exactly what the last person said.",
+   "voice": "am_onyx",
+   "speed": 0.98,
+   "who": "MAYOR",
+   "hl": [
+    "last",
+    "person"
+   ]
+  },
+  {
+   "gap": 5.0,
+   "text": "Then every phone in town rang at exactly the same time.",
+   "voice": "am_michael",
+   "speed": 1.12,
+   "hl": [
+    "every",
+    "phone"
+   ]
+  },
+  {
+   "gap": 1.0,
+   "text": "If you're hearing this… I've already taken every word you've ever said.",
+   "voice": "am_echo",
+   "speed": 0.88,
+   "who": "???",
+   "hl": [
+    "taken"
+   ],
+   "say": "If you're hearing this... I've already taken every word you've ever said.",
+   "fx": "ghost"
+  },
+  {
+   "gap": 0.3,
+   "text": "NO! TURN OFF THE SPEAKERS!",
+   "voice": "am_onyx",
+   "speed": 0.98,
+   "who": "MAYOR",
+   "say": "No! Turn off the speakers!"
+  },
+  {
+   "gap": 2.6,
+   "text": "Wait… the mayor can't speak?!",
+   "voice": "am_puck",
+   "speed": 1.1,
+   "who": "LUCAS",
+   "hl": [
+    "can't",
+    "speak?!"
+   ],
+   "say": "Wait... the mayor can't speak?!"
+  },
+  {
+   "gap": 1.6,
+   "text": "Lucas found a hidden speaker inside the mayor's podium. It wasn't stealing money… it was stealing people's voices.",
+   "voice": "am_michael",
+   "speed": 1.12,
+   "hl": [
+    "hidden",
+    "speaker",
+    "voices."
+   ],
+   "say": "Lucas found a hidden speaker inside the mayor's podium. It wasn't stealing money... it was stealing people's voices."
+  },
+  {
+   "gap": 0.2,
+   "text": "Then who's controlling it?!",
+   "voice": "am_puck",
+   "speed": 1.1,
+   "who": "LUCAS",
+   "hl": [
+    "controlling"
+   ]
+  },
+  {
+   "gap": 0.9,
+   "text": "THANK YOU, LUCAS.",
+   "voice": "am_echo",
+   "speed": 0.88,
+   "who": "???",
+   "say": "Ha. Ha. Ha. Thank you, Lucas.",
+   "fx": "ghost"
+  },
+  {
+   "gap": 0.2,
+   "text": "What?!",
+   "voice": "am_puck",
+   "speed": 1.1,
+   "who": "LUCAS"
+  },
+  {
+   "gap": 0.3,
+   "text": "You just gave me my voice back.",
+   "voice": "am_echo",
+   "speed": 0.88,
+   "who": "???",
+   "hl": [
+    "voice",
+    "back."
+   ],
+   "fx": "ghost"
+  },
+  {
+   "gap": 1.6,
+   "text": "Lucas realized the voice wasn't trapped inside the speaker.",
+   "voice": "am_michael",
+   "speed": 0.98,
+   "hl": [
+    "wasn't"
+   ]
+  },
+  {
+   "gap": 0.6,
+   "text": "I was trapped inside YOUR phone.",
+   "voice": "am_echo",
+   "speed": 0.88,
+   "who": "???",
+   "hl": [
+    "YOUR",
+    "phone."
+   ],
+   "fx": "ghost"
+  },
+  {
+   "gap": 0.4,
+   "text": "NO… WAIT!",
+   "voice": "am_puck",
+   "speed": 1.1,
+   "who": "LUCAS",
+   "say": "No... wait!"
+  },
+  {
+   "gap": 3.0,
+   "text": "Finally… I can talk.",
+   "voice": "am_puck",
+   "speed": 0.9,
+   "who": "???",
+   "say": "Finally... I can talk.",
+   "fx": "ghostlucas"
+  },
+  {
+   "gap": 3.0,
+   "text": "Help me…",
+   "voice": "am_puck",
+   "speed": 0.85,
+   "who": "LUCAS",
+   "say": "Help me...",
+   "fx": "whisper"
+  }
+ ],
+ "sfx": [
+  {
+   "t": 8.651,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 8.984,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 9.163,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 9.343,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 9.548,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 10.232,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 10.351,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 10.529,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 10.884,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 11.062,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 11.211,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 11.418,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 13.263,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 13.459,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 13.907,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 14.131,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 14.439,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 14.579,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 14.663,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 15.455,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 15.71,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 15.837,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 15.913,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 16.066,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 16.219,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 16.751,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 17.166,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 17.339,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 17.581,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 17.996,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 18.803,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 18.966,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 19.064,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 19.326,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 19.522,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 19.783,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 21.104,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 21.535,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 21.69,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 21.844,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 22.121,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 22.275,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 30.997,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 31.15,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 31.277,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 31.659,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 31.735,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 31.939,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 32.092,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 36.855,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 44.246,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 44.503,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 44.857,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 44.986,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 45.115,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 45.73,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 45.842,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 46.102,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 46.4,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 46.549,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 46.735,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 52.096,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 52.467,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 52.599,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 55.197,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 55.284,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 55.516,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 55.632,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 77.552,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 77.945,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 78.085,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 78.281,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 78.477,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 87.687,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 87.869,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 88.081,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 88.475,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 92.272,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 103.513,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 103.865,
+   "type": "coin",
+   "gain": 0.16
+  },
+  {
+   "t": 48.158,
+   "type": "coin",
+   "gain": 0.35
+  },
+  {
+   "t": 0.1,
+   "type": "coin",
+   "gain": 0.3
+  },
+  {
+   "t": 0.38,
+   "type": "coin",
+   "gain": 0.3
+  },
+  {
+   "t": 0.66,
+   "type": "coin",
+   "gain": 0.3
+  },
+  {
+   "t": 0.94,
+   "type": "coin",
+   "gain": 0.3
+  },
+  {
+   "t": 2.968,
+   "type": "coin",
+   "gain": 0.45
+  },
+  {
+   "t": 5.124,
+   "type": "coins",
+   "gain": 0.6
+  },
+  {
+   "t": 5.124,
+   "type": "hit",
+   "gain": 0.4
+  },
+  {
+   "t": 0,
+   "type": "crowd",
+   "dur": 12,
+   "gain": 0.12
+  },
+  {
+   "t": 0,
+   "type": "whoosh",
+   "gain": 0.4
+  },
+  {
+   "t": 1.35,
+   "type": "whoosh",
+   "gain": 0.35
+  },
+  {
+   "t": 7.177,
+   "type": "boing",
+   "gain": 0.3
+  },
+  {
+   "t": 8.770999999999999,
+   "type": "door",
+   "gain": 0.5
+  },
+  {
+   "t": 11.062,
+   "type": "boing",
+   "gain": 0.4
+  },
+  {
+   "t": 12.663,
+   "type": "tick",
+   "dur": 0.6,
+   "gain": 0.2
+  },
+  {
+   "t": 13.263,
+   "type": "whoosh",
+   "gain": 0.3
+  },
+  {
+   "t": 15.055,
+   "type": "boing",
+   "gain": 0.35
+  },
+  {
+   "t": 15.254999999999999,
+   "type": "steps",
+   "dur": 0.9,
+   "rate": 0.18,
+   "gain": 0.35
+  },
+  {
+   "t": 22.726,
+   "type": "sub",
+   "gain": 0.45
+  },
+  {
+   "t": 23.375999999999998,
+   "type": "ping",
+   "gain": 0.35
+  },
+  {
+   "t": 24.376,
+   "type": "ping",
+   "gain": 0.3
+  },
+  {
+   "t": 24.676000000000002,
+   "type": "ping",
+   "gain": 0.3
+  },
+  {
+   "t": 24.926000000000002,
+   "type": "ping",
+   "gain": 0.3
+  },
+  {
+   "t": 25.176000000000002,
+   "type": "ping",
+   "gain": 0.3
+  },
+  {
+   "t": 28.047,
+   "type": "whoosh",
+   "gain": 0.4
+  },
+  {
+   "t": 33.023,
+   "type": "click",
+   "gain": 0.4
+  },
+  {
+   "t": 33.273,
+   "type": "glitch",
+   "dur": 0.4,
+   "gain": 0.3
+  },
+  {
+   "t": 35.673,
+   "type": "glitch",
+   "dur": 0.3,
+   "gain": 0.3
+  },
+  {
+   "t": 33.273,
+   "type": "heartbeat",
+   "dur": 3.4,
+   "gain": 0.45
+  },
+  {
+   "t": 36.855,
+   "type": "hit",
+   "gain": 0.9
+  },
+  {
+   "t": 37.458999999999996,
+   "type": "crowd",
+   "dur": 6.5,
+   "gain": 0.2
+  },
+  {
+   "t": 44.196,
+   "type": "crowd",
+   "dur": 3.6,
+   "gain": 0.35
+  },
+  {
+   "t": 44.3,
+   "type": "coins",
+   "gain": 0.4
+  },
+  {
+   "t": 45.2,
+   "type": "coins",
+   "gain": 0.4
+  },
+  {
+   "t": 46.1,
+   "type": "coins",
+   "gain": 0.4
+  },
+  {
+   "t": 47.0,
+   "type": "coins",
+   "gain": 0.4
+  },
+  {
+   "t": 47.306,
+   "type": "boing",
+   "gain": 0.3
+  },
+  {
+   "t": 47.706,
+   "type": "boing",
+   "gain": 0.3
+  },
+  {
+   "t": 48.006,
+   "type": "boing",
+   "gain": 0.3
+  },
+  {
+   "t": 48.721000000000004,
+   "type": "sub",
+   "gain": 0.45
+  },
+  {
+   "t": 50.335,
+   "type": "whoosh",
+   "gain": 0.3
+  },
+  {
+   "t": 59.15500000000001,
+   "type": "steps",
+   "dur": 4.4,
+   "rate": 0.17,
+   "gain": 0.5
+  },
+  {
+   "t": 59.15500000000001,
+   "type": "crowd",
+   "dur": 3.8,
+   "gain": 0.35
+  },
+  {
+   "t": 61.75500000000001,
+   "type": "steps",
+   "dur": 1.2,
+   "rate": 0.2,
+   "gain": 0.35
+  },
+  {
+   "t": 62.855000000000004,
+   "type": "whoosh",
+   "gain": 0.45
+  },
+  {
+   "t": 63.65500000000001,
+   "type": "door",
+   "gain": 0.4
+  },
+  {
+   "t": 64.855,
+   "type": "ring",
+   "dur": 4.6,
+   "gain": 0.45
+  },
+  {
+   "t": 65.805,
+   "type": "hit",
+   "gain": 0.5
+  },
+  {
+   "t": 68.6,
+   "type": "coins",
+   "gain": 0.45
+  },
+  {
+   "t": 69.6,
+   "type": "coins",
+   "gain": 0.45
+  },
+  {
+   "t": 70.6,
+   "type": "coins",
+   "gain": 0.45
+  },
+  {
+   "t": 71.6,
+   "type": "coins",
+   "gain": 0.45
+  },
+  {
+   "t": 68.556,
+   "type": "static",
+   "dur": 4.0,
+   "gain": 0.12
+  },
+  {
+   "t": 75.252,
+   "type": "hit",
+   "gain": 0.5
+  },
+  {
+   "t": 75.452,
+   "type": "glitch",
+   "dur": 0.3,
+   "gain": 0.25
+  },
+  {
+   "t": 80.62599999999999,
+   "type": "steps",
+   "dur": 1.6,
+   "rate": 0.45,
+   "gain": 0.3
+  },
+  {
+   "t": 83.48,
+   "type": "creak",
+   "gain": 0.4
+  },
+  {
+   "t": 83.78,
+   "type": "hum",
+   "dur": 7,
+   "gain": 0.2
+  },
+  {
+   "t": 83.78,
+   "type": "riser",
+   "gain": 0.3
+  },
+  {
+   "t": 89.769,
+   "type": "glitch",
+   "dur": 0.5,
+   "gain": 0.35
+  },
+  {
+   "t": 89.769,
+   "type": "hit",
+   "gain": 0.6
+  },
+  {
+   "t": 93.076,
+   "type": "riser",
+   "gain": 0.35
+  },
+  {
+   "t": 95.429,
+   "type": "heartbeat",
+   "dur": 1.6,
+   "gain": 0.45
+  },
+  {
+   "t": 97.229,
+   "type": "sub",
+   "gain": 0.7
+  },
+  {
+   "t": 97.829,
+   "type": "glitch",
+   "dur": 0.4,
+   "gain": 0.4
+  },
+  {
+   "t": 100.84499999999998,
+   "type": "ping",
+   "gain": 0.4
+  },
+  {
+   "t": 102.04499999999999,
+   "type": "ping",
+   "gain": 0.45
+  },
+  {
+   "t": 103.513,
+   "type": "hit",
+   "gain": 0.7
+  },
+  {
+   "t": 104.6,
+   "type": "coin",
+   "gain": 0.5
+  },
+  {
+   "t": 104.65,
+   "type": "hit",
+   "gain": 0.8
+  },
+  {
+   "t": 104.7,
+   "type": "heartbeat",
+   "dur": 2.5,
+   "gain": 0.55
+  },
+  {
+   "t": 107.276,
+   "type": "glitch",
+   "dur": 0.5,
+   "gain": 0.35
+  },
+  {
+   "t": 108.92699999999999,
+   "type": "hit",
+   "gain": 0.9
+  },
+  {
+   "t": 108.92699999999999,
+   "type": "sub",
+   "gain": 0.7
+  },
+  {
+   "t": 111.477,
+   "type": "hum",
+   "dur": 1.6,
+   "gain": 0.12
+  }
+ ],
+ "music": [
+  {
+   "t": 0,
+   "dur": 22.6,
+   "kind": "bouncy",
+   "gain": 0.2
+  },
+  {
+   "t": 22.4,
+   "dur": 15.1,
+   "kind": "tension",
+   "gain": 0.24,
+   "rise": [
+    0,
+    0.35,
+    9,
+    0.55,
+    15,
+    0.8
+   ]
+  },
+  {
+   "t": 37.358999999999995,
+   "dur": 21.0,
+   "kind": "bouncy",
+   "gain": 0.14
+  },
+  {
+   "t": 59.05500000000001,
+   "dur": 5.2,
+   "kind": "tension",
+   "gain": 0.3,
+   "rise": [
+    0,
+    1,
+    5.2,
+    1
+   ]
+  },
+  {
+   "t": 64.055,
+   "dur": 16.4,
+   "kind": "tension",
+   "gain": 0.24,
+   "rise": [
+    0,
+    0.4,
+    16.4,
+    0.7
+   ]
+  },
+  {
+   "t": 80.526,
+   "dur": 16.3,
+   "kind": "tension",
+   "gain": 0.27,
+   "rise": [
+    0,
+    0.5,
+    16.3,
+    1.0
+   ]
+  },
+  {
+   "t": 96.829,
+   "dur": 12.048000000000005,
+   "kind": "pad",
+   "gain": 0.28
+  }
+ ],
+ "mute": [
+  {
+   "t": 104.47600000000001,
+   "dur": 0.5
+  },
+  {
+   "t": 109.777,
+   "dur": 4.223000000000002
+  }
+ ]
+}

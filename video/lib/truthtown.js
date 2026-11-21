@@ -14,7 +14,7 @@ function textTex(w, h, bg, lines) { // lines: [text, font, color, y]
 }
 
 // ---------------- TOWN (bright) ----------------
-function town() {
+export function town() {
   const g = new THREE.Group();
   box(g, 600, 0.1, 600, M(0x6fae4f, { map: noiseTex('#7cbf58', .12, 40) }), 0, 0, 0, { cast: false });
   box(g, 14, 0.12, 600, M(0x3a3d44, { map: noiseTex('#4a4d55', .15, 30) }), 0, 0.03, 0, { cast: false });
@@ -61,7 +61,7 @@ function town() {
 }
 
 // ---------------- KITCHEN ----------------
-function kitchen() {
+export function kitchen() {
   const g = new THREE.Group(); g.position.set(1000, 0, 0);
   box(g, 20, 10, 18, M(0xf2e2c4, { side: THREE.BackSide, map: noiseTex('#f6ead2', .05, 3) }), 0, 5, 0, { cast: false });
   box(g, 20, 0.1, 18, M(0xffffff, { map: woodTex(4) }), 0, 0.05, 0, { cast: false });

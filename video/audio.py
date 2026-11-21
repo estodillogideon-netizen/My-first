@@ -174,6 +174,24 @@ def sfx(kind, dur=1.0, s=None):
     if kind == 'sub':  # deep sub drop
         n = int(3 * SR); t = np.arange(n) / SR
         return norm(np.sin(2 * np.pi * (60 * np.exp(-t * 0.8)) * t) * np.exp(-t * 0.9))
+    if kind == 'coin':  # bright coin "ding"
+        a = tone(1975.5, 0.3, 14, (1, 0.4, 0.2)); b = tone(2637, 0.3, 12, (1, 0.3)); k2 = int(0.05 * SR)
+        x = a.copy(); x[k2:] += b[:-k2]; return norm(x)
+    if kind == 'coins':  # shower of coins
+        n = int(1.0 * SR); x = np.zeros(n)
+        for _ in range(14):
+            i = int(rng.uniform(0, 0.7) * SR); c = tone(rng.uniform(1800, 3200), 0.25, 16, (1, 0.4)); x[i:i + len(c)] += c[: n - i] * rng.uniform(0.4, 1)
+        return norm(x)
+    if kind == 'ring':  # old-school phone ring, many phones slightly out of sync
+        x = np.zeros(n)
+        for ph in [0, 0.13, 0.29]:
+            tt = t + ph; on = ((tt % 2.0) < 1.0) * (np.sin(2 * np.pi * 20 * tt) > 0)
+            x += on * (np.sin(2 * np.pi * (440 + ph * 300) * t) + np.sin(2 * np.pi * (480 + ph * 300) * t))
+        return norm(lowpass(x, 0.5)) * env(n, 0.01, 0.2)
+    if kind == 'boing':  # comedic boing
+        n = int(0.45 * SR); t = np.arange(n) / SR
+        f = 180 + 420 * (t / 0.45) + 40 * np.sin(2 * np.pi * 18 * t)
+        return norm(np.sin(2 * np.pi * np.cumsum(f) / SR) * np.exp(-t * 4))
     raise ValueError(kind)
 
 
@@ -211,6 +229,18 @@ def music(kind, dur, cue):
             i = int(k * 0.36 * SR)
             if i < n: x[i:i + len(s)] += s[: n - i]
         return reverb(norm(x), 0.5) * env(n, 0.02, 0.8)
+    if kind == 'bouncy':  # light, playful-mysterious pluck groove (124 bpm)
+        beat = 60 / 124; x = np.zeros(n)
+        mel = [0, 3, 7, 10, 7, 3, 5, 8, 0, 3, 7, 12, 10, 7, 5, 3]
+        for k2, st in enumerate(np.arange(0, dur, beat / 2)):
+            i = int(st * SR)
+            if k2 % 8 != 7:
+                p = tone(note(mel[k2 % 16], 261.6), 0.4, 9, (1, 0.5, 0.2)); x[i:i + len(p)] += p[: n - i] * 0.45
+            if k2 % 2 == 0:
+                b = tone(65.4 * (1.5 if (k2 // 8) % 2 else 1), 0.35, 10, (1, 0.3)); x[i:i + len(b)] += b[: n - i] * 0.9
+            if k2 % 2 == 1:
+                m = int(0.03 * SR); x[i:i + m] += bp(rng.standard_normal(m), 6000, 10000)[: n - i] * np.exp(-np.linspace(0, 8, m))[: n - i] * 0.3
+        return norm(x) * env(n, 0.05, 0.4)
     if kind == 'pad':
         x = sum(np.sin(2 * np.pi * f * t) for f in [A1, A1 * 1.19, A1 * 1.5, A1 * 2.01])
         return norm(lowpass(x, 0.04)) * env(n, 0.5, 1.2)
@@ -268,6 +298,13 @@ def main(name):
         if auto: a = trim(a)
         if line.get('fx') == 'whisper': a = whisperize(a)
         if line.get('fx') == 'tv': a = tvize(a)
+        if line.get('fx') in ('ghost', 'ghostlucas'):  # distorted electronic voice
+            tt = np.arange(len(a)) / SR
+            ring = a * (0.6 + 0.4 * np.sin(2 * np.pi * (38 if line['fx'] == 'ghost' else 22) * tt))
+            crush = np.round(ring * 10) / 10
+            mix_ = 0.55 * crush + (0.6 * whisperize(a) if line['fx'] == 'ghost' else 0.45 * a)
+            dly = int(0.012 * SR); mix_[dly:] += 0.35 * mix_[:-dly]
+            a = norm(reverb(mix_, 0.35))
         if auto: line['t'] = round(cursor + line.get('gap', 0.12), 3)
         d = len(a) / SR; cursor = line['t'] + d
         durs.append(round(d + 0.3, 2))
