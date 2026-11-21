@@ -1,3 +1,16 @@
+# IN THIS TOWN, YOU GET ARRESTED FOR TELLING THE TRUTH
+
+**Final video:** `truth_is_illegal.mp4` (1080×1920, 9:16, exactly 60.0 s, 30 fps, H.264 + AAC 192k). Checked: 1800 frames, plays through with no errors.
+
+Cast (defined once in `video/lib/human.js`): **Alex** (spiky black hair, black hoodie, gray cargo pants, white sneakers, crossbody bag), **Mom**, **the Teacher** (brown suit, glasses), **Leo** (green jacket, gray beanie), police, students and townspeople.
+Voices: narrator (deep), Alex, Mom (whisper), Teacher (British, formal), Leo. Captions show who is speaking and highlight key words in yellow.
+
+Scenes: 1 billboard "TRUTH IS A CRIME" and a police scan · 2 kitchen with Mom · 3 classroom: "Who stole the money?" · 4 the teacher's smile disappears, police arrive · 5 hallway chase, locked doors, Leo · 6 secret control room · 7 every screen shows Alex: "THE NEXT MAYOR HAS BEEN FOUND."
+
+**Rebuild:** `cd video && python3 audio.py truth`, then render in parts (`SCALE=1.5 START=0 END=12 PART=1 node render.mjs truth`, …) and join them with ffmpeg concat.
+
+---
+
 # IN THIS TOWN, NOBODY IS ALLOWED TO SLEEP
 
 **Final video:** `nobody_is_allowed_to_sleep.mp4` (1080×1920, 9:16, 60 s, 30 fps, AAC audio). Deep narrator voice, word-synced captions with yellow keywords, music, and sound effects.
