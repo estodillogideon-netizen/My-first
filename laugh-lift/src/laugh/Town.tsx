@@ -495,9 +495,9 @@ export const Town: React.FC<{ big?: boolean }> = ({ big = false }) => (
   <>
     <Suburb />
     <Cottage />
-    <Bush p={BUSH_HIDE} s={1.75} c="#3f9a36" />
-    <Bush p={[BUSH_HIDE[0] + 0.9, 0, BUSH_HIDE[2] - 0.1]} s={1.4} c="#4aa63f" />
-    <Blob p={BUSH_HIDE} sx={2.6} sz={1.8} op={0.5} />
+    <Bush p={BUSH_HIDE} s={1.4} c="#3f9a36" />
+    <Bush p={[BUSH_HIDE[0] + 0.85, 0, BUSH_HIDE[2] - 0.1]} s={1.15} c="#4aa63f" />
+    <Blob p={BUSH_HIDE} sx={2.2} sz={1.6} op={0.5} />
     {big ? <BigTown /> : null}
   </>
 );

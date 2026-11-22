@@ -69,6 +69,21 @@ for (let n = 0; n < FRAMES; n += 2) {
     if (segDist(cam.pos, c.a, c.b) < c.r * 0.85) note(row.id, `LENS_IN ${a.key}`);
   }
   const L0 = LENSES[row.id];
+  for (const it of st.items) if (it.k === "cloud" && Math.abs(cam.pos[1] - it.p[1] - 0.2 * it.s) < 1.1 * it.s && Math.hypot(cam.pos[0] - it.p[0], cam.pos[2] - it.p[2]) < 2.9 * it.s) note(row.id, "IN_CLOUD");
+  if (L0 && L0.kind !== "F") {
+    // something big in the near half of the view line (foreground blocking)
+    for (const b of st.actors) {
+      const c = capsule(b);
+      const q0 = cam.pos, q1 = cam.look;
+      const d = Math.hypot(q1[0] - q0[0], q1[1] - q0[1], q1[2] - q0[2]);
+      let m = 1e9;
+      for (let i = 1; i < 20; i++) {
+        const u = (i / 20) * Math.min(0.6, 2.2 / Math.max(0.1, d));
+        m = Math.min(m, segDist([q0[0] + (q1[0] - q0[0]) * u, q0[1] + (q1[1] - q0[1]) * u, q0[2] + (q1[2] - q0[2]) * u], c.a, c.b));
+      }
+      if (m < c.r * 0.7) note(row.id, `NEAR_BLOCK ${b.key}`);
+    }
+  }
   if (L0 && L0.kind === "F") {
     const a = st.actors.find((x) => x.key === L0.key);
     if (!a) {

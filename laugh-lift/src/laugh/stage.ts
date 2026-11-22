@@ -401,7 +401,7 @@ const bedroom = (t: number): Stage => {
   // Grandpa at the bedside, checking the knot at the foot post twice
   const c1 = W(12, "checks"), c2 = W(12, "twice");
   const tugs = [c1 + 0.05, c2 + 0.05].reduce((m, a) => m + (t > a && t < a + 0.45 ? Math.sin((Math.PI * (t - a)) / 0.45) : 0), 0);
-  const gp = stand(-0.85, 0.42, -Math.PI / 2 + 0.25, g, { pitch: 0.18, armL: 1.15 - 0.28 * tugs, outL: 0.05, armR: 0.2, headPitch: 0.35, headYaw: 0.1 });
+  const gp = stand(-1.85, 1.2, Math.PI, g, { pitch: 0.28, armL: 1.05 - 0.28 * tugs, outL: -0.08, armR: 0.95 - 0.2 * tugs, outR: -0.08, headPitch: 0.3, headYaw: 0.05 });
   actors.push(mk("grandpa", GRANDPA, g, gp, "flat", 2.1, 0, 0, { blink: false }));
   const an = ankle(tp2, "R", s);
   const post = ROOM_BED.post;
@@ -424,8 +424,8 @@ const tomoAlt = (t: number) => {
     [
       [snap, 1.65], [W(18, "missed.") - 0.2, 2.45], [ST("E16"), 3.6], [ST("E17"), 8.0], [ST("F02"), 13], [ST("F03"), 17], [ST("F05"), 21.5],
       [ST("F07"), 25.5], [ST("F09"), 33], [ST("F11"), 41], [ST("F13"), 52], [ST("F14"), 68], [ST("F15"), 76], [ST("F16"), 79], [ST("F17"), 78],
-      [ST("F18"), 82], [ST("F18b"), 88], [ST("F20"), 101], [ST("G01"), 106], [ST("G08"), 124], [W(34, "caught"), 125], [ST("H03"), 125.5],
-      [ST("H04"), 131], [ST("H10"), 132], [ST("H12"), 132], [ST("H15"), 124], [ST("H15b"), 42], [ST("H17"), 9.5], [ST("H20"), 9.0],
+      [ST("F18"), 82], [ST("F18b"), 88], [ST("F20"), 101], [ST("G01"), 106], [ST("G08"), 124], [W(34, "caught"), 124.6], [ST("H03"), 125.2],
+      [ST("H04"), 126.8], [ST("H10"), 127], [ST("H12"), 126.6], [ST("H15"), 121], [ST("H15b"), 42], [ST("H17"), 9.5], [ST("H20"), 9.0],
     ],
     t,
   );
@@ -440,9 +440,10 @@ const party = (t: number): Stage => {
   // ---------------------------------------------------------------- the set dressing
   items.push({ k: "table", p: TB });
   items.push({ k: "banner", p: [TB[0], 2.35, 6.55], text: "HAPPY BIRTHDAY!", w: 3.6 });
-  items.push({ k: "bunch", at: [TB[0] - 1.15, 0.78, TB[2] - 0.3], h: 1.5, n: 5, seed: 1 });
-  items.push({ k: "stake", p: STAKE, h: 1.0 });
-  items.push({ k: "bunch", at: [STAKE[0], 1.0, STAKE[2]], h: 1.0, n: 6, seed: 4 });
+  if (t < ST("F02") || t > ST("H20") - 0.3) {
+    items.push({ k: "stake", p: STAKE, h: 2.6 });
+    items.push({ k: "bunch", at: [STAKE[0], 2.6, STAKE[2]], h: 1.0, n: 6, seed: 4 });
+  }
   items.push({ k: "bunch", at: [TB[0] + 1.9, 0.0, TB[2] - 0.9], h: 1.8, n: 4, seed: 7 });
   // ---------------------------------------------------------------- the clown, the banana, the cake, the wig
   const slip = W(15, "slipped") + 0.05;
@@ -488,19 +489,19 @@ const party = (t: number): Stage => {
     if (t > faceIn + 1.2) {
       // he pulls his face out of the cake and sits on the grass beside the table, bald, frosting on his face
       const uu = ss(faceIn + 1.2, faceIn + 1.8, t);
-      const seat = base(TB[0] + 1.55, 4.15, -0.4, cs);
-      cp = { ...cp, x: lerp(cp.x, seat.x, uu), z: lerp(cp.z, seat.z, uu), y: lerp(cp.y, seat.y, uu), pitch: lerp(cp.pitch, 0, uu), legL: lerp(cp.legL, 0, uu), legR: lerp(cp.legR, 0, uu), yaw: lerp(0, -0.4, uu), armL: lerp(cp.armL, 0.3, uu), armR: lerp(cp.armR, 0.3, uu) };
+      const seat = base(CAKE[0] + 0.1, 3.95, 0, cs);
+      cp = { ...cp, x: lerp(cp.x, seat.x, uu), z: lerp(cp.z, seat.z, uu), y: lerp(cp.y, seat.y, uu), pitch: lerp(cp.pitch, 0, uu), legL: lerp(cp.legL, 0, uu), legR: lerp(cp.legR, 0, uu), yaw: lerp(0, Math.PI - 0.25, ss(faceIn + 1.6, faceIn + 2.3, t)), armL: lerp(cp.armL, 0.3, uu), armR: lerp(cp.armR, 0.3, uu), headYaw: 0.3 * Math.sin(t * 2.2) };
       clownEmo = "shock";
     }
     if (t > wigOff) wigOn = false;
   }
   // later beats for the clown: looks up at the flight (shock), cries at the end
   if (t > ST("F02")) {
-    cp = stand(TB[0] + 1.7, 4.0, -0.5, cs, { headPitch: -0.55, armL: 0.3, armR: 0.3 });
+    cp = stand(2.2, 4.3, -0.3, cs, { headPitch: -0.55, armL: 0.3, armR: 0.3 });
     clownEmo = "shock";
   }
   if (t > ST("H22") - 0.2) {
-    cp = stand(TB[0] + 1.75, 4.05, -0.35, cs, { headPitch: -0.05, armL: 2.2, armR: 2.2, outL: 0.25, outR: 0.25 });
+    cp = stand(2.0, 4.2, -0.45, cs, { headPitch: -0.05, armL: 2.2, armR: 2.2, outL: 0.25, outR: 0.25 });
     clownEmo = t > W(46, "clown") - 0.1 ? "cry" : "joy";
   }
   actors.push(mk("clown", CLOWN, cs, cp, clownEmo, 9.1, 0, 0, { wig: wigOn }));
@@ -634,7 +635,7 @@ const party = (t: number): Stage => {
   if (t >= ST("G08")) {
     const caught = W(34, "caught");
     // Tomo hangs in the sky; Grandpa arrives from below and their hands meet; positions follow the hand
-    const hold = t < ST("H10") || t > ST("H12") - 0.2;
+    const hold = t < ST("H10") || t > ST("H13");
     const hug = !hold;
     const a = tomoAlt(t);
     // drift toward the yard on the way down; over the cottage for the point
@@ -643,26 +644,28 @@ const party = (t: number): Stage => {
       if (tt < ST("H15")) return base0;
       if (tt < ST("H17")) return lerp3(base0, [-2.6, 0, 4.0], ss(ST("H15"), ST("H17"), tt));
       if (tt < ST("H20")) return [-2.6, 0, 4.0];
-      return lerp3([-2.6, 0, 4.0], [CAKE[0], 0, CAKE[2] - 0.1], ss(ST("H20"), land, tt));
+      const mid: V3 = [STAKE[0] - 0.1, 0, STAKE[2] + 0.15];
+      const u = ss(ST("H20"), land, tt);
+      return u < 0.5 ? lerp3([-2.6, 0, 4.0], mid, u * 2) : lerp3(mid, [CAKE[0], 0, CAKE[2] - 0.1], (u - 0.5) * 2);
     };
     const pth = path(t);
     tx = pth[0];
     tz = pth[2];
     let alt = a;
     if (t > ST("H20")) alt = keys([[ST("H20"), 9.0], [land, CAKE[1] + 0.12]], t);
-    tyaw = hug ? 0.0 : 0.55;
-    if (t > ST("H17") && t < ST("H20")) tyaw = -0.4;
+    tyaw = hug ? 0.0 : -0.55;
+    if (t > ST("H17") && t < ST("H20")) tyaw = -0.75;
     const giggly = t < ST("H04") || (t > ST("H12") - 0.3 && t < W(42, "quiet."));
-    tp = float(tx, tz, tyaw, s, alt, t, 1.9, { armR: 1.15, outR: 0.05, armL: 0.3, outL: 0.4 });
-    if (t < caught + 0.1) tp = { ...tp, armR: lerp(0.35, 1.9, ss(ST("G08"), caught, t)), headPitch: 0.45 };
+    tp = float(tx, tz, tyaw, s, alt, t, 1.9, { armR: 0.45, outR: 1.05, armL: 0.3, outL: 0.4 });
+    if (t < caught + 0.1) tp = { ...tp, armR: lerp(0.35, 0.45, ss(ST("G08"), caught, t)), outR: lerp(0.4, 1.05, ss(ST("G08"), caught, t)), headPitch: 0.45 };
     tEmo = t < ST("H01") ? "shock" : t < ST("H04") ? "joy" : t < ST("H05") ? "happy" : t < ST("H07") ? "curious" : t < ST("H10") ? "sad" : t < ST("H12") ? "smile" : t < ST("H13") ? "sleep" : "smile";
     if (t > ST("H09") && t < ST("H10")) tEmo = "curious";
     if (t >= ST("H03") && t < ST("H04")) tp = laughL(tp, t, 0.9);
     if (giggly && t >= ST("H03")) haBubbles(items, facePoint(tp, s), t, ST("H03"), ST("H04") - 0.2, 81, 0.9, 0.3);
     if (t > ST("H20")) tEmo = "joy";
     // Grandpa
-    const gyawS = hug ? 0.0 : -0.75;
-    let gpS = float(0, 0, gyawS, g, 0, t, 2.6, { armL: 1.2, outL: 0.0 });
+    const gyawS = hug ? 0.0 : 0.6;
+    let gpS = float(0, 0, gyawS, g, 0, t, 2.6, { armL: 0.45, outL: 1.0 });
     if (hold) {
       // put his L hand on Tomo's R hand
       const th = hand(tp, "R", s);
@@ -671,7 +674,7 @@ const party = (t: number): Stage => {
       if (t < caught) {
         // arriving from below
         const u = ss(ST("G08"), caught, t);
-        gpS = { ...gpS, y: gpS.y - 2.2 * (1 - u), armL: lerp(2.9, 1.2, u) };
+        gpS = { ...gpS, y: gpS.y - 2.2 * (1 - u), armL: lerp(2.9, 0.45, u), outL: lerp(0.2, 1.0, u) };
       }
     } else {
       // the hug: Grandpa behind Tomo, both facing the same way, his arms round Tomo's shoulders
@@ -685,7 +688,7 @@ const party = (t: number): Stage => {
     // the point at the cottage roof: the far arm (R) toward the cottage, his body turned to it
     if (t > ST("H17") - 0.2 && t < ST("H20")) {
       const k = ss(ST("H17") - 0.1, ST("H17") + 0.6, t) * (1 - ss(ST("H19") + 0.2, ST("H19") + 0.8, t));
-      gpS = { ...gpS, armR: lerp(gpS.armR, 1.15, k), outR: lerp(gpS.outR, 0.3, k), headYaw: -0.2 * k };
+      gpS = { ...gpS, armR: lerp(gpS.armR, 0.35, k), outR: lerp(gpS.outR, 1.25, k), headYaw: 0.2 * k };
       gEmo = "smile";
     }
     if (t > ST("H20")) {
@@ -721,7 +724,7 @@ const party = (t: number): Stage => {
   const crowdUp = t > ST("F02") && t < ST("H22") - 0.2;
   const cheer = t > ST("H22") - 0.2;
   const guestsAt: [number, number, number, number][] = [
-    [-1.05, 4.9, 0.5, SC.kid], [2.15, 4.55, -0.5, SC.kid], [2.85, 3.45, -0.8, SC.kid], [-0.15, 3.35, 0.1, SC.adult],
+    [-1.05, 4.9, 0.5, SC.kid], [2.45, 5.6, -0.9, SC.kid], [2.9, 3.3, -0.8, SC.kid], [-0.45, 4.35, 0.1, SC.adult],
   ];
   guestsAt.forEach(([x, z, yaw, sc], i) => {
     const look = GUESTS[i];
@@ -749,7 +752,7 @@ const party = (t: number): Stage => {
     const rk = SC.rika;
     const throwT = W(23, "threw") - 0.15;
     const dropT = W(23, "Way,") + 0.3;
-    let rp = stand(-3.15, 2.0, 0.3, rk, { headPitch: -0.75, armL: 0.4, armR: 0.4 });
+    let rp = stand(-1.6, 1.4, Math.PI - 0.3, rk, { headPitch: -0.75, armL: 0.4, armR: 0.4 });
     let rEmo: Emotion = "shock";
     if (t > throwT - 0.3 && t < dropT + 0.9) {
       const u = pop(clamp((t - throwT + 0.3) / 0.75));
@@ -759,7 +762,7 @@ const party = (t: number): Stage => {
     if (t > dropT + 0.2) rEmo = "flat";
     if (t > W(31, "huge,") + 0.2) {
       rEmo = "shock";
-      rp = { ...rp, headPitch: -0.35, yaw: 0.6 };
+      rp = { ...rp, headPitch: -0.35, yaw: Math.PI - 0.6 };
     }
     if (t > ST("G06") && t < ST("H22")) {
       rEmo = "joy";
@@ -768,7 +771,7 @@ const party = (t: number): Stage => {
     let rl = 0;
     if (cheer) {
       rl = 0.22 + 0.1 * Math.max(0, Math.sin(t * 2 * Math.PI * 1.3));
-      rp = { ...rp, y: rp.y + rl, armL: 2.7, armR: 2.6, outL: 0.35, outR: 0.35, headPitch: 0, yaw: 0.5 };
+      rp = { ...rp, y: rp.y + rl, armL: 2.7, armR: 2.6, outL: 0.35, outR: 0.35, headPitch: 0, yaw: Math.PI - 0.5 };
       rEmo = "joy";
     }
     actors.push(mk("rika", RIKA, rk, rp, rEmo, 4.4, rl));
@@ -784,7 +787,7 @@ const party = (t: number): Stage => {
     // Mom with the three kites
     const ms = SC.mom;
     const kiteA = W(22, "tied") - 0.3;
-    let mp = stand(0.45, 2.2, -0.2, ms, { headPitch: -0.75, armL: 0.4, armR: 0.4 });
+    let mp = stand(2.4, 1.6, -0.6, ms, { headPitch: -0.75, armL: 0.4, armR: 0.4 });
     let mEmo: Emotion = "shock";
     if (t > kiteA && t < ST("G01")) {
       mp = { ...mp, armL: 1.9, outL: 0.1, armR: 1.7, outR: 0.1 };
@@ -809,11 +812,11 @@ const party = (t: number): Stage => {
     const ladT = W(21, "brought") - 0.2;
     const fp = stand(-3.6, 3.55, 0.6, fs, { headPitch: -0.7, armL: 1.3, armR: 1.25, outL: 0.15, outR: 0.15 });
     actors.push(mk("fire", FIRE, fs, cheer ? { ...fp, armL: 2.7, armR: 2.6, headPitch: 0 } : fp, cheer ? "joy" : "shock", 13.3));
-    const lh = t < ladT ? 2.8 : lin([[ladT, 2.8], [W(21, "Too") - 0.15, 12.0]], t);
+    const lh = t < ladT ? 2.8 : lin([[ladT, 2.8], [W(21, "Too") - 0.15, 12.0], [ST("F05") + 1.5, 12.0], [ST("F07"), 2.8]], t);
     items.push({ k: "ladder", p: [-3.25, 0.02, 3.95], h: cheer ? 2.8 : lh });
   }
   // ---------------------------------------------------------------- birds, clouds, shoes, the bird on his head
-  if (t > ST("E16")) {
+  if (t > ST("E17") - 0.1) {
     // a small flock round the roof height, scattering when he passes
     for (let i = 0; i < 6; i++) {
       const t0 = ST("E17");
@@ -826,8 +829,8 @@ const party = (t: number): Stage => {
   if (t > ST("F02")) {
     // clouds around his altitude band (static in the world: he rises past them)
     const C: [number, number, number, number][] = [
-      [-6, 30, -2, 2.2], [5, 38, 8, 2.6], [-2.5, 60, 10, 3.0], [6, 74, -4, 2.4], [-8, 88, 6, 3.2], [2.5, 93, 3.0, 2.6], [-1.3, 131.5, 3.2, 2.4],
-      [9, 120, 12, 3.4], [-12, 112, -6, 3.6], [-4, 140, -10, 3.2], [12, 136, 2, 3.0], [-10, 128, 14, 3.2], [-2.0, 50, -6, 3.0], [-10, 20, 12, 3.0],
+      [-16, 44, -8, 2.4], [14, 52, 12, 2.6], [-14, 62, 16, 3.0], [16, 74, -10, 2.4], [-18, 86, 8, 3.2], [2.0, 93, 8.6, 2.0], [-1.3, 131.5, 3.2, 2.4],
+      [12, 122, 16, 3.4], [-15, 114, -8, 3.6], [-6, 142, -14, 3.2], [16, 136, 2, 3.0], [-14, 128, 16, 3.2], [10, 100, -14, 3.0], [-12, 104, 14, 2.8],
     ];
     C.forEach(([x, y, z, sc], i) => items.push({ k: "cloud", p: [x, y, z], s: sc, seed: i * 1.7 }));
     // shoes fall from his feet

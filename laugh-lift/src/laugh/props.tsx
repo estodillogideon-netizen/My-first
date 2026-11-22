@@ -269,9 +269,9 @@ export const Cloud: React.FC<{ p: V3; s?: number; seed?: number }> = ({ p, s = 1
       const a = (i / 9) * Math.PI * 2 + seed;
       const r = i === 0 ? 0 : 1.1 + 0.8 * hash(seed + i);
       const k = i === 0 ? 1.6 : 0.8 + 0.6 * hash(seed * 7 + i);
-      return <mesh key={i} geometry={geoOf("cloudPuff", () => new THREE.IcosahedronGeometry(1, 3))} material={plastic(i % 3 ? "#ffffff" : "#eef2fa", { rough: 0.95 })} position={[Math.cos(a) * r * 1.4, (i === 0 ? 0.4 : 0.1 * hash(i + seed)) + 0.2, Math.sin(a) * r * 0.9]} scale={[k, k * 0.72, k]} />;
+      return <mesh key={i} geometry={geoOf("cloudPuff", () => new THREE.IcosahedronGeometry(1, 3))} material={plastic(i % 3 ? "#ffffff" : "#eef2fa", { rough: 0.95, emissive: "#ffffff", ei: 0.62 })} position={[Math.cos(a) * r * 1.4, (i === 0 ? 0.4 : 0.1 * hash(i + seed)) + 0.2, Math.sin(a) * r * 0.9]} scale={[k, k * 0.72, k]} />;
     })}
-    <mesh geometry={geoOf("cloudBase", () => new THREE.CylinderGeometry(2.4, 2.1, 0.5, 24))} material={plastic("#d8e0ee", { rough: 0.95 })} position={[0, -0.25, 0]} scale={[1.2, 1, 0.8]} />
+    <mesh geometry={geoOf("cloudBase", () => new THREE.CylinderGeometry(2.4, 2.1, 0.5, 24))} material={plastic("#e4eaf4", { rough: 0.95, emissive: "#ffffff", ei: 0.55 })} position={[0, -0.25, 0]} scale={[1.2, 1, 0.8]} />
   </group>
 );
 

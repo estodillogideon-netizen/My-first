@@ -102,14 +102,14 @@ const ActorView: React.FC<{ a: Actor }> = ({ a }) => {
   );
 };
 
-export const LaughLift: React.FC<{ sub?: boolean; at?: number; captions?: boolean }> = ({ sub = false, at, captions = true }) => {
+export const LaughLift: React.FC<{ sub?: boolean; subN?: number; at?: number; captions?: boolean }> = ({ sub = false, subN = 4, at, captions = true }) => {
   const g = useCurrentFrame();
   const ready = useFonts();
   const f = at !== undefined ? at : g;
-  const n0 = sub ? Math.floor(f / 4) : f;
+  const n0 = sub ? Math.floor(f / subN) : f;
   const row = shotAtFrame(n0);
   const shutter = FAST.has(row.id) ? 0.2 : 0.35;
-  const { n, fp } = sub ? subFrame(f, 4, shutter) : { n: f, fp: f };
+  const { n, fp } = sub ? subFrame(f, subN, shutter) : { n: f, fp: f };
   const t = Math.max(row.t, fp / 30);
   const st = stageAt(t);
   const cam = camFor(row.id, t, st);
@@ -119,7 +119,7 @@ export const LaughLift: React.FC<{ sub?: boolean; at?: number; captions?: boolea
   return (
     <AbsoluteFill style={{ background: "#6aa6f2" }}>
       <View mood={mood} cam={cam} t={t} blur={0}>
-        {st.set === "town" ? <Town big={st.big} /> : <Room t={t} earth={null} jarGlow={0} planets={false} jar={false} />}
+        {st.set === "town" ? <Town big={st.big} /> : <><Room t={t} earth={null} jarGlow={0} planets={false} jar={false} /><pointLight position={[-0.4, 1.7, 0.6]} color="#ffc890" intensity={3.2} distance={4.5} decay={2} /></>}
         {st.items.map((it, i) => (
           <ItemView key={i} it={it} t={t} cam={cam.pos} />
         ))}
