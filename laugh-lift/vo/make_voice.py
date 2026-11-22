@@ -4,7 +4,8 @@ cuts and captions of the existing render stay in sync. Writes vo/voice.wav (48 k
 
     python vo/make_voice.py vo/timings.json vo/voice.wav [voice] [rate] [pitch]
 
-voice: an espeak-ng voice (default mb-us3, a male MBROLA voice), rate in words per minute (default 215), pitch 0-99.
+voice: "pico" (SVOX Pico, rate/pitch in percent) or an espeak-ng voice (e.g. mb-us3, a male MBROLA voice; rate in
+words per minute, pitch 0-99).
 """
 import json, re, subprocess, sys, tempfile
 from pathlib import Path
@@ -40,7 +41,11 @@ def main(timings, out, voice="mb-us3", rate=215, pitch=55):
             nxt = turns[i + 1]["words"][0]["t"] if i + 1 < len(turns) else total
             slot = min(nxt - a - 0.06, tr["words"][-1]["end"] - a + 0.22)
             raw = tmp / f"l{i:02d}.wav"
-            subprocess.run(["espeak-ng", "-v", voice, "-s", str(rate), "-p", str(pitch), "-g", "1", "-w", str(raw), text], check=True, capture_output=True)
+            if voice == "pico":
+                # SVOX Pico: speed / pitch in percent (rate 100 = normal); a lively, fast narrator
+                subprocess.run(["pico2wave", "-l", "en-US", "-w", str(raw), f"<speed level='{rate}'><pitch level='{pitch}'>{text}</pitch></speed>"], check=True, capture_output=True)
+            else:
+                subprocess.run(["espeak-ng", "-v", voice, "-s", str(rate), "-p", str(pitch), "-g", "1", "-w", str(raw), text], check=True, capture_output=True)
             # trim the engine's leading/trailing silence, then fit into the slot
             trimmed = tmp / f"t{i:02d}.wav"
             subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", str(raw), "-af",
