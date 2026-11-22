@@ -1,0 +1,230 @@
+{
+ "title": "The Checkpoint That Lied",
+ "duration": 26.5,
+ "layout": "auto",
+ "captions": "words",
+ "voice": "am_michael",
+ "speed": 1.1,
+ "duck": 0.75,
+ "bed_gain": 0.45,
+ "narration": [
+  {
+   "gap": 0.15,
+   "text": "Lucas was ONE jump away from beating the hardest obby ever made.",
+   "voice": "am_michael",
+   "speed": 1.1,
+   "hl": [
+    "ONE",
+    "jump"
+   ],
+   "say": "Lucas was one jump away from beating the hardest obby ever made."
+  },
+  {
+   "gap": 0.5,
+   "text": "Okay. Last jump. Don't mess this up.",
+   "voice": "am_puck",
+   "speed": 1.1,
+   "who": "LUCAS"
+  },
+  {
+   "gap": 1.6,
+   "text": "He made it. The checkpoint turned green.",
+   "voice": "am_michael",
+   "speed": 1.1,
+   "hl": [
+    "green."
+   ]
+  },
+  {
+   "gap": 0.3,
+   "text": "Checkpoint saved.",
+   "voice": "af_bella",
+   "speed": 1.0,
+   "who": "CHECKPOINT",
+   "hl": [
+    "saved."
+   ],
+   "fx": "ghostlucas"
+  },
+  {
+   "gap": 0.3,
+   "text": "YES! Nine hundred ninety-nine stages! I'm a LEGEND!",
+   "voice": "am_puck",
+   "speed": 1.1,
+   "who": "LUCAS",
+   "hl": [
+    "LEGEND!"
+   ],
+   "say": "Yes! Nine hundred ninety-nine stages! I'm a legend!"
+  },
+  {
+   "gap": 0.5,
+   "text": "Then the floor disappeared.",
+   "voice": "am_michael",
+   "speed": 1.1,
+   "hl": [
+    "disappeared."
+   ]
+  },
+  {
+   "gap": 0.3,
+   "text": "Wait… WHAT?!",
+   "voice": "am_puck",
+   "speed": 1.1,
+   "who": "LUCAS",
+   "hl": [
+    "WHAT?!"
+   ],
+   "say": "Wait... what?!"
+  },
+  {
+   "gap": 1.3,
+   "text": "He respawned… at stage one.",
+   "voice": "am_michael",
+   "speed": 1.1,
+   "hl": [
+    "stage",
+    "one."
+   ],
+   "say": "He respawned... at stage one."
+  },
+  {
+   "gap": 0.4,
+   "text": "Just kidding. Progress not saved.",
+   "voice": "af_bella",
+   "speed": 1.0,
+   "who": "CHECKPOINT",
+   "hl": [
+    "not",
+    "saved."
+   ],
+   "fx": "ghostlucas"
+  },
+  {
+   "gap": 0.9,
+   "text": "…I'm uninstalling.",
+   "voice": "am_puck",
+   "speed": 1.1,
+   "who": "LUCAS",
+   "hl": [
+    "uninstalling."
+   ],
+   "say": "I'm uninstalling."
+  }
+ ],
+ "sfx": [
+  {
+   "t": 0,
+   "type": "wind",
+   "dur": 26,
+   "gain": 0.12
+  },
+  {
+   "t": 0,
+   "type": "hit",
+   "gain": 0.5
+  },
+  {
+   "t": 1.7,
+   "type": "whoosh",
+   "gain": 0.35
+  },
+  {
+   "t": 6.206999999999999,
+   "type": "heartbeat",
+   "dur": 0.8,
+   "gain": 0.4
+  },
+  {
+   "t": 6.706999999999999,
+   "type": "whoosh",
+   "gain": 0.5
+  },
+  {
+   "t": 6.706999999999999,
+   "type": "boing",
+   "gain": 0.25
+  },
+  {
+   "t": 8.198,
+   "type": "door",
+   "gain": 0.5
+  },
+  {
+   "t": 8.248000000000001,
+   "type": "coins",
+   "gain": 0.4
+  },
+  {
+   "t": 10.342,
+   "type": "ping",
+   "gain": 0.45
+  },
+  {
+   "t": 15.31,
+   "type": "glitch",
+   "dur": 0.5,
+   "gain": 0.35
+  },
+  {
+   "t": 15.667,
+   "type": "sub",
+   "gain": 0.6
+  },
+  {
+   "t": 16.388,
+   "type": "whoosh",
+   "gain": 0.6
+  },
+  {
+   "t": 16.838,
+   "type": "riser",
+   "gain": 0.25
+  },
+  {
+   "t": 18.404,
+   "type": "vanish",
+   "gain": 0.5
+  },
+  {
+   "t": 18.404,
+   "type": "hit",
+   "gain": 0.4
+  },
+  {
+   "t": 20.917,
+   "type": "error",
+   "gain": 0.35
+  },
+  {
+   "t": 24.995,
+   "type": "boing",
+   "gain": 0.45
+  },
+  {
+   "t": 25.025,
+   "type": "hit",
+   "gain": 0.5
+  }
+ ],
+ "music": [
+  {
+   "t": 0,
+   "dur": 15.667,
+   "kind": "bouncy",
+   "gain": 0.2
+  },
+  {
+   "t": 17.604000000000003,
+   "dur": 7.4709999999999965,
+   "kind": "bouncy",
+   "gain": 0.13
+  }
+ ],
+ "mute": [
+  {
+   "t": 15.717,
+   "dur": 0.6
+  }
+ ]
+}
