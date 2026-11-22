@@ -4,7 +4,7 @@ cuts and captions of the existing render stay in sync. Writes vo/voice.wav (48 k
 
     python vo/make_voice.py vo/timings.json vo/voice.wav [voice] [rate] [pitch]
 
-voice: "pico" (SVOX Pico, rate/pitch in percent) or an espeak-ng voice (e.g. mb-us3, a male MBROLA voice; rate in
+voice: "piper" (a neural voice: env PIPER, PIPER_MODEL; rate in percent), "pico" (SVOX Pico, rate/pitch in percent) or an espeak-ng voice (e.g. mb-us3, a male MBROLA voice; rate in
 words per minute, pitch 0-99).
 """
 import json, re, subprocess, sys, tempfile
@@ -41,7 +41,13 @@ def main(timings, out, voice="mb-us3", rate=215, pitch=55):
             nxt = turns[i + 1]["words"][0]["t"] if i + 1 < len(turns) else total
             slot = min(nxt - a - 0.06, tr["words"][-1]["end"] - a + 0.22)
             raw = tmp / f"l{i:02d}.wav"
-            if voice == "pico":
+            if voice == "piper":
+                # Piper neural voice (a natural male narrator: en_US-joe-medium). PIPER = the piper binary, PIPER_MODEL =
+                # the .onnx voice; rate = speaking speed in percent (length scale = 100 / rate)
+                import os
+                subprocess.run([os.environ.get("PIPER", "piper"), "-m", os.environ["PIPER_MODEL"], "-f", str(raw), "--length-scale", f"{100 / rate:.3f}",
+                                "--noise-scale", "0.7", "--noise-w-scale", "0.9", "--sentence-silence", "0.12"], input=text, text=True, check=True, capture_output=True)
+            elif voice == "pico":
                 # SVOX Pico: speed / pitch in percent (rate 100 = normal); a lively, fast narrator
                 subprocess.run(["pico2wave", "-l", "en-US", "-w", str(raw), f"<speed level='{rate}'><pitch level='{pitch}'>{text}</pitch></speed>"], check=True, capture_output=True)
             else:
