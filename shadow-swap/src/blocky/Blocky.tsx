@@ -292,6 +292,62 @@ const faceTex = (emotion: Emotion, blink: boolean, cheeks: Look["cheeks"], es = 
     }
   });
 
+// ------------------------------------------------------------------ fabric (multiplied into the clothes' colours)
+/** knit: columns of little V stitches with soft shading (sweaters, shirts) */
+const knitTex = () => {
+  const t = canvasTexture("fabricKnit", 256, 256, (g, W) => {
+    g.fillStyle = "#f4f4f4";
+    g.fillRect(0, 0, W, W);
+    const cols = 8, rows = 10, cw = W / cols, rh = W / rows;
+    for (let j = 0; j < rows; j++)
+      for (let i = 0; i < cols; i++) {
+        const x = i * cw, y = j * rh;
+        for (const s of [-1, 1]) {
+          const gr = g.createLinearGradient(x + cw / 2, y, x + cw / 2 + s * cw * 0.45, y + rh);
+          gr.addColorStop(0, "#ffffff");
+          gr.addColorStop(1, "#d2d2d2");
+          g.fillStyle = gr;
+          g.beginPath();
+          g.moveTo(x + cw / 2, y + rh * 0.95);
+          g.lineTo(x + cw / 2 + s * cw * 0.46, y + rh * 0.05);
+          g.lineTo(x + cw / 2 + s * cw * 0.46, y + rh * 0.45);
+          g.lineTo(x + cw / 2 + s * cw * 0.06, y + rh * 1.25);
+          g.closePath();
+          g.fill();
+        }
+        g.fillStyle = "rgba(120,120,120,0.35)";
+        g.fillRect(x + cw / 2 - 1, y, 2, rh);
+      }
+  });
+  t.wrapS = t.wrapT = THREE.RepeatWrapping;
+  t.repeat.set(2.5, 2.5);
+  return t;
+};
+/** denim / twill: fine diagonal ribs and a few slubs (trousers, coveralls) */
+const denimTex = () => {
+  const t = canvasTexture("fabricDenim", 256, 256, (g, W) => {
+    g.fillStyle = "#e6e6ea";
+    g.fillRect(0, 0, W, W);
+    g.lineWidth = 3;
+    for (let k = -W; k < W * 2; k += 8) {
+      g.strokeStyle = (k / 8) % 2 ? "rgba(255,255,255,0.85)" : "rgba(150,150,165,0.55)";
+      g.beginPath();
+      g.moveTo(k, 0);
+      g.lineTo(k + W, W);
+      g.stroke();
+    }
+    let seed = 7;
+    const r = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+    for (let i = 0; i < 260; i++) {
+      g.fillStyle = r() < 0.5 ? "rgba(255,255,255,0.5)" : "rgba(110,110,130,0.35)";
+      g.fillRect(r() * W, r() * W, 2 + r() * 8, 1.5);
+    }
+  });
+  t.wrapS = t.wrapT = THREE.RepeatWrapping;
+  t.repeat.set(3, 3);
+  return t;
+};
+
 const printTex = (kind: Look["print"], color: string) =>
   canvasTexture(`print|${kind}|${color}`, 512, 512, (g, W) => {
     g.clearRect(0, 0, W, W);
@@ -490,8 +546,8 @@ export const Blocky: React.FC<{ pose: Pose; look: Look; emotion: Emotion; blink?
   const S = SPEC;
   const skin = plastic(look.skin, { rough: 0.42 });
   const hand = plastic(mix(look.skin, "#fff4e8", 0.28), { rough: 0.4 });
-  const shirt = plastic(look.shirt, { rough: 0.55 });
-  const pants = plastic(look.pants, { rough: 0.6 });
+  const shirt = plastic(look.shirt, { rough: 0.72, map: look.shirt === look.pants ? denimTex() : knitTex() });
+  const pants = plastic(look.pants, { rough: 0.75, map: denimTex() });
   const shoes = plastic(socks ?? look.shoes, { rough: socks ? 0.8 : 0.45 });
   const sole = plastic(socks ?? look.sole, { rough: socks ? 0.8 : 0.5 });
   const face = plastic("#ffffff", { decal: true, rough: 0.45, map: faceTex(emotion, blink, look.cheeks, look.eyeScale ?? 1) });
