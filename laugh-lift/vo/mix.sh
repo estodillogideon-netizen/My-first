@@ -3,7 +3,7 @@
 # then (optionally) mux it onto a video: bash vo/mix.sh [video.mp4 out.mp4]
 set -euo pipefail
 cd "$(dirname "$0")/.."
-VOICE="${VOICE:-vo/voice_pico.wav}"
+VOICE="${VOICE:-vo/voice_normal.wav}"
 ffmpeg -v error -y -i "$VOICE" -i vo/music.wav -i vo/sfx.wav -filter_complex "\
 [0:a]aformat=sample_rates=48000:channel_layouts=stereo,volume=1.0,asplit=2[v][vk];\
 [1:a]volume=0.22[m];[m][vk]sidechaincompress=threshold=0.03:ratio=6:attack=20:release=350[md];\
