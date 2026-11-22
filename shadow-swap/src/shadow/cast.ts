@@ -1,5 +1,5 @@
 // The cast of "The Shadow Swap" (our own characters, one blocky family; new outfits, nothing reused from Laugh Lift):
-//   KAI        the hero, ~10: mustard hoodie (hood + kangaroo pocket + drawstrings), dark jeans, red sneakers
+//   KAI        the hero, ~10: plain mustard sweater with darker cuffs, dark jeans, red sneakers
 //   OLLIE      the school janitor: navy work cap with a gold bill, white beard, blue-grey coveralls with an OLLIE patch,
 //              a key ring on the belt
 //   OLLIE_YOUNG  the same coveralls thirty years ago (dark hair, no beard)
@@ -12,7 +12,7 @@ import type { Look } from "../blocky/Blocky";
 const SK = "#e9b98c";
 export const KAI: Look = {
   skin: SK, shirt: "#f2b233", pants: "#2f3d66", shoes: "#e8402a", sole: "#ffffff", hair: "#3a2418", hairStyle: "shaggy",
-  accent: "#d89418", print: "none", cheeks: "none", eyeScale: 1.22, cuffs: "#d89418", acc: { hood: ["#e8a62a", "#d89418"] },
+  accent: "#d89418", print: "none", cheeks: "none", eyeScale: 1.22, cuffs: "#d89418",
 };
 export const OLLIE: Look = {
   skin: "#d9a47a", shirt: "#5b7fa6", pants: "#5b7fa6", shoes: "#3a2a1e", sole: "#1a1410", hair: "#e8e8ec", hairStyle: "bald",
