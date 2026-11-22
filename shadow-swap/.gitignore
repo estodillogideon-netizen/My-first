@@ -1,0 +1,6 @@
+node_modules/
+build/
+out/
+vo/music.wav
+vo/sfx.wav
+vo/mix.wav
