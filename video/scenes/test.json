@@ -1,0 +1,114 @@
+{
+ "title": "Style test",
+ "duration": 9.6,
+ "layout": "auto",
+ "captions": "word1",
+ "voice": "am_michael",
+ "speed": 1.15,
+ "duck": 0.75,
+ "bed_gain": 0.45,
+ "narration": [
+  {
+   "gap": 0.05,
+   "text": "In this town, every kid gets a pet on their birthday.",
+   "hl": []
+  },
+  {
+   "gap": 0.08,
+   "text": "A dog. A cat. Even a dragon."
+  },
+  {
+   "gap": 0.08,
+   "text": "But when Leo opened his present…",
+   "say": "But when Leo opened his present..."
+  },
+  {
+   "gap": 0.05,
+   "text": "something inside opened its eyes."
+  }
+ ],
+ "sfx": [
+  {
+   "t": 0,
+   "type": "whoosh",
+   "gain": 0.4
+  },
+  {
+   "t": 0.846,
+   "type": "whoosh",
+   "gain": 0.25
+  },
+  {
+   "t": 2.249,
+   "type": "coins",
+   "gain": 0.25
+  },
+  {
+   "t": 3.116,
+   "type": "boing",
+   "gain": 0.25
+  },
+  {
+   "t": 3.671,
+   "type": "ping",
+   "gain": 0.25
+  },
+  {
+   "t": 4.434,
+   "type": "sub",
+   "gain": 0.5
+  },
+  {
+   "t": 4.434,
+   "type": "whoosh",
+   "gain": 0.4
+  },
+  {
+   "t": 5.681,
+   "type": "creak",
+   "gain": 0.35
+  },
+  {
+   "t": 6.877,
+   "type": "heartbeat",
+   "dur": 1.2,
+   "gain": 0.45
+  },
+  {
+   "t": 7.7989999999999995,
+   "type": "hit",
+   "gain": 0.85
+  },
+  {
+   "t": 7.7989999999999995,
+   "type": "sub",
+   "gain": 0.6
+  }
+ ],
+ "music": [
+  {
+   "t": 0,
+   "dur": 5.069,
+   "kind": "bouncy",
+   "gain": 0.2
+  },
+  {
+   "t": 5.069,
+   "dur": 4.531,
+   "kind": "tension",
+   "gain": 0.22,
+   "rise": [
+    0,
+    0.5,
+    4,
+    1
+   ]
+  }
+ ],
+ "mute": [
+  {
+   "t": 6.827,
+   "dur": 0.9
+  }
+ ]
+}
