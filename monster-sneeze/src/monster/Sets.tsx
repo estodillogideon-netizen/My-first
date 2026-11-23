@@ -249,24 +249,26 @@ export const Bed: React.FC<{ bounce?: number; blanket: Blanket; shake?: number; 
   const bl = plastic("#b8a0ff", { rough: 0.85, map: quilt() });
   let blanketNode: React.ReactNode;
   if (blanket === "fold") blanketNode = <mesh geometry={rbox(w + 0.06, 0.1, 0.62, 0.04)} material={bl} position={[cx, top + 0.05, z1 - 0.36]} castShadow receiveShadow />;
-  else if (blanket === "lie")
+  else if (blanket === "lie" || blanket === "lifted")
+    // a thick, soft quilt over her legs and up to her chest (or her lap when she sits up), draping over the sides
     blanketNode = (
       <>
-        <mesh geometry={rbox(w + 0.08, 0.18, 1.3, 0.07)} material={bl} position={[cx, top + 0.07, z1 - 0.68]} castShadow receiveShadow />
-        <mesh geometry={rbox(w + 0.1, 0.06, 0.16, 0.03)} material={plastic("#ffffff", { rough: 0.7 })} position={[cx, top + 0.15, z1 - 1.3]} />
+        <mesh geometry={rbox(w + 0.1, 0.34, 1.34, 0.12)} material={bl} position={[cx, top + 0.12, z1 - 0.69]} castShadow receiveShadow />
+        <mesh geometry={rbox(w + 0.12, 0.07, 0.16, 0.03)} material={plastic("#ffffff", { rough: 0.7 })} position={[cx, top + 0.27, z1 - 1.3]} />
       </>
     );
-  else if (blanket === "over")
+  else
+    // over her head: a shaking mound, her two pigtail puffs and bows peeking out at the pillow end
     blanketNode = (
       <group position={[cx, top, cz - 0.08]} scale={[1 + 0.025 * shake, 1 - 0.04 * shake, 1]}>
-        <mesh geometry={rbox(w + 0.08, 0.32, L - 0.25, 0.14)} material={bl} position={[0, 0.1, 0.1]} castShadow receiveShadow />
-        <mesh geometry={rbox(0.7, 0.26, 0.9, 0.13)} material={bl} position={[0.02, 0.3, -0.25]} castShadow />
-      </group>
-    );
-  else
-    blanketNode = (
-      <group position={[cx, top + 0.08, z1 - 0.2]} rotation={[0.45 * lift, 0, 0]}>
-        <mesh geometry={rbox(w + 0.08, 0.1, 1.5, 0.04)} material={bl} position={[0, 0.0, -0.75]} castShadow receiveShadow />
+        <mesh geometry={rbox(w + 0.08, 0.36, L - 0.25, 0.15)} material={bl} position={[0, 0.12, 0.1]} castShadow receiveShadow />
+        <mesh geometry={rbox(0.7, 0.26, 0.9, 0.13)} material={bl} position={[0.02, 0.32, -0.25]} castShadow />
+        {[-1, 1].map((k) => (
+          <group key={k} position={[k * 0.17, 0.3, -(L - 0.25) / 2 + 0.12]}>
+            <mesh geometry={geoOf("peekPuff", () => new THREE.IcosahedronGeometry(0.085, 3))} material={plastic("#6a3a1e", { rough: 0.62 })} />
+            <mesh geometry={rbox(0.09, 0.07, 0.03, 0.015)} material={plastic("#ff3a7a", { rough: 0.4 })} position={[k * -0.06, 0.03, 0.05]} rotation={[0, 0, k * 0.6]} />
+          </group>
+        ))}
       </group>
     );
   return (
