@@ -66,6 +66,18 @@ for (const part of [1, 2] as const) {
     const subj = Ls.kind === "F" ? head(Ls.key)(st, t) : Ls.kind === "X" ? Ls.subj(st, t) : Ls.look(st, t);
     const q = project(cam, subj);
     if (q.z > 1 || q.x < 0.05 || q.x > 0.95 || q.y < 0.05 || q.y > 0.95) note(id, `OUT subject (${q.x.toFixed(2)},${q.y.toFixed(2)})`);
+    // NEAR: another body fills the frame (within 0.75 m of the lens and in view), not the subject itself
+    for (const b of bs) {
+      if (b.key === key || Math.hypot(b.b[0] - subj[0], b.b[1] - subj[1], b.b[2] - subj[2]) < 0.45) continue;
+      let best = 1e9, bp = b.a;
+      for (let i = 0; i <= 10; i++) {
+        const u = i / 10, pt = [b.a[0] + (b.b[0] - b.a[0]) * u, b.a[1] + (b.b[1] - b.a[1]) * u, b.a[2] + (b.b[2] - b.a[2]) * u];
+        const dd = Math.hypot(pt[0] - p[0], pt[1] - p[1], pt[2] - p[2]);
+        if (dd < best) { best = dd; bp = pt; }
+      }
+      const qb = project(cam, bp);
+      if (best - b.r < 0.45 && qb.z < 1 && qb.x > 0.1 && qb.x < 0.9 && qb.y > 0.1 && qb.y < 0.9) note(id, `NEAR ${b.key} (${(best - b.r).toFixed(2)})`);
+    }
     if (key) {
       const f = facingOf(st, key)!;
       const dx = p[0] - subj[0], dz = p[2] - subj[2];

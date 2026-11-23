@@ -428,7 +428,7 @@ SHOT.U08 = ({ t }) => ({ set: "cliff", env: { beam: 1, fog: 0.3 }, hums: [pia(pi
 // V: inside, everyone wakes
 const thawOf = (t: number) => ss(W2(27, "Inside,"), W2(29, "Laughing."), t);
 SHOT.V01 = ({ t }) => ({ set: "inside", env: { fog: 0.25 }, hums: [...keptHums(0), frozenMom(0), frozenMilo(0.6)], sparkles: { c: [0, 2.5, 0], u: 0.6, spread: 4 } });
-SHOT.V02 = ({ t }) => ({ set: "inside", env: { fog: 0.25 }, hums: [frozenMom(0.6, { armR: 0.45 + 0.08 * Math.sin(t * 6), outR: -0.2 }), milo(stand(MILO_MOM[0], MILO_MOM[1] + 0.4, PI + 0.3, KS, { armL: 1.05, outL: -0.12 }), "curious")] });
+SHOT.V02 = ({ t }) => ({ set: "inside", env: { fog: 0.25 }, hums: [frozenMom(0.6, { armL: 0.3 + 0.08 * Math.sin(t * 6) }), milo(miloAtMom({ armL: 1.05, outL: -0.15 }), "curious")] });
 SHOT.V03 = ({ t, u }) => ({ set: "inside", env: { fog: 0.25 }, hums: [frozenMom(u > 0.35 ? 1 : 0.7), milo(stand(MILO_MOM[0], MILO_MOM[1] + 0.4, PI + 0.3, KS, { armL: 1.05, outL: -0.12 }), "curious")] });
 SHOT.V04 = ({ t }) => ({ set: "inside", env: { fog: 0.25 }, hums: [mom(kneel(MOM_IN[0], MOM_IN[1], 0.35, SC.adult, 1, { armL: 0.9, armR: 0.9, outL: -0.2, outR: -0.2 }), "smile"), milo(stand(MILO_MOM[0], MILO_MOM[1] + 0.4, PI + 0.3, KS, { armL: 0.6, armR: 0.6 }), "cry")] });
 const hugMilo = (t: number) => [mom(kneel(MOM_IN[0] + 0.02, MOM_IN[1] + 0.05, 0.4, SC.adult, 1, { armL: 1.45, armR: 1.45, outL: -0.35, outR: -0.35, sway: 0.05 * Math.sin(t * 2) }), "joy"), milo(hugP(MILO_MOM[0] - 0.12, MILO_MOM[1] + 0.12, PI + 0.4, KS, t), "joy", { blink: true })];

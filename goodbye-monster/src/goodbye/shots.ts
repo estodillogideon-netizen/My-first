@@ -45,12 +45,6 @@ const mid = (a: Subj, b: Subj, u = 0.5): Subj => (st, t) => {
 };
 const at = (p: V3): Subj => () => p;
 /** a point `d` m from a subject toward a target (plus a little height) */
-const toward = (s: Subj, target: V3, d: number, up = 0.25): Subj => (st, t) => {
-  const p = s(st, t);
-  const v = [target[0] - p[0], target[1] - p[1], target[2] - p[2]];
-  const l = Math.hypot(v[0], v[1], v[2]) || 1;
-  return [p[0] + (v[0] / l) * d, p[1] + (v[1] / l) * d + up, p[2] + (v[2] / l) * d];
-};
 const off = (s: Subj, d: V3): Subj => (st, t) => {
   const p = s(st, t);
   return [p[0] + d[0], p[1] + d[1], p[2] + d[2]];
@@ -162,7 +156,7 @@ export const LENSES: Record<string, Lens> = {
   Q01: X([1.2, 0.95, 1.9], head("milo"), 42, 0.5),
   Q02: X([0.4, 1.3, 3.6], head("milo"), 44, 0.46),
   Q03: X([4.5, 2.4, 6.5], at([0, 1, 0]), 54, 0.5),
-  Q04: X([2.6, 1.3, 2.2], head("milo"), 44, 0.46),
+  Q04: X([2.4, 4.6, 1.2], head("milo"), 44, 0.5),
   Q05: F("kept1", 0, 1.0, 0.0),
   Q06: F("kept3", 0, 1.1, 0.0),
   Q07: F("kept4", 0, 0.9, 0.0),
@@ -174,7 +168,7 @@ export const LENSES: Record<string, Lens> = {
   R01: X([0.6, 1.3, 4.4], head("pia"), 42, 0.46),
   R02: X([0.35, 1.15, 3.9], head("pia"), 38, 0.46),
   R03: X([0.7, 1.4, 4.0], at([Math.cos(Math.PI * 0.55 + 0.66) * (IN.r - 0.6), 1.2, Math.sin(Math.PI * 0.55 + 0.66) * (IN.r - 0.6)]), 44, 0.5),
-  R04: R(toward(held("pia", "L"), [0, 1.6, 0], 0.32, 0.42), held("pia", "L"), 38),
+  R04: F("pia", -20, 1.2, 0, 40, 0.36),
   R05: X([BX - 1.9, 1.5, 7.0], mid(head("ymayor"), head("june")), 44, 0.48),
   R06: F("june", 10, 0.95, 0.0),
   R07: X([BX, 1.4, 7.2], mid(head("ymayor"), head("june")), 44, 0.48),
@@ -182,7 +176,7 @@ export const LENSES: Record<string, Lens> = {
   R09: X([BX + 1.0, 1.4, 6.0], head("june"), 44, 0.46),
   R10: F("ymayor", 0, 1.2, 0.0),
   R11: X([BX + 1.6, 1.6, 7.4], head("ymayor"), 44, 0.46),
-  R12: X([BX - 0.6, 0.6, 6.0], head("ymayor"), 48, 0.48),
+  R12: X([BX + 1.6, 1.1, TOWN.bus.z + 1.6], head("ymayor"), 48, 0.42),
   R13: X([-6, 9, 18], at([2, 0, 0]), 55, 0.5),
   R14: F("pia", 0, 0.9, 0.0),
   R15: X([1.8, 1.5, 4.2], at([0, 1.5, 0]), 56, 0.5),
@@ -214,7 +208,7 @@ export const LENSES: Record<string, Lens> = {
   U07: X([1.0, 1.4, 11.0], at([0, 4.5, 0]), 58, 0.5),
   U08: X([2.0, 0.8, 3.4], at([0.4, 1.8, 6.5]), 50, 0.5),
   V01: X([1.6, 1.6, 2.6], at([0.2, 1.1, 0.3]), 48, 0.5),
-  V02: X([1.0, 0.95, 0.9], at([0.2, 0.85, 0.55]), 36, 0.5),
+  V02: X([1.25, 1.25, -0.65], mid(head("milo"), at([0.2, 0.85, 0.35]), 0.3), 40, 0.5),
   V03: F("mom", 15, 0.7, 0.0),
   V04: F("mom", 25, 0.85, 0.0),
   V05: X([0.3, 1.25, 1.9], mid(head("mom"), head("milo")), 44, 0.48),
@@ -242,7 +236,7 @@ export const LENSES: Record<string, Lens> = {
 };
 export const _keepL = [LH, _CAL];
 
-const startCache = new Map<string, V3>();
+export const startCache = new Map<string, V3>();
 /** the camera of shot `id` at time t */
 export const camFor = (id: string, t: number, st: Stage): Cam => {
   const s = shot(id);
