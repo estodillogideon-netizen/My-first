@@ -169,12 +169,12 @@ SHOT.C09 = ({ t, u, d }) => {
   const k = ss(0, d, u);
   return {
     set: "town",
-    hums: [littleMilo(stand(BUS_MILO[0] - 0.1, BUS_MILO[1] + 0.1, PI / 2 - 0.3, LITTLE, { armL: 1.6, armR: 1.6, outL: 0.2, outR: 0.2 }), "cry"), memMom(stand(BUS_MOM[0], BUS_MOM[1], -PI / 2, SC.adult, { armL: 1.6 - 0.6 * k, armR: 1.6 - 0.6 * k, pitch: -0.15 * k }), "sad")],
+    hums: [littleMilo(stand(BUS_MILO[0] - 0.1, BUS_MILO[1] + 0.1, PI / 2 - 0.3, LITTLE, { armL: 1.6, armR: 1.6, outL: 0.2, outR: 0.2 }), "sob"), memMom(stand(BUS_MOM[0], BUS_MOM[1], -PI / 2, SC.adult, { armL: 1.6 - 0.6 * k, armR: 1.6 - 0.6 * k, pitch: -0.15 * k }), "sad")],
     monster: BUS_MONSTER(t, u, 1, 1),
     streams: [0, 1, 2].map((i) => ({ a: [BUS_MOM[0] + 1.6, 0.2 + 0.6 * i, BUS_MOM[1] + 1.2], ctrl: [BUS_MOM[0] - 0.9, 1.0 + 0.5 * i, BUS_MOM[1] - 0.7], b: [BUS_MOM[0], 0.8 + 0.5 * i, BUS_MOM[1] + 0.2], u: clamp(k * 1.4 - i * 0.15), w: 0.8, n: 22, op: 0.75 })),
   };
 };
-SHOT.C10 = ({ t }) => ({ set: "town", hums: [littleMilo(stand(BUS_MILO[0] + 0.1, BUS_MILO[1], PI / 2, LITTLE, { armL: 0.1, armR: 0.1, headPitch: 0.25 }), "cry")], env: { fog: 0.6 } });
+SHOT.C10 = ({ t }) => ({ set: "town", hums: [littleMilo(stand(BUS_MILO[0] + 0.1, BUS_MILO[1], PI / 2, LITTLE, { armL: 0.1, armR: 0.1, headPitch: 0.25 }), "sob")], env: { fog: 0.6 } });
 // ---- D: Milo now, Pia (day)
 const BENCH_Y = 0.48;
 const BENCH_Z = TOWN.bus.z - 0.32;
@@ -191,7 +191,7 @@ SHOT.E01 = ({ t }) => ({ set: "room", hums: [milo(miloFloor(), "sad")], items: [
 SHOT.E01b = ({ u }) => ({ set: "room", hums: [milo(miloFloor({ armL: 1.1, armR: 1.1 }), "curious")], items: [{ k: "box", p: [MR[0], 0, MR[1] + 0.48], open: ss(0, 0.6, u) }] });
 SHOT.E02 = () => ({ set: "room", hums: [milo(miloFloor({ armL: 1.25, armR: 0.5 }), "curious", { held2: { side: "L", kind: "recorder", tilt: [-0.9, 0] } })], items: [{ k: "box", p: [MR[0], 0, MR[1] + 0.48], open: 1 }] });
 SHOT.E03 = ({ u }) => ({ set: "room", hums: [milo(miloFloor({ armL: 1.25, armR: 1.1, outR: -0.2 }), "curious", { held2: { side: "L", kind: u > 0.4 ? "recorderOn" : "recorder", tilt: [-0.9, 0] } })], items: [{ k: "box", p: [MR[0], 0, MR[1] + 0.48], open: 1 }] });
-SHOT.E04 = () => ({ set: "room", hums: [milo(miloFloor({ armL: 1.25, armR: 0.5, headPitch: 0.15 }), "cry", { held2: { side: "L", kind: "recorderOn", tilt: [-0.9, 0] } })], items: [{ k: "box", p: [MR[0], 0, MR[1] + 0.48], open: 1 }] });
+SHOT.E04 = () => ({ set: "room", hums: [milo(miloFloor({ armL: 1.25, armR: 0.5, headPitch: 0.15 }), "sob", { held2: { side: "L", kind: "recorderOn", tilt: [-0.9, 0] } })], items: [{ k: "box", p: [MR[0], 0, MR[1] + 0.48], open: 1 }] });
 SHOT.E05 = ({ t }) => ({ set: "room", items: [{ k: "box", p: [MR[0], 0, MR[1] + 0.48], open: 1 }, { k: "glow", p: [1.15, 1.45, -3.3], s: 0.22, c: "#ffe0a0", op: 1 }, { k: "beam", p: [1.15, 1.45, -3.3], dir: [Math.cos(t * 1.2), -0.05, 0.05], len: 1.4, r: 0.18, op: 0.5 }], hums: [milo(miloFloor({ armL: 1.25, armR: 0.5, headPitch: 0.0 }), "sad", { held2: { side: "L", kind: "recorderOn", tilt: [-0.9, 0] } })] });
 const PIA_WIN: [number, number] = [0.62, -2.5];
 SHOT.E06 = ({ t, u }) => ({ set: "room", hums: [milo(lookAt(miloFloor({ armL: 1.25, armR: 0.5 }), KS, [PIA_WIN[0], 1.2, PIA_WIN[1]], ss(0.2, 0.7, u)), "shock", { held2: { side: "L", kind: "recorderOn", tilt: [-0.9, 0] } }), pia(stand(PIA_WIN[0], PIA_WIN[1], 0, KS, { armR: 1.7 + 0.12 * Math.max(0, wave(t, 3)), outR: -0.2 }), "brave", { held: torch(true, [-0.2, 0]) })], items: [{ k: "box", p: [MR[0], 0, MR[1] + 0.48], open: 1 }] });
@@ -293,7 +293,7 @@ SHOT.H05 = ({ t, u }) => ({ set: "inside", hums: [...keptHums(), frozenMom(), mi
 SHOT.H06 = ({ t }) => ({ set: "inside", hums: [...keptHums(), frozenMom(), milo(lookAt(miloAtMom(), KS, [-0.25, 1.0, 1.85]), "curious"), pia(lookAt(piaBehind(), KS, [MILO_MOM[0], 1.0, MILO_MOM[1]]), "curious", { held: torch(true, [0.25, 0]) })] });
 SHOT.H07 = ({ t }) => ({ set: "inside", hums: [...keptHums(), frozenMom(), milo(miloAtMom(), "sad"), pia(piaBehind(), "sad", { held: torch(true, [0.25, 0]) })] });
 SHOT.H08 = ({ t, u }) => ({ set: "inside", hums: [...keptHums(), frozenMom(), milo(miloAtMom({ armL: lerp(0.2, 1.05, ss(0, 0.5, u)), outL: -0.15 }), "sad"), pia(piaBehind(), "sad", { held: torch(true, [0.25, 0]) })] });
-SHOT.H09 = ({ t }) => ({ set: "inside", hums: [...keptHums(), frozenMom(), milo(miloAtMom({ armL: 1.05, outL: -0.15 }), "cry"), pia(piaBehind(), "sad", { held: torch(true, [0.25, 0]) })] });
+SHOT.H09 = ({ t }) => ({ set: "inside", hums: [...keptHums(), frozenMom(), milo(miloAtMom({ armL: 1.05, outL: -0.15 }), "sob"), pia(piaBehind(), "sad", { held: torch(true, [0.25, 0]) })] });
 // the monster rises behind them (between the kids and the door)
 const inMonster = (rise: number, eyes: number, reach: number, s = 1.35): MonsterState => ({ p: [0.1, 0, 3.3], yaw: PI, s, rise, eyes, reach, burst: 0 });
 SHOT.J01 = ({ t, u }) => ({ set: "inside", hums: [...keptHums(), frozenMom(), milo(miloAtMom({ armL: 1.05, outL: -0.15 }), "sad"), pia(piaBehind(), "curious", { held: torch(true, [0.25, 0]) })], monster: inMonster(lerp(0.15, 0.35, u), 0, 0.2) });
@@ -304,9 +304,9 @@ const piaFacing = (o: Partial<Pose> = {}) => stand(-0.3, 1.6, 0.1, KS, { armR: 1
 SHOT.J04 = ({ t }) => ({ set: "inside", hums: [...keptHums(), frozenMom(), milo(facingMonster(t), "shock"), pia(piaFacing(), "shock", { held: torch(true, [-0.7, 0]) })], monster: inMonster(1, 1, 0.5) });
 SHOT.J05 = ({ t, u, d }) => ({ set: "inside", hums: [...keptHums(), frozenMom(), milo(facingMonster(t), "shock"), pia(piaFacing(), "shock", { held: torch(true, [-0.7, 0]) })], monster: inMonster(1, 1, lerp(0.5, 1, ss(0, d, u))) });
 SHOT.J06 = ({ t, u }) => ({ set: "inside", hums: [...keptHums(), frozenMom(), milo(facingMonster(t), "brave"), pia(stand(MILO_MOM[0] - 0.42, MILO_MOM[1] + 0.55, 0.6, KS, { armL: lerp(0.3, 1.45, ss(0, 0.4, u)), outL: -0.2, armR: 1.2 }), "shock", { held: torch(true, [-0.5, 0]) })], monster: inMonster(1, 1, 1) });
-SHOT.J07 = ({ t }) => ({ set: "inside", hums: [...keptHums(), frozenMom(), milo(facingMonster(t), "brave"), pia(stand(MILO_MOM[0] - 0.42, MILO_MOM[1] + 0.55, 0.6, KS, { armL: 1.45, outL: -0.2, armR: 1.2 }), "cry", { held: torch(true, [-0.5, 0]) })], monster: inMonster(1, 1, 1) });
-SHOT.J08 = ({ t }) => ({ set: "inside", hums: [...keptHums(), frozenMom(), milo(lookAt(facingMonster(t), KS, [MOM_IN[0], faceY(SC.adult), MOM_IN[1]]), "sad"), pia(stand(MILO_MOM[0] - 0.42, MILO_MOM[1] + 0.55, 0.6, KS, { armL: 1.45, outL: -0.2, armR: 1.2 }), "cry", { held: torch(true, [-0.5, 0]) })], monster: inMonster(1, 1, 1) });
-SHOT.J09 = ({ t }) => ({ set: "inside", hums: [...keptHums(), frozenMom(), milo(lookAt(facingMonster(t), KS, [MILO_MOM[0] - 0.42, 0.95, MILO_MOM[1] + 0.55]), "sad"), pia(stand(MILO_MOM[0] - 0.42, MILO_MOM[1] + 0.55, 0.6, KS, { armL: 1.45, outL: -0.2, armR: 1.2 }), "cry", { held: torch(true, [-0.5, 0]) })], monster: inMonster(1, 1, 1) });
+SHOT.J07 = ({ t }) => ({ set: "inside", hums: [...keptHums(), frozenMom(), milo(facingMonster(t), "brave"), pia(stand(MILO_MOM[0] - 0.42, MILO_MOM[1] + 0.55, 0.6, KS, { armL: 1.45, outL: -0.2, armR: 1.2 }), "sob", { held: torch(true, [-0.5, 0]) })], monster: inMonster(1, 1, 1) });
+SHOT.J08 = ({ t }) => ({ set: "inside", hums: [...keptHums(), frozenMom(), milo(lookAt(stand(MILO_MOM[0], MILO_MOM[1] + 0.4, PI + 0.3, KS), KS, [MOM_IN[0], faceY(SC.adult), MOM_IN[1]]), "sad"), pia(stand(MILO_MOM[0] - 0.42, MILO_MOM[1] + 0.55, 0.6, KS, { armL: 1.45, outL: -0.2, armR: 1.2 }), "sob", { held: torch(true, [-0.5, 0]) })], monster: inMonster(1, 1, 1) });
+SHOT.J09 = ({ t }) => ({ set: "inside", hums: [...keptHums(), frozenMom(), milo(lookAt(facingMonster(t), KS, [MILO_MOM[0] - 0.42, 0.95, MILO_MOM[1] + 0.55]), "sad"), pia(stand(MILO_MOM[0] - 0.42, MILO_MOM[1] + 0.55, 0.6, KS, { armL: 1.45, outL: -0.2, armR: 1.2 }), "sob", { held: torch(true, [-0.5, 0]) })], monster: inMonster(1, 1, 1) });
 const spiral = (c: [number, number], u: number, k = 4): Stream[] =>
   Array.from({ length: k }, (_, i) => {
     const a = (i / k) * PI * 2 + u * 3;
@@ -316,7 +316,7 @@ const GB_P = (): number => W1(41, "Goodbye,");
 SHOT.J10 = ({ t, u }) => ({ set: "inside", hums: [...keptHums(), frozenMom(), milo(lookAt(facingMonster(t), KS, [MILO_MOM[0] - 0.42, 0.95, MILO_MOM[1] + 0.55]), "sad"), pia(stand(MILO_MOM[0] - 0.42, MILO_MOM[1] + 0.55, 0.6, KS, { armL: 1.45, outL: -0.2, armR: 1.2 }), "shock", { held: torch(true, [-0.5, 0]) })], monster: inMonster(1, 1 + 0.3 * ss(GB_P(), GB_P() + 0.5, t), 1), streams: spiral([MILO_MOM[0], MILO_MOM[1] + 0.4], ss(0.3, 1.4, u)) });
 SHOT.K01 = ({ t, u, d }) => {
   const k = ss(0, d, u);
-  return { set: "inside", hums: [...keptHums(), frozenMom(), milo(facingMonster(t, { armL: 0.6 + k, armR: 0.6 + k }), "sleep"), pia(stand(MILO_MOM[0] - 0.5, MILO_MOM[1] + 0.75, 0.6, KS, { armL: 2.0, outL: -0.25, armR: 1.2, pitch: 0.2 }), "cry", { held: torch(true, [-0.5, 0]) })], monster: inMonster(1, 1.3, 1), streams: [...spiral([MILO_MOM[0], MILO_MOM[1] + 0.4], 1, 6).map((s) => ({ ...s, op: 0.85, w: 1.1 }))], env: { fog: 1 + k } };
+  return { set: "inside", hums: [...keptHums(), frozenMom(), milo(facingMonster(t, { armL: 0.6 + k, armR: 0.6 + k }), "sleep"), pia(stand(MILO_MOM[0] - 0.5, MILO_MOM[1] + 0.75, 0.6, KS, { armL: 2.0, outL: -0.25, armR: 1.2, pitch: 0.2 }), "sob", { held: torch(true, [-0.5, 0]) })], monster: inMonster(1, 1.3, 1), streams: [...spiral([MILO_MOM[0], MILO_MOM[1] + 0.4], 1, 6).map((s) => ({ ...s, op: 0.85, w: 1.1 }))], env: { fog: 1 + k } };
 };
 SHOT.K02 = ({ u }) => ({ set: "card", monster: { p: [0, -1.1, -1.5], yaw: 0, s: 1.25, rise: 1, eyes: ss(0, 0.3, u), reach: 0.3, burst: 0 }, items: [{ k: "card", p: [0, 1.55, 1.4], s: 1.25, op: ss(0.05, 0.35, u) }] });
 
@@ -342,8 +342,8 @@ const MILO_FW_MOM: [number, number] = [0.45, 0.65];
 SHOT.Q09 = ({ t, u }) => ({ set: "fogworld", hums: [...keptHums(), frozenMom(), milo(lookAt(stand(MILO_FW_MOM[0], MILO_FW_MOM[1], PI * 0.6 - u * 0.3, KS), KS, [0, faceY(SC.adult), 0], ss(0.2, 0.8, u)), "shock")] });
 const miloHolds = (o: Partial<Pose> = {}) => lookAt(stand(MILO_FW_MOM[0], MILO_FW_MOM[1], PI + 0.3, KS, { armL: 1.05, outL: -0.12, ...o }), KS, [0, faceY(SC.adult), 0]);
 SHOT.Q10 = ({ t }) => ({ set: "fogworld", hums: [...keptHums(), frozenMom(0, { armR: 0.45, outR: -0.2 }), milo(miloHolds(), "sad")] });
-SHOT.Q11 = ({ t }) => ({ set: "fogworld", hums: [...keptHums(), frozenMom(0, { armR: 0.45 + 0.04 * Math.sin(t * 25), outR: -0.2 }), milo(miloHolds(), "curious")] });
-SHOT.Q12 = ({ t }) => ({ set: "fogworld", hums: [...keptHums(), frozenMom(0, { armR: 0.45, outR: -0.2 }), milo(miloHolds({ headPitch: -0.3 }), "cry")] });
+SHOT.Q11 = ({ t, u }) => ({ set: "fogworld", hums: [...keptHums(), frozenMom(0.25 * Math.sin(PI * Math.min(1, u * 1.5)), { armR: 0.45 + 0.05 * Math.sin(t * 25), outR: -0.2, headYaw: 0.03 * Math.sin(t * 30) * Math.sin(PI * Math.min(1, u * 1.5)) }), milo(miloHolds(), "curious")] });
+SHOT.Q12 = ({ t }) => ({ set: "fogworld", hums: [...keptHums(), frozenMom(0, { armR: 0.45, outR: -0.2 }), milo(miloHolds({ headPitch: -0.3 }), "sob")] });
 SHOT.Q13 = ({ t }) => ({ set: "fogworld", hums: [frozenMom(0, { armR: 0.45, outR: -0.2 }), milo(miloHolds(), "sad")] });
 // R: Pia alone; the diary; the memory of June (sepia, 40 years ago)
 const frozenMilo = (thaw = 0): Hum => milo(stand(MILO_MOM[0], MILO_MOM[1] + 0.4, PI + 0.3, KS, { armL: 1.05, outL: -0.12 }), thaw > 0.5 ? "happy" : "sleep", { look: freeze(MILO, 1 - thaw), still: thaw < 0.5 } as Partial<Hum>);
@@ -352,7 +352,7 @@ const STEP = (i: number): V3 => {
   return [Math.cos(a) * (IN.r - 0.6), 0.2 + i * 0.3 + 0.06, Math.sin(a) * (IN.r - 0.6)];
 };
 const PIA_ALONE: [number, number] = [0.0, 2.9];
-SHOT.R01 = ({ t }) => ({ set: "inside", hums: [...keptHums(), frozenMom(), frozenMilo(), pia(stand(PIA_ALONE[0], PIA_ALONE[1], 0.3 + 0.25 * Math.sin(t * 2), KS, { armR: 1.4 + 0.05 * Math.sin(t * 17), outR: -0.1 }), "cry", { held: torch(true, [0.1, 0]) })], items: [{ k: "diary", p: STEP(3), rot: [0, 0.3, 0] }] });
+SHOT.R01 = ({ t }) => ({ set: "inside", hums: [...keptHums(), frozenMom(), frozenMilo(), pia(stand(PIA_ALONE[0], PIA_ALONE[1], 0.3 + 0.25 * Math.sin(t * 2), KS, { armR: 1.4 + 0.05 * Math.sin(t * 17), outR: -0.1 }), "sob", { held: torch(true, [0.1, 0]) })], items: [{ k: "diary", p: STEP(3), rot: [0, 0.3, 0] }] });
 SHOT.R02 = ({ t }) => ({ set: "inside", hums: [...keptHums(), frozenMom(), frozenMilo(), pia(stand(PIA_ALONE[0], PIA_ALONE[1], 0.3, KS, { armR: 1.4, outR: -0.1 }), "brave", { held: torch(true, [0.1, 0]) })], items: [{ k: "diary", p: STEP(3), rot: [0, 0.3, 0] }] });
 SHOT.R03 = ({ t, u }) => ({ set: "inside", hums: [...keptHums(), frozenMom(), frozenMilo(), pia(lookAt(stand(PIA_ALONE[0], PIA_ALONE[1], lerp(0.3, -2.2, ss(0, 0.5, u)), KS, { armR: 1.6, outR: -0.1 }), KS, STEP(3)), "curious", { held: torch(true, [-0.2, 0]) })], items: [{ k: "diary", p: STEP(3), rot: [0, 0.3, 0] }] });
 const piaReads = (o: Partial<Pose> = {}) => sitOn(STEP(1)[0] + 0.25, STEP(1)[2] - 0.15, toward([STEP(1)[0], STEP(1)[2]], [0, 0]), KS, STEP(1)[1] - 0.06, { armL: 1.15, armR: 1.15, outL: -0.15, outR: -0.15, headPitch: 0.45, ...o });
@@ -372,11 +372,11 @@ SHOT.R08 = ({ t, u, d }) => {
 SHOT.R09 = ({ t }) => ({ set: "town", hums: [june(walkAB([TOWN.bus.x + 3.5, TOWN.bus.z + 0.5], [TOWN.bus.x + 12, TOWN.bus.z + 0.6], t, ST("R09") - 1.2, ST("R09") + 6, SC.june), "smile", { held: { side: "R", kind: "suitcase" } })] });
 SHOT.R10 = ({ t }) => ({ set: "town", hums: [youngMayor(stand(TOWN.bus.x - 0.6, TOWN.bus.z + 0.4, PI / 2, SC.mayor, { headPitch: 0.1 }), "sad", { still: true })] });
 SHOT.R11 = ({ t, u, d }) => ({ set: "town", env: { lampOn: ss(0.3 * d, 0.6 * d, u) }, hums: [youngMayor(stand(TOWN.bus.x - 0.6, TOWN.bus.z + 0.4, PI / 2, SC.mayor, { headPitch: 0.15 }), "sad", { still: true })] });
-SHOT.R12 = ({ t, u, d }) => ({ set: "town", hums: [youngMayor(stand(TOWN.bus.x - 0.6, TOWN.bus.z + 0.4, PI / 2, SC.mayor, { headPitch: 0.2 }), "cry", { still: true })], streams: [0, 1, 2, 3].map((i) => ({ a: [TOWN.bus.x - 0.6, 0.05, TOWN.bus.z + 0.4], ctrl: [TOWN.bus.x - 0.6 + Math.cos(i * 1.6) * 1.4, 0.6, TOWN.bus.z + 0.4 + Math.sin(i * 1.6) * 1.4], b: [TOWN.bus.x - 0.6 + Math.cos(i * 1.6) * 3.2, 1.6 + 0.4 * i, TOWN.bus.z + 0.4 + Math.sin(i * 1.6) * 3.2], u: ss(0, d, u), w: 1.0, n: 20, op: 0.6, color: "#c8b8a0" })) });
+SHOT.R12 = ({ t, u, d }) => ({ set: "town", hums: [youngMayor(stand(TOWN.bus.x - 0.6, TOWN.bus.z + 0.4, PI / 2, SC.mayor, { headPitch: 0.2 }), "sob", { still: true })], streams: [0, 1, 2, 3].map((i) => ({ a: [TOWN.bus.x - 0.6, 0.05, TOWN.bus.z + 0.4], ctrl: [TOWN.bus.x - 0.6 + Math.cos(i * 1.6) * 1.4, 0.6, TOWN.bus.z + 0.4 + Math.sin(i * 1.6) * 1.4], b: [TOWN.bus.x - 0.6 + Math.cos(i * 1.6) * 3.2, 1.6 + 0.4 * i, TOWN.bus.z + 0.4 + Math.sin(i * 1.6) * 3.2], u: ss(0, d, u), w: 1.0, n: 20, op: 0.6, color: "#c8b8a0" })) });
 SHOT.R13 = ({ u }) => ({ set: "town", env: { fog: lerp(0.4, 1.3, u) } });
 SHOT.R14 = () => ({ set: "inside", hums: [...keptHums(), frozenMom(), frozenMilo(), pia(piaReads({ headPitch: 0.3 }), "shock", { held2: { side: "L", kind: "diaryOpen", tilt: [-1.0, 0.2] } })] });
 SHOT.R15 = ({ t }) => ({ set: "inside", hums: [...keptHums(), frozenMom(), frozenMilo()], monster: { p: [0, 0, -0.6], yaw: 0, s: 1.55, rise: 0.75, eyes: 0.45, reach: 1, burst: 0 } });
-SHOT.R16 = () => ({ set: "inside", hums: [...keptHums(), frozenMom(), frozenMilo(), pia(piaReads({ headPitch: 0.05, headYaw: 0.4 }), "cry", { held2: { side: "L", kind: "diary", tilt: [-1.0, 0.2] } })] });
+SHOT.R16 = () => ({ set: "inside", hums: [...keptHums(), frozenMom(), frozenMilo(), pia(piaReads({ headPitch: 0.05, headYaw: 0.4 }), "sob", { held2: { side: "L", kind: "diary", tilt: [-1.0, 0.2] } })] });
 // S: Pia wakes the town
 SHOT.S01 = ({ t }) => ({ set: "town", hums: [pia(run(-20, 3.25, PI / 2, t, ST("S01"), 3.0, KS, { armR: 1.3 }), "brave", { held: torch(true, [0.1, 0]) })] });
 const DOOR_A: [number, number] = [-9.5, 0.25];
@@ -440,8 +440,8 @@ SHOT.V09 = ({ t }) => ({ set: "inside", env: { fog: 0.15 }, hums: [...hugMilo(t)
 const MAYOR_STEPS = (o: Partial<Pose> = {}): Pose => sitOn(0.0, 2.15, 0, SC.mayor, 0.18, { armL: 1.1, armR: 1.1, outL: -0.15, outR: -0.15, headPitch: 0.35, ...o });
 SHOT.W01 = () => ({ set: "cliff", env: { beam: 0.6, fog: 0.4, doorGlow: 0.1 }, hums: [hum("mayor", MAYOR, SC.mayor, MAYOR_STEPS(), "sad", 91, { held2: { side: "L", kind: "photo", tilt: [-1.0, 0] } })] });
 SHOT.W02 = SHOT.W01;
-SHOT.W03 = () => ({ set: "cliff", env: { beam: 0.6, fog: 0.4, doorGlow: 0.1 }, hums: [hum("mayor", MAYOR, SC.mayor, MAYOR_STEPS(), "cry", 91, { held2: { side: "L", kind: "photo", tilt: [-1.0, 0] } })] });
-SHOT.W03b = () => ({ set: "cliff", env: { beam: 0.6, fog: 0.4, doorGlow: 0.1 }, hums: [hum("mayor", MAYOR, SC.mayor, MAYOR_STEPS({ armL: 1.5, outL: -0.35, armR: 1.4, outR: -0.35, headPitch: 0.25 }), "cry", 91, { held2: { side: "L", kind: "photo", tilt: [-1.4, 0] } })] });
+SHOT.W03 = () => ({ set: "cliff", env: { beam: 0.6, fog: 0.4, doorGlow: 0.1 }, hums: [hum("mayor", MAYOR, SC.mayor, MAYOR_STEPS(), "sob", 91, { held2: { side: "L", kind: "photo", tilt: [-1.0, 0] } })] });
+SHOT.W03b = () => ({ set: "cliff", env: { beam: 0.6, fog: 0.4, doorGlow: 0.1 }, hums: [hum("mayor", MAYOR, SC.mayor, MAYOR_STEPS({ armL: 1.5, outL: -0.35, armR: 1.4, outR: -0.35, headPitch: 0.25 }), "sob", 91, { held2: { side: "L", kind: "photo", tilt: [-1.4, 0] } })] });
 SHOT.W04 = () => ({ set: "cliff", env: { beam: 0.6, fog: 0.4, doorGlow: 0.1 }, hums: [hum("mayor", MAYOR, SC.mayor, MAYOR_STEPS({ armL: 1.5, outL: -0.35, armR: 1.4, outR: -0.35, headPitch: 0.1 }), "sad", 91, { held2: { side: "L", kind: "photo", tilt: [-1.4, 0] }, blink: true })] });
 SHOT.W05 = ({ u, d }) => ({ set: "cliff", env: { beam: 0.6, fog: 0.25, doorGlow: 0.1 }, hums: [hum("mayor", MAYOR, SC.mayor, MAYOR_STEPS({ headPitch: -0.4 }), "smile", 91, { held2: { side: "L", kind: "photo", tilt: [-1.0, 0] } })], streams: [{ a: [0, 1.2, 2.4], ctrl: [0.6, 3.5, 3.0], b: [-0.4, 9.5, 3.5], u: lerp(0.4, 1, ss(0, d, u)), w: 0.7, n: 20, op: 0.5 }] });
 SHOT.W06 = () => ({ set: "cliff", env: { beam: 0.6, fog: 0.2, doorGlow: 0.1 }, hums: [hum("mayor", MAYOR, SC.mayor, MAYOR_STEPS({ headPitch: -0.1 }), "smile", 91, { held2: { side: "L", kind: "photo", tilt: [-1.0, 0] } })] });
