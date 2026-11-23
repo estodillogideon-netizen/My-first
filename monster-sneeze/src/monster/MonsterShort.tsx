@@ -43,7 +43,7 @@ const heldNode = (h: HeldKind) => {
 const ItemView: React.FC<{ it: Item; t: number }> = ({ it, t }) => {
   switch (it.k) {
     case "sock":
-      return <Sock p={it.p} yaw={it.yaw} tilt={it.tilt} c={it.c} striped={it.striped} />;
+      return <Sock p={it.p} yaw={it.yaw} tilt={it.tilt} c={it.c} striped={it.striped} s={it.s} />;
     case "drawing":
       return <Drawing p={it.p} kind={it.kind} rot={it.rot} s={it.s} />;
     case "tissue":

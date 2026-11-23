@@ -18,7 +18,7 @@ export type HeldKind = { side: "L" | "R"; kind: "book" | "flashlight" | "drawing
 export type Hum = { key: string; look: Look; pose: Pose; emotion: Emotion; s: number; seed: number; held?: HeldKind; held2?: HeldKind; blink?: boolean; blob?: number; floor?: number };
 export type Mon = { key: string; look: MonsterLook; pose: MPose; emotion: MEmotion; s: number; seed: number; acc?: MAcc; noseRed?: number; eyeGlow?: number; blink?: boolean; blob?: number; floor?: number };
 export type Item =
-  | { k: "sock"; p: V3; yaw: number; tilt: number; c: string; striped?: boolean }
+  | { k: "sock"; p: V3; yaw: number; tilt: number; c: string; striped?: boolean; s?: number }
   | { k: "drawing"; p: V3; kind: "cat" | "pickle"; rot: V3; s?: number }
   | { k: "tissue"; p: V3; yaw: number; note?: boolean; s?: number }
   | { k: "puff"; p: V3; dir: V3; u: number; s?: number }
@@ -271,29 +271,35 @@ SHOT.B07 = room(({ t, u }) => ({
   hums: [lily(sitBed({ armL: 0.4, armR: 0.4 }), "happy", {}, false)],
   mons: [bo(boUnder(t, { x: BO_UNDER[0] + 0.1, look: [Math.sin(u * 5) * 0.8, 0] }), "determined", { acc: { mask: true }, noseRed: 0.3 })],
 }));
-/** Bo crammed in the sock drawer (the drawer pulled out 0.36 m) */
+/** Bo crammed in the sock drawer (the drawer pulled out 0.36 m): small and squashed, his body inside the drawer box,
+ * only his face and head peeking over the drawer's front edge */
 const DRAWER_OPEN = 0.36;
-const boDrawer = (t: number, lift = 0): MPose => mp(DRESSER.x, DRESSER.z + DRESSER.d / 2 - 0.2 + DRAWER_OPEN, 0, { y: DRESSER.drawerY - DRESSER.drawerH / 2 + 0.01 - 0.13 * 0.7 + lift, squash: 0.42, armL: 2.4, armR: 2.4, outL: 0.6, outR: 0.6, legL: 1.4, legR: 1.4, bob: 0.01 * Math.sin(t * 2) });
-const drawerSocks = (items: Item[], top: number, z: number, t: number, fly = 0) => {
+const BO_DRAWER_S = 0.5;
+const boDrawer = (t: number, lift = 0): MPose => {
+  const floor = DRESSER.drawerY - DRESSER.drawerH / 2 + 0.02;
+  return mp(DRESSER.x, DRESSER.z + DRESSER.d / 2 - 0.2 + DRAWER_OPEN - 0.04, 0, { y: floor + 0.19 + lift, squash: 0.5, armL: 0.3, armR: 0.3, outL: 0.2, outR: 0.2, bob: 0.006 * Math.sin(t * 2) });
+};
+/** socks draped over Bo's head (fly = 0..1: they fly off) */
+const drawerSocks = (items: Item[], m: Mon, fly = 0) => {
+  const c = monCentre(m);
+  const top = c[1] + ((m.look.h ?? 0.78) / 2) * (m.pose.squash ?? 1) * m.s;
   const cs = ["#ff8ab0", "#7ad0ff", "#ffd23a"];
-  [-0.15, 0.05, 0.18].forEach((dx, i) => {
+  [[-0.1, 0.02, 0.4], [0.07, -0.04, -0.5], [0.16, 0.05, 1.2]].forEach(([dx, dz, yaw], i) => {
     const a = i * 2.1;
-    items.push({ k: "sock", p: [DRESSER.x + dx + fly * (dx * 4 + 0.3 * Math.cos(a)), top + fly * (0.9 + 0.5 * hash(i)) - 4.9 * Math.max(0, fly - 0.5) ** 2, z + fly * 0.4 * Math.sin(a)], yaw: i * 1.3 + fly * 6, tilt: 1.4 + fly * 8 * (i - 1), c: cs[i], striped: i === 1 });
+    items.push({ k: "sock", p: [c[0] + dx + fly * (dx * 4 + 0.3 * Math.cos(a)), top - 0.01 + fly * (0.9 + 0.5 * hash(i)) - 4.9 * Math.max(0, fly - 0.5) ** 2, c[2] + dz + fly * 0.4 * Math.sin(a)], yaw: yaw + fly * 6, tilt: PI / 2 + fly * 8 * (i - 1), c: cs[i], striped: i === 1, s: 0.75 });
   });
 };
 SHOT.B08 = room(({ t }, items) => {
-  const m = bo(boDrawer(t), "sleep", { s: 0.72, noseRed: 0.3 });
-  const f = monFace(m);
-  drawerSocks(items, f[1] + 0.12, f[2] - 0.12, t);
+  const m = bo(boDrawer(t), "sleep", { s: BO_DRAWER_S, noseRed: 0.3, blob: 0 });
+  drawerSocks(items, m);
   return { room: { drawer: DRAWER_OPEN }, hums: [lily(sitBed({ armL: 0.4, armR: 0.4 }), "happy", {}, false)], mons: [m] };
 });
 SHOT.B09 = room(({ t, u }, items) => {
   const t0 = ST("B09") + 0.25;
   const up = t > t0 ? 0.28 * Math.sin(Math.min(PI, (t - t0) * 6)) : 0;
-  let m = bo({ ...boDrawer(t, up), squash: 0.42 + 0.35 * clamp((t - t0) * 6) }, "happy", { s: 0.72 });
+  let m = bo({ ...boDrawer(t, up), squash: 0.5 + 0.3 * clamp((t - t0) * 6) }, "happy", { s: BO_DRAWER_S, blob: 0 });
   m = withSneeze(m, t, t0, items, 0.25);
-  const f = monFace(m);
-  drawerSocks(items, f[1] + 0.12, f[2] - 0.12, t, clamp((t - t0) * 1.6));
+  drawerSocks(items, bo(boDrawer(t), "happy", { s: BO_DRAWER_S }), clamp((t - t0) * 1.6));
   return { room: { drawer: DRAWER_OPEN }, hums: [lily(laughL(sitBed({ armL: 0.5, armR: 0.5 }), t), "joy", {}, false)], mons: [m] };
 });
 
