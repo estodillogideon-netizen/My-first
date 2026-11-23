@@ -92,7 +92,7 @@ const Streetlamp: React.FC<{ x: number; night: boolean; flicker?: number }> = ({
 };
 export const NoGoodbyes: React.FC<{ p: V3; yaw?: number; s?: number }> = ({ p, yaw = 0, s = 1 }) => (
   <group position={p} rotation={[0, yaw, 0]} scale={s}>
-    <mesh geometry={geoOf("signPole", () => new THREE.CylinderGeometry(0.035, 0.04, 2.3, 10))} material={plastic("#8a8e98", { rough: 0.35 })} position={[0, 1.15, 0]} castShadow />
+    <mesh geometry={geoOf("signPole", () => new THREE.CylinderGeometry(0.035, 0.04, 2.3, 10))} material={plastic("#8a8e98", { rough: 0.35 })} position={[0, 1.15, -0.065]} castShadow />
     <mesh geometry={geoOf("signDisc", () => new THREE.CylinderGeometry(0.42, 0.42, 0.03, 40))} material={plastic("#ffffff", { rough: 0.4 })} position={[0, 2.2, 0]} rotation={[Math.PI / 2, 0, 0]} />
     <mesh geometry={geoOf("signFace", () => new THREE.CircleGeometry(0.4, 40))} material={plastic("#ffffff", { rough: 0.4, map: textTex("nogoodbyes", ["NO", "GOODBYES"], { ring: "#d8202a", font: 64 }) })} position={[0, 2.2, 0.017]} />
   </group>
