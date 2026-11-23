@@ -307,6 +307,12 @@ export const Classroom: React.FC = () => (
     {[-1, 1].map((s) => (
       <mesh key={s} geometry={geoOf("clSide", () => new THREE.PlaneGeometry(9, 3.2))} material={plastic("#e0d4b8", { rough: 0.85 })} rotation={[0, -s * Math.PI / 2, 0]} position={[s * 4.5, 1.6, 0.5]} receiveShadow />
     ))}
+    <mesh geometry={geoOf("clBack", () => new THREE.PlaneGeometry(9, 3.2))} material={plastic("#e8dcc0", { rough: 0.85 })} position={[0, 1.6, 4.95]} rotation={[0, Math.PI, 0]} receiveShadow />
+    <B s={[1.6, 1.0, 0.04]} p={[-1.2, 1.7, 4.92]} c="#b8885a" rough={0.9} />
+    <B s={[0.9, 2.1, 0.05]} p={[2.4, 1.05, 4.92]} c="#8a5a3a" />
+    {[[-1.6, 1.85, "#f0d060"], [-1.0, 1.6, "#80c0e8"], [-0.8, 1.95, "#f08080"]].map(([x, y, c], i) => (
+      <B key={i} s={[0.3, 0.36, 0.01]} p={[x as number, y as number, 4.89]} c={c as string} />
+    ))}
     <mesh geometry={geoOf("clCeil", () => new THREE.PlaneGeometry(9, 9))} material={plastic("#f4f0e6")} rotation={[Math.PI / 2, 0, 0]} position={[0, 3.2, 0.5]} />
     <B s={[3.6, 1.6, 0.06]} p={[CLASS.board[0], CLASS.board[1], -3.05]} c="#5a3a22" />
     <mesh geometry={geoOf("chalk", () => new THREE.PlaneGeometry(3.4, 1.4))} material={plastic("#ffffff", { rough: 0.9, map: canvasTexture("chalkboard", 1024, 420, (g, W, H) => {
