@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tindahan sa Eskwelahan: Container Design</title>
+<style>
+  :root{--bg:#f6f4ef;--card:#fff;--ink:#1f2933;--muted:#5f6b76;--a:#1f6feb;--b:#c2410c;--line:#d9d4c7;--ok:#0f766e}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
+  header{background:#1f2933;color:#fff;padding:22px 16px 18px;text-align:center}
+  header h1{margin:0 0 4px;font-size:1.45rem}
+  header p{margin:0;opacity:.85;font-size:.92rem}
+  main{max-width:820px;margin:0 auto;padding:12px}
+  section{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin:14px 0}
+  h2{margin:0 0 10px;font-size:1.15rem}
+  h3{margin:14px 0 6px;font-size:1rem}
+  .num{display:inline-block;background:var(--ink);color:#fff;border-radius:50%;width:26px;height:26px;text-align:center;line-height:26px;font-size:.85rem;margin-right:6px}
+  .note{background:#fff7e0;border:1px solid #f0d58a;border-radius:10px;padding:10px 12px;font-size:.9rem}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media(max-width:620px){.grid{grid-template-columns:1fr}}
+  .box{border:1px solid var(--line);border-radius:12px;padding:12px}
+  .box.a{border-top:5px solid var(--a)} .box.b{border-top:5px solid var(--b)}
+  label{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:6px 0;font-size:.95rem}
+  input{width:96px;padding:8px;border:1px solid #bbb;border-radius:8px;font-size:1rem;text-align:right}
+  table{width:100%;border-collapse:collapse;font-size:.92rem;margin-top:6px}
+  th,td{border:1px solid var(--line);padding:7px 8px;text-align:left}
+  th{background:#efece4}
+  td.r{text-align:right;white-space:nowrap}
+  tr.total td{font-weight:700;background:#f3f8f7}
+  .work{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.88rem;background:#f7f7f5;border-radius:8px;padding:10px;overflow-x:auto;white-space:pre}
+  svg{width:100%;height:auto;display:block}
+  .big{font-size:1.25rem;font-weight:700}
+  .win{background:#e8f5f2;border:1px solid #9fd3c7;border-radius:10px;padding:10px 12px}
+  .btns{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:8px 0 20px}
+  button{background:var(--ink);color:#fff;border:0;border-radius:10px;padding:10px 16px;font-size:.95rem}
+  footer{text-align:center;color:var(--muted);font-size:.8rem;padding:10px 0 30px}
+  @media print{.btns,.note.edit{display:none} section{break-inside:avoid} body{background:#fff}}
+</style>
+</head>
+<body>
+<header>
+  <h1>Tindahan sa Eskwelahan</h1>
+  <p>Designing Storage &amp; Packaging Containers using Surface Area, Volume and Trigonometry</p>
+  <p style="margin-top:6px">Prepared by: <span contenteditable="true" style="border-bottom:1px dashed #fff">[Your Name, Grade &amp; Section]</span></p>
+</header>
+
+<main>
+
+<section>
+  <h2><span class="num">1</span>Our Goal</h2>
+  <p>Our school store (tindahan) needs containers to store and sell snacks like candies, biscuits and chips. We designed two containers:</p>
+  <ul>
+    <li><b style="color:var(--a)">Container A:</b> a rectangular box (rectangular prism) made of cardboard.</li>
+    <li><b style="color:var(--b)">Container B:</b> a round can (cylinder) made of cardboard with a lid.</li>
+  </ul>
+  <p>We measured each one, computed how much material it needs (<b>surface area</b>), how much it can hold (<b>volume / capacity</b>), and how much it costs to make in <b>Philippine pesos (₱)</b>.</p>
+  <div class="note edit">✏️ <b>Change the numbers below</b> to your own measurements and local prices. Everything on this page (diagrams, tables, answers, costs) updates automatically. The numbers shown first are <b>sample values only</b>.</div>
+</section>
+
+<section>
+  <h2><span class="num">2</span>Measurements</h2>
+  <div class="grid">
+    <div class="box a">
+      <h3 style="margin-top:0;color:var(--a)">Container A: Box</h3>
+      <label>Length (L), cm <input id="L" type="number" step="0.1" min="0" value="20"></label>
+      <label>Width (W), cm <input id="W" type="number" step="0.1" min="0" value="15"></label>
+      <label>Height (H), cm <input id="H" type="number" step="0.1" min="0" value="10"></label>
+    </div>
+    <div class="box b">
+      <h3 style="margin-top:0;color:var(--b)">Container B: Can</h3>
+      <label>Diameter (d), cm <input id="D" type="number" step="0.1" min="0" value="10"></label>
+      <label>Height (h), cm <input id="CH" type="number" step="0.1" min="0" value="15"></label>
+      <label>Radius (r = d ÷ 2), cm <span id="Rout" class="big" style="font-size:1rem"></span></label>
+    </div>
+  </div>
+  <h3>Measurement table</h3>
+  <table>
+    <tr><th>Container</th><th>Dimension</th><th>Measurement</th><th>Tool used</th></tr>
+    <tr><td rowspan="3">A: Box</td><td>Length</td><td class="r" id="tL"></td><td rowspan="5" contenteditable="true">Ruler / tape measure</td></tr>
+    <tr><td>Width</td><td class="r" id="tW"></td></tr>
+    <tr><td>Height</td><td class="r" id="tH"></td></tr>
+    <tr><td rowspan="2">B: Can</td><td>Diameter (radius)</td><td class="r" id="tD"></td></tr>
+    <tr><td>Height</td><td class="r" id="tCH"></td></tr>
+  </table>
+</section>
+
+<section>
+  <h2><span class="num">3</span>Labeled Diagrams</h2>
+  <div class="grid">
+    <div class="box a">
+      <h3 style="margin-top:0;color:var(--a)">Box (rectangular prism)</h3>
+      <svg viewBox="0 0 300 230" aria-label="Box diagram">
+        <!-- back edges dashed -->
+        <polygon points="50,90 200,90 250,50 100,50" fill="#dbe8fd" stroke="#1f6feb" stroke-width="2"/>
+        <polygon points="200,90 250,50 250,150 200,190" fill="#bcd4fb" stroke="#1f6feb" stroke-width="2"/>
+        <rect x="50" y="90" width="150" height="100" fill="#e9f1fe" stroke="#1f6feb" stroke-width="2"/>
+        <line x1="100" y1="50" x2="100" y2="150" stroke="#1f6feb" stroke-dasharray="5 4"/>
+        <line x1="100" y1="150" x2="50" y2="190" stroke="#1f6feb" stroke-dasharray="5 4"/>
+        <line x1="100" y1="150" x2="250" y2="150" stroke="#1f6feb" stroke-dasharray="5 4"/>
+        <!-- space diagonal -->
+        <line x1="50" y1="190" x2="250" y2="50" stroke="#0f766e" stroke-width="2.5"/>
+        <text x="125" y="212" text-anchor="middle" font-size="14" fill="#1f2933">L = <tspan id="sL"></tspan> cm</text>
+        <text x="236" y="182" font-size="14" fill="#1f2933" transform="rotate(-38 236 182)">W = <tspan id="sW"></tspan></text>
+        <text x="40" y="145" text-anchor="end" font-size="14" fill="#1f2933">H =</text>
+        <text x="40" y="162" text-anchor="end" font-size="14" fill="#1f2933"><tspan id="sH"></tspan> cm</text>
+        <text x="150" y="128" font-size="13" fill="#0f766e" font-weight="700">diagonal</text>
+      </svg>
+    </div>
+    <div class="box b">
+      <h3 style="margin-top:0;color:var(--b)">Can (cylinder)</h3>
+      <svg viewBox="0 0 300 230" aria-label="Cylinder diagram">
+        <path d="M80,50 L80,180 A70,20 0 0 0 220,180 L220,50" fill="#fde3d3" stroke="#c2410c" stroke-width="2"/>
+        <ellipse cx="150" cy="50" rx="70" ry="20" fill="#fbd0b5" stroke="#c2410c" stroke-width="2"/>
+        <path d="M80,180 A70,20 0 0 1 220,180" fill="none" stroke="#c2410c" stroke-dasharray="5 4"/>
+        <line x1="150" y1="50" x2="220" y2="50" stroke="#1f2933" stroke-width="2"/>
+        <circle cx="150" cy="50" r="3" fill="#1f2933"/>
+        <text x="185" y="44" text-anchor="middle" font-size="13" fill="#1f2933">r = <tspan id="sR"></tspan></text>
+        <line x1="240" y1="50" x2="240" y2="180" stroke="#1f2933" marker-start="url(#ar)" marker-end="url(#ar)"/>
+        <text x="248" y="112" font-size="14" fill="#1f2933">h =</text>
+        <text x="248" y="129" font-size="14" fill="#1f2933"><tspan id="sCH"></tspan> cm</text>
+        <text x="150" y="222" text-anchor="middle" font-size="14" fill="#1f2933">d = <tspan id="sD"></tspan> cm</text>
+        <defs><marker id="ar" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1f2933"/></marker></defs>
+      </svg>
+    </div>
+  </div>
+  <h3>Net (flattened pattern) of each container</h3>
+  <div class="grid">
+    <div class="box a">
+      <svg viewBox="0 0 300 220" aria-label="Box net">
+        <g fill="#e9f1fe" stroke="#1f6feb" stroke-width="1.5" font-size="11" text-anchor="middle">
+          <rect x="20" y="70" width="50" height="60"/><text x="45" y="104" stroke="none" fill="#1f2933">side</text>
+          <rect x="70" y="70" width="90" height="60"/><text x="115" y="104" stroke="none" fill="#1f2933">front</text>
+          <rect x="160" y="70" width="50" height="60"/><text x="185" y="104" stroke="none" fill="#1f2933">side</text>
+          <rect x="210" y="70" width="90" height="60"/><text x="255" y="104" stroke="none" fill="#1f2933">back</text>
+          <rect x="70" y="20" width="90" height="50"/><text x="115" y="49" stroke="none" fill="#1f2933">top</text>
+          <rect x="70" y="130" width="90" height="50"/><text x="115" y="159" stroke="none" fill="#1f2933">bottom</text>
+        </g>
+        <text x="150" y="208" text-anchor="middle" font-size="12" fill="#5f6b76">6 rectangles: 2 of L×W, 2 of L×H, 2 of W×H</text>
+      </svg>
+    </div>
+    <div class="box b">
+      <svg viewBox="0 0 300 220" aria-label="Cylinder net">
+        <g fill="#fde3d3" stroke="#c2410c" stroke-width="1.5">
+          <circle cx="60" cy="40" r="28"/><circle cx="60" cy="168" r="28"/>
+          <rect x="95" y="70" width="190" height="70"/>
+        </g>
+        <g font-size="11" fill="#1f2933" text-anchor="middle">
+          <text x="60" y="44">top</text><text x="60" y="172">bottom</text>
+          <text x="190" y="102">body (rectangle)</text>
+          <text x="190" y="118">length = 2πr, width = h</text>
+        </g>
+        <text x="150" y="212" text-anchor="middle" font-size="12" fill="#5f6b76">2 circles + 1 rectangle that rolls into a tube</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">4</span>Surface Area (material needed)</h2>
+  <div class="grid">
+    <div class="box a"><h3 style="margin-top:0;color:var(--a)">Box</h3><div class="work" id="wSAa"></div></div>
+    <div class="box b"><h3 style="margin-top:0;color:var(--b)">Can</h3><div class="work" id="wSAb"></div></div>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">5</span>Volume &amp; Capacity (how much it holds)</h2>
+  <p style="font-size:.9rem;color:var(--muted)">Remember: 1 cm³ = 1 mL and 1,000 cm³ = 1 liter.</p>
+  <div class="grid">
+    <div class="box a"><h3 style="margin-top:0;color:var(--a)">Box</h3><div class="work" id="wVa"></div></div>
+    <div class="box b"><h3 style="margin-top:0;color:var(--b)">Can</h3><div class="work" id="wVb"></div></div>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">6</span>Trigonometry: Diagonals and Angles</h2>
+  <p>We used trigonometry to find the <b>longest item</b> (like a straw, stick or pencil) that fits inside each container, and the <b>angle</b> it makes with the bottom.</p>
+  <div class="grid">
+    <div class="box a"><h3 style="margin-top:0;color:var(--a)">Box</h3><div class="work" id="wTa"></div></div>
+    <div class="box b"><h3 style="margin-top:0;color:var(--b)">Can</h3><div class="work" id="wTb"></div></div>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">7</span>Cost Estimate (₱)</h2>
+  <div class="note edit">✏️ Sample prices. Check real prices at your local school supply store, bookstore or palengke and type them in.</div>
+  <label>Price of 1 cardboard sheet (₱) <input id="pSheet" type="number" step="1" min="0" value="35"></label>
+  <label>Cardboard sheet size, cm × cm <span><input id="sw" type="number" min="1" value="70" style="width:64px"> × <input id="sh" type="number" min="1" value="100" style="width:64px"></span></label>
+  <label>Extra for flaps and waste (%) <input id="waste" type="number" step="1" min="0" value="15"></label>
+  <label>Glue / tape per container (₱) <input id="pGlue" type="number" step="0.5" min="0" value="3"></label>
+  <label>Label sticker per container (₱) <input id="pLabel" type="number" step="0.5" min="0" value="5"></label>
+  <label>Number of containers to make <input id="qty" type="number" step="1" min="1" value="20"></label>
+
+  <h3>Cost per container</h3>
+  <table id="costTable"></table>
+  <h3>How we got the cardboard cost</h3>
+  <div class="work" id="wCost"></div>
+</section>
+
+<section>
+  <h2><span class="num">8</span>Which container is better?</h2>
+  <table id="cmpTable"></table>
+  <div class="win" id="verdict" style="margin-top:10px"></div>
+</section>
+
+<section>
+  <h2><span class="num">9</span>Reflection</h2>
+  <div class="note edit">✏️ You can tap the text below and edit it in your own words.</div>
+  <div contenteditable="true" style="padding:6px 2px">
+    <p>This task showed me that math is not only for the classroom. To make a good container for our tindahan, I needed to <b>measure</b> carefully, because a small mistake in centimeters changes the surface area and volume a lot.</p>
+    <p><b>Surface area</b> told me how much cardboard to buy, so it is connected to <b>money</b>. <b>Volume</b> told me how many snacks the container can hold. I learned that two containers can use almost the same material but hold different amounts, so choosing the right shape saves money.</p>
+    <p>Using <b>trigonometry</b>, I found the longest item that can fit inside and its angle. This is useful when packing things like straws or skewers.</p>
+    <p>In real life, store owners, packaging designers and engineers use these same formulas to save materials, lower costs and reduce waste. Next time, I will measure two times and compare more shapes before deciding.</p>
+  </div>
+</section>
+
+<div class="btns">
+  <button onclick="resetVals()">Reset sample values</button>
+  <button onclick="window.print()">Print / Save as PDF</button>
+</div>
+<footer>Formulas: Box SA = 2(LW + LH + WH), V = LWH · Cylinder SA = 2πr² + 2πrh, V = πr²h · π ≈ 3.1416</footer>
+</main>
+
+<script>
+const ids=["L","W","H","D","CH","pSheet","sw","sh","waste","pGlue","pLabel","qty"];
+const defaults={};
+ids.forEach(i=>{const e=document.getElementById(i);defaults[i]=e.value;e.addEventListener("input",update)});
+const $=i=>document.getElementById(i);
+const v=i=>Math.max(0,parseFloat($(i).value)||0);
+const f=(n,d=2)=>n.toLocaleString("en-PH",{minimumFractionDigits:d,maximumFractionDigits:d});
+const g=n=>n.toLocaleString("en-PH",{maximumFractionDigits:2});
+const peso=n=>"₱"+f(n);
+const deg=r=>r*180/Math.PI;
+function resetVals(){ids.forEach(i=>$(i).value=defaults[i]);update()}
+
+function update(){
+  const L=v("L"),W=v("W"),H=v("H"),D=v("D"),h=v("CH"),r=D/2,PI=Math.PI;
+  $("Rout").textContent=g(r);
+  $("tL").textContent=g(L)+" cm";$("tW").textContent=g(W)+" cm";$("tH").textContent=g(H)+" cm";
+  $("tD").textContent=g(D)+" cm (r = "+g(r)+" cm)";$("tCH").textContent=g(h)+" cm";
+  $("sL").textContent=g(L);$("sW").textContent=g(W);$("sH").textContent=g(H);
+  $("sR").textContent=g(r);$("sCH").textContent=g(h);$("sD").textContent=g(D);
+
+  // Surface area
+  const LW=L*W,LH=L*H,WH=W*H,SAa=2*(LW+LH+WH);
+  const base=PI*r*r,side=2*PI*r*h,SAb=2*base+side;
+  $("wSAa").textContent=
+`SA = 2(LW + LH + WH)
+   = 2(${g(L)}×${g(W)} + ${g(L)}×${g(H)} + ${g(W)}×${g(H)})
+   = 2(${g(LW)} + ${g(LH)} + ${g(WH)})
+   = 2(${g(LW+LH+WH)})
+SA = ${f(SAa)} cm²`;
+  $("wSAb").textContent=
+`SA = 2πr² + 2πrh
+2πr² = 2 × 3.1416 × ${g(r)}²
+     = ${f(2*base)} cm²  (top + bottom)
+2πrh = 2 × 3.1416 × ${g(r)} × ${g(h)}
+     = ${f(side)} cm²  (body)
+SA = ${f(SAb)} cm²`;
+
+  // Volume
+  const Va=L*W*H,Vb=PI*r*r*h;
+  $("wVa").textContent=
+`V = L × W × H
+  = ${g(L)} × ${g(W)} × ${g(H)}
+V = ${f(Va)} cm³
+Capacity = ${f(Va,0)} mL = ${f(Va/1000)} L`;
+  $("wVb").textContent=
+`V = πr²h
+  = 3.1416 × ${g(r)}² × ${g(h)}
+  = 3.1416 × ${g(r*r)} × ${g(h)}
+V = ${f(Vb)} cm³
+Capacity = ${f(Vb,0)} mL = ${f(Vb/1000)} L`;
+
+  // Trig
+  const bd=Math.hypot(L,W),sd=Math.hypot(bd,H),angA=deg(Math.atan2(H,bd));
+  const cd=Math.hypot(D,h),angB=deg(Math.atan2(h,D));
+  $("wTa").textContent=
+`Floor diagonal (Pythagorean theorem):
+b = √(L² + W²) = √(${g(L*L)} + ${g(W*W)})
+b = ${f(bd)} cm
+
+Space diagonal (longest item):
+d = √(b² + H²) = √(${g(bd*bd)} + ${g(H*H)})
+d = ${f(sd)} cm
+
+Angle with the bottom:
+tan θ = H / b = ${g(H)} / ${f(bd)}
+θ = tan⁻¹(${f(bd?H/bd:0,4)}) = ${f(angA,1)}°`;
+  $("wTb").textContent=
+`The longest item goes from one
+edge of the bottom to the opposite
+edge of the top.
+
+d = √(diameter² + h²)
+  = √(${g(D*D)} + ${g(h*h)})
+d = ${f(cd)} cm
+
+Angle with the bottom:
+tan θ = h / diameter = ${g(h)} / ${g(D)}
+θ = tan⁻¹(${f(D?h/D:0,4)}) = ${f(angB,1)}°`;
+
+  // Cost
+  const sheetArea=v("sw")*v("sh"),perCm=sheetArea?v("pSheet")/sheetArea:0,wf=1+v("waste")/100;
+  const glue=v("pGlue"),lab=v("pLabel"),q=Math.max(1,Math.round(v("qty")));
+  const matA=SAa*wf,matB=SAb*wf,cbA=matA*perCm,cbB=matB*perCm;
+  const totA=cbA+glue+lab,totB=cbB+glue+lab;
+  const sheetsA=sheetArea?Math.ceil(matA*q/sheetArea):0,sheetsB=sheetArea?Math.ceil(matB*q/sheetArea):0;
+  $("costTable").innerHTML=
+`<tr><th>Item</th><th class="r">Box (A)</th><th class="r">Can (B)</th></tr>
+<tr><td>Cardboard</td><td class="r">${peso(cbA)}</td><td class="r">${peso(cbB)}</td></tr>
+<tr><td>Glue / tape</td><td class="r">${peso(glue)}</td><td class="r">${peso(glue)}</td></tr>
+<tr><td>Label sticker</td><td class="r">${peso(lab)}</td><td class="r">${peso(lab)}</td></tr>
+<tr class="total"><td>Total for 1</td><td class="r">${peso(totA)}</td><td class="r">${peso(totB)}</td></tr>
+<tr class="total"><td>Total for ${q}</td><td class="r">${peso(totA*q)}</td><td class="r">${peso(totB*q)}</td></tr>
+<tr><td>Cardboard sheets to buy for ${q}</td><td class="r">${sheetsA}</td><td class="r">${sheetsB}</td></tr>`;
+  $("wCost").textContent=
+`1 sheet = ${g(v("sw"))} × ${g(v("sh"))} = ${g(sheetArea)} cm² for ${peso(v("pSheet"))}
+Cost per cm² = ${peso(v("pSheet"))} ÷ ${g(sheetArea)} = ₱${f(perCm,5)}
+
+Box: ${f(SAa)} cm² + ${g(v("waste"))}% extra = ${f(matA)} cm²
+     ${f(matA)} × ₱${f(perCm,5)} = ${peso(cbA)}
+Can: ${f(SAb)} cm² + ${g(v("waste"))}% extra = ${f(matB)} cm²
+     ${f(matB)} × ₱${f(perCm,5)} = ${peso(cbB)}`;
+
+  // Compare
+  const ppA=Va?totA/(Va/1000):0,ppB=Vb?totB/(Vb/1000):0;
+  const effA=SAa?Va/SAa:0,effB=SAb?Vb/SAb:0;
+  $("cmpTable").innerHTML=
+`<tr><th></th><th class="r">Box (A)</th><th class="r">Can (B)</th></tr>
+<tr><td>Surface area</td><td class="r">${f(SAa)} cm²</td><td class="r">${f(SAb)} cm²</td></tr>
+<tr><td>Capacity</td><td class="r">${f(Va/1000)} L</td><td class="r">${f(Vb/1000)} L</td></tr>
+<tr><td>Cost for 1</td><td class="r">${peso(totA)}</td><td class="r">${peso(totB)}</td></tr>
+<tr><td>Cost per liter of space</td><td class="r">${peso(ppA)}</td><td class="r">${peso(ppB)}</td></tr>
+<tr><td>Volume per cm² of material</td><td class="r">${f(effA)}</td><td class="r">${f(effB)}</td></tr>`;
+  let msg;
+  if(!Va||!Vb){msg="Type all measurements to compare the containers.";}
+  else{
+    const cheap=ppA<ppB?"Box (A)":"Can (B)";
+    const bigger=Va>Vb?"Box (A)":"Can (B)";
+    msg=`<b>${bigger}</b> holds more snacks (${f(Math.max(Va,Vb)/1000)} L vs ${f(Math.min(Va,Vb)/1000)} L). `+
+        `<b>${cheap}</b> is cheaper for the space it gives (${peso(Math.min(ppA,ppB))} per liter vs ${peso(Math.max(ppA,ppB))}). `+
+        `For the tindahan, we choose <b>${cheap}</b> because it gives more storage for every peso we spend.`;
+  }
+  $("verdict").innerHTML=msg;
+}
+update();
+</script>
+</body>
+</html>
