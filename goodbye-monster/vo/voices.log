@@ -1,0 +1,9 @@
+length scale 1.000: speech 111.96 s + gaps 30.24 s = 142.20 s
+length scale 0.784: speech 95.81 s + gaps 30.24 s = 126.05 s
+length scale 0.718: speech 88.10 s + gaps 30.24 s = 118.34 s
+wrote vo/p1/voice.wav (118.34 s), 399 words, 202 wpm, length scale 0.715
+length scale 1.000: speech 109.73 s + gaps 29.14 s = 138.87 s
+length scale 0.810: speech 97.32 s + gaps 29.14 s = 126.46 s
+length scale 0.739: speech 88.71 s + gaps 29.14 s = 117.85 s
+wrote vo/p2/voice.wav (117.85 s), 390 words, 199 wpm, length scale 0.739
+VOICES_DONE
