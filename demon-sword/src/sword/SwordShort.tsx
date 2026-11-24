@@ -86,7 +86,7 @@ const EyeGlow: React.FC<{ a: Hum; c: string; k: number; big?: boolean }> = ({ a,
     </>
   );
 };
-const HumView: React.FC<{ a: Hum; t: number }> = ({ a, t }) => {
+export const HumView: React.FC<{ a: Hum; t: number }> = ({ a, t }) => {
   const held = a.held ? { side: a.held.side, node: heldNode(a.held, t), tilt: a.held.tilt } : undefined;
   const held2 = a.held2 ? { side: a.held2.side, node: heldNode(a.held2, t), tilt: a.held2.tilt } : undefined;
   return (
