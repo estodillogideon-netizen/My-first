@@ -11,7 +11,7 @@ import { Blob } from "../blocky/Contact";
 import { L, SPEC, U } from "../blocky/motion";
 import type { V3 } from "../blocky/motion";
 import { facePoint } from "../library/characters";
-import { FogBank, Glow, Sparkles } from "../goodbye/Fog";
+import { FogBank, Glow, LensCtx, Sparkles } from "../goodbye/Fog";
 import { Katana, Sheath, SlashArc } from "./Blade";
 import { Demon, ShadowClaws, Silhouette } from "./Demon";
 import { moodOfShot } from "./mood";
@@ -193,6 +193,7 @@ export const SwordShort: React.FC<{ sub?: boolean; subN?: number; at?: number }>
   return (
     <AbsoluteFill style={{ background: "#05060c" }}>
       <View mood={mood} cam={cam} t={t} blur={blur} sky={exterior}>
+        <LensCtx.Provider value={cam.pos}>
         {st.set === "village" ? <Village night={e.night} t={t} lit={e.lit} stage={e.stage} fires={[]} /> : null}
         {st.set === "home" ? <Home t={t} lamp={e.lamp} dumplings={e.dumplings} /> : null}
         {st.set === "forest" ? <Forest t={t} hunters={e.hunters} /> : null}
@@ -209,6 +210,7 @@ export const SwordShort: React.FC<{ sub?: boolean; subN?: number; at?: number }>
           <HumView key={a.key} a={a} t={t} />
         ))}
         <Mist st={st} scene={row.scene} c0={cam0.pos} t={t} cam={cam.pos} />
+        </LensCtx.Provider>
       </View>
     </AbsoluteFill>
   );

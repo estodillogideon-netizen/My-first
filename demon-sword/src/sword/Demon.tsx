@@ -137,7 +137,7 @@ export const Demon: React.FC<DemonProps> = ({ p, yaw, s, t, rise = 1, eyes = 1, 
     const fl = 0.55 + 0.45 * Math.sin(t * (3.1 + hash(ni) * 2) + ni);
     const ap: V3 = [nd.p[0] * 1.12, nd.p[1] * rise * 1.03 + 0.08 * Math.sin(t * 2 + ni), nd.p[2] * 1.1];
     out.push(<sprite key={k++} position={ap} scale={[nd.r * 3.4, nd.r * 3.2, 1]} material={smoke(king ? "#1a0610" : "#12081a", q((king ? 0.42 : 0.32) * fl * fade), (ni + 1) % 3)} renderOrder={6} />);
-    if (nd.rim && fade > 0.05) out.push(<sprite key={k++} position={ap} scale={[nd.r * 2.6, nd.r * 2.4, 1]} material={addGlow("#ff2410", q((king ? 0.2 : 0.13) * fl * fade))} renderOrder={6} />);
+    if (nd.rim && fade > 0.05) out.push(<sprite key={k++} position={ap} scale={[nd.r * 2.6, nd.r * 2.4, 1]} material={addGlow("#ff2410", q((king ? 0.2 : 0.13) * fl * fade))} renderOrder={8} />);
   });
   // embers drifting up off the body
   for (let i = 0; i < (king ? 16 : 7); i++) {
@@ -224,7 +224,7 @@ export const ShadowClaws: React.FC<{ p: V3; yaw: number; s: number; t: number; g
       const ph = t * 2 + i + sx;
       out.push(<sprite key={k++} position={[x + 0.05 * Math.sin(ph), y, z]} scale={[r * 2.6, r * 2.4, 1]} material={smoke("#06040a", q(0.9 * fade), (i + (sx > 0 ? 1 : 0)) % 3)} renderOrder={7} />);
       out.push(<sprite key={k++} position={[x * 1.08, y, z]} scale={[r * 3.6, r * 3.4, 1]} material={smoke("#160a1e", q(0.32 * fade * (0.6 + 0.4 * Math.sin(ph * 1.7))), (i + 2) % 3)} renderOrder={6} />);
-      if (i % 2 === 0) out.push(<sprite key={k++} position={[x * 1.05, y, z]} scale={[r * 3.2, r * 3.0, 1]} material={addGlow("#ff2410", q(0.3 * fade * (0.7 + 0.3 * Math.sin(ph * 2.3))))} renderOrder={6} />);
+      if (i % 2 === 0) out.push(<sprite key={k++} position={[x * 1.05, y, z]} scale={[r * 3.2, r * 3.0, 1]} material={addGlow("#ff2410", q(0.3 * fade * (0.7 + 0.3 * Math.sin(ph * 2.3))))} renderOrder={8} />);
       if (i === 10) {
         // three hooked claws at the end
         for (let f = -1; f <= 1; f++)

@@ -111,7 +111,15 @@ export const FogBank: React.FC<{ box: [number, number, number, number, number, n
 };
 
 // ------------------------------------------------------------------ Glow
-export const Glow: React.FC<{ p: V3; s: number; c: string; op?: number }> = ({ p, s, c, op = 1 }) => (op < 0.01 ? null : <sprite position={p} scale={[s, s, 1]} material={spriteMat(c, q(op), 0, true)} renderOrder={8} />);
+/** the lens position (set by the composition): a glow fades out smoothly as the lens comes inside it, instead of
+ *  popping when its sprite crosses the lens */
+export const LensCtx = React.createContext<V3 | null>(null);
+export const Glow: React.FC<{ p: V3; s: number; c: string; op?: number }> = ({ p, s, c, op = 1 }) => {
+  const lens = React.useContext(LensCtx);
+  const k = lens ? Math.min(1, Math.max(0, (Math.hypot(p[0] - lens[0], p[1] - lens[1], p[2] - lens[2]) - s * 0.3) / (s * 0.45 + 0.05))) : 1;
+  const o = op * k;
+  return o < 0.01 ? null : <sprite position={p} scale={[s, s, 1]} material={spriteMat(c, q(o), 0, true)} renderOrder={8} />;
+};
 
 // ------------------------------------------------------------------ LightCone
 const coneMats = new Map<string, THREE.ShaderMaterial>();
