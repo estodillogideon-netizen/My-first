@@ -636,7 +636,7 @@ export const Cone: React.FC<{ scoops: number; colors: string[]; pop?: [number, n
 };
 
 // ------------------------------------------------------------------ the character
-export const Blocky: React.FC<{ pose: Pose; look: Look; emotion: Emotion; blink?: boolean; cone?: ConeProps; held?: Held; held2?: Held; chest?: React.ReactNode; scale?: number; socks?: string; face2?: { emotion: Emotion; k: number } }> = ({
+export const Blocky: React.FC<{ pose: Pose; look: Look; emotion: Emotion; blink?: boolean; cone?: ConeProps; held?: Held; held2?: Held; chest?: React.ReactNode; scale?: number; socks?: string; face2?: { emotion: Emotion; k: number }; headOnly?: boolean }> = ({
   pose: p,
   look,
   emotion,
@@ -648,6 +648,7 @@ export const Blocky: React.FC<{ pose: Pose; look: Look; emotion: Emotion; blink?
   scale = 1,
   socks,
   face2,
+  headOnly = false,
 }) => {
   const cs = React.useContext(CastCtx);
   const S = SPEC;
@@ -729,15 +730,19 @@ export const Blocky: React.FC<{ pose: Pose; look: Look; emotion: Emotion; blink?
   return (
     <group position={[p.x, p.y, p.z]} rotation={[0, p.yaw, 0]} scale={scale}>
       <group rotation={[p.pitch, 0, 0]}>
-        {leg("L")}
-        {leg("R")}
+        {headOnly ? null : leg("L")}
+        {headOnly ? null : leg("R")}
         <group position={[0, p.bob ?? 0, 0]} rotation={[0, p.twist ?? 0, p.sway ?? 0]}>
-        <mesh geometry={rbox(S.torso.w * U, S.torso.h * U, S.torso.d * U, EDGE)} material={shirt} position={[0, (S.torso.h * U) / 2, 0]} castShadow={cs} receiveShadow />
-        <mesh geometry={geoOf("printPlane", () => new THREE.PlaneGeometry(1.15 * U, 1.15 * U))} material={print} position={[0, 1.12 * U, (S.torso.d * U) / 2 + DECAL_OFF]} />
-        {arm("L")}
-        {arm("R")}
-        {chest ? <group position={[0, 1.0 * U, (S.torso.d * U) / 2]}>{chest}</group> : null}
-        <BodyAcc look={look} />
+        {headOnly ? null : (
+          <>
+            <mesh geometry={rbox(S.torso.w * U, S.torso.h * U, S.torso.d * U, EDGE)} material={shirt} position={[0, (S.torso.h * U) / 2, 0]} castShadow={cs} receiveShadow />
+            <mesh geometry={geoOf("printPlane", () => new THREE.PlaneGeometry(1.15 * U, 1.15 * U))} material={print} position={[0, 1.12 * U, (S.torso.d * U) / 2 + DECAL_OFF]} />
+            {arm("L")}
+            {arm("R")}
+            {chest ? <group position={[0, 1.0 * U, (S.torso.d * U) / 2]}>{chest}</group> : null}
+            <BodyAcc look={look} />
+          </>
+        )}
         <group position={[0, (S.torso.h + H.gap) * U, 0]} rotation={[0, p.headYaw, 0]}>
           <group rotation={[p.headPitch, 0, 0]}>
             <group position={[0, (H.h * U) / 2, 0]}>
