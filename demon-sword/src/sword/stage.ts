@@ -284,7 +284,7 @@ SHOT.F05 = ({ t, u }) => {
     items: [demon([-0.4, 0, STREET], PI / 2, 0.64, { burst: ss(0.25, 0.9, u), reach: 0.8 }, 6), demon([2.9, 0, STREET + 0.4], -PI / 2, 0.6, { burst: ss(0.85, 1.4, u) }, 7), { k: "arc", p: [REN_F[0] - 0.4, 1.05, STREET], rot: [0, 0, 0], r: 0.75, a0: 2.2, a1: -0.9, u: ss(0.0, 0.3, u) + (u > 0.3 ? (u - 0.3) * 1.2 : 0), c: RED }, { k: "arc", p: [REN_F[0], 0.95, STREET], rot: [-PI / 2 + 0.15, 0, 0], r: 0.85, a0: 0, a1: 2 * PI - 0.3, u: ss(0.45, 0.85, u) + (u > 0.85 ? (u - 0.85) * 1.2 : 0), c: RED, w: 0.12 }],
   };
 };
-SHOT.F07 = ({ t }) => ({ set: "village", hums: [ren(ready(stand(REN_F[0], REN_F[1], -PI / 2 + 0.4, RS, { pitch: 0.18, headPitch: 0.1, bob: -0.03 })), emo(t, [[0, "brave"], [ST("F07") + 0.3, "sad"]]), { held: sword(red(0.9), [1.1 + 0.05 * Math.sin(t * 40), 0.04 * Math.sin(t * 33)]) })] });
+SHOT.F07 = ({ t }) => ({ set: "village", hums: [ren(ready(stand(REN_F[0], REN_F[1], -PI / 2 + 0.4, RS, { pitch: 0.18, headPitch: 0.1, bob: -0.03 })), "sad", { held: sword(red(0.9), [1.1 + 0.05 * Math.sin(t * 40), 0.04 * Math.sin(t * 33)]) })] });
 // cornered against the south houses
 const REN_W: [number, number] = [-6, VIL.sz - 0.55];
 const BIGD = (t: number, o: Partial<DemonProps> = {}) => demon([-6, 0, 3.6], 0, 1.15, { reach: lerp(0.5, 0.85, 0.5 + 0.5 * Math.sin(t * 1.5)), ...o }, 8);

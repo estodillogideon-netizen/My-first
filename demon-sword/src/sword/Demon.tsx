@@ -258,7 +258,7 @@ export const ShadowClaws: React.FC<{ p: V3; yaw: number; s: number; t: number; g
 
 /** a flat shadow of a small person on a wall (facing +z), x = where it falls */
 export const Silhouette: React.FC<{ p: V3; s: number; op?: number; walk?: number }> = ({ p, s, op = 0.55, walk = 0 }) => {
-  const m = new THREE.MeshBasicMaterial({ color: "#1a0c10", transparent: true, opacity: op, depthWrite: false });
+  const m = new THREE.MeshBasicMaterial({ color: "#0a0608", transparent: true, opacity: Math.min(0.9, op * 1.4), depthWrite: false });
   const sw = Math.sin(walk) * 0.25;
   return (
     <group position={p} scale={s}>

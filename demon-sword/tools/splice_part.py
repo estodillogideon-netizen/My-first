@@ -40,7 +40,7 @@ for j, (n, a, b, base) in enumerate(segs):
     labels.append(f"[s{j}]")
 fc.append("".join(labels) + f"concat=n={len(segs)}:v=1:a=0,fps=30[v]")
 print("segments:", [(s[0], s[1], s[2]) for s in segs])
-out = f"out/final/GoodbyeMonster_Part{P}.mp4"
+out = f"out/final/TheSwordThatCantLie.mp4"
 cmd = ["ffmpeg", "-v", "error", "-y", *inputs, "-filter_complex", ";".join(fc), "-map", "[v]", "-map", f"{mix}:a",
        "-c:v", "libx264", "-b:v", "3200k", "-maxrate", "4200k", "-bufsize", "8400k", "-preset", "slow", "-pix_fmt", "yuv420p",
        "-c:a", "aac", "-b:a", "192k", "-shortest", "-movflags", "+faststart", out]

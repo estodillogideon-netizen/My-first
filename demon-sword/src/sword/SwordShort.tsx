@@ -78,8 +78,8 @@ const EyeGlow: React.FC<{ a: Hum; c: string; k: number; big?: boolean }> = ({ a,
         const p: V3 = [f[0] + Math.sin(yaw) * fwd + Math.cos(yaw) * side * sx, y, f[2] + Math.cos(yaw) * fwd - Math.sin(yaw) * side * sx];
         return (
           <group key={sx}>
-            <Glow p={p} s={(big ? 0.12 : 0.07) * a.s} c="#ffffff" op={k} />
-            <Glow p={p} s={(big ? 0.32 : 0.16) * a.s} c={c} op={k} />
+            <Glow p={p} s={(big ? 0.06 : 0.05) * a.s} c="#ffffff" op={k} />
+            <Glow p={p} s={(big ? 0.15 : 0.12) * a.s} c={c} op={0.9 * k} />
           </group>
         );
       })}
