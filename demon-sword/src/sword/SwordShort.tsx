@@ -156,7 +156,7 @@ const ItemView: React.FC<{ it: Item; t: number }> = ({ it, t }) => {
 };
 
 /** mist per set, anchored on the shot's first lens position */
-const Mist: React.FC<{ st: Stage; scene: string; c0: V3; t: number }> = ({ st, scene, c0, t }) => {
+const Mist: React.FC<{ st: Stage; scene: string; c0: V3; t: number; cam: V3 }> = ({ st, scene, c0, t, cam }) => {
   const k = st.env.mist;
   if (k < 0.02 || st.set === "home" || st.set === "shrineIn") return null;
   const cx = c0[0], cz = c0[2];
@@ -164,8 +164,8 @@ const Mist: React.FC<{ st: Stage; scene: string; c0: V3; t: number }> = ({ st, s
   const op = scene === "day" || scene === "dawn" ? 0.15 : scene === "battle" || scene === "memory" ? 0.3 : 0.45;
   return (
     <>
-      <FogBank box={[cx - 14, cx + 14, 0.05, 1.2, cz - 16, cz + 2]} n={36} color={col} op={op * k} t={t} seed={1} size={[2.8, 5.0]} />
-      <FogBank box={[cx - 16, cx + 16, 1.2, 5.5, cz - 24, cz - 4]} n={16} color={col} op={op * 0.6 * k} t={t} seed={2} size={[4, 7]} drift={0.2} />
+      <FogBank box={[cx - 14, cx + 14, 0.05, 1.2, cz - 16, cz + 2]} n={36} color={col} op={op * k} t={t} seed={1} size={[2.8, 5.0]} avoid={cam} />
+      <FogBank box={[cx - 16, cx + 16, 1.2, 5.5, cz - 24, cz - 4]} n={16} color={col} op={op * 0.6 * k} t={t} seed={2} size={[4, 7]} drift={0.2} avoid={cam} />
     </>
   );
 };
@@ -208,7 +208,7 @@ export const SwordShort: React.FC<{ sub?: boolean; subN?: number; at?: number }>
         {st.hums.map((a) => (
           <HumView key={a.key} a={a} t={t} />
         ))}
-        <Mist st={st} scene={row.scene} c0={cam0.pos} t={t} />
+        <Mist st={st} scene={row.scene} c0={cam0.pos} t={t} cam={cam.pos} />
       </View>
     </AbsoluteFill>
   );

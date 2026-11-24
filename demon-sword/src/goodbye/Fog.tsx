@@ -85,7 +85,9 @@ const litColor = (base: string, p: V3, lights: FogLight[]) => {
 };
 
 // ------------------------------------------------------------------ FogBank
-export const FogBank: React.FC<{ box: [number, number, number, number, number, number]; n: number; color: string; op: number; t: number; seed?: number; size?: [number, number]; drift?: number; lights?: FogLight[] }> = ({ box, n, color, op, t, seed = 1, size = [1.6, 3.2], drift = 0.12, lights = [] }) => {
+/** avoid: the camera position; puffs fade out smoothly as they come within (their size + 1 m) of it (no popping
+ *  through the lens) */
+export const FogBank: React.FC<{ box: [number, number, number, number, number, number]; n: number; color: string; op: number; t: number; seed?: number; size?: [number, number]; drift?: number; lights?: FogLight[]; avoid?: V3 }> = ({ box, n, color, op, t, seed = 1, size = [1.6, 3.2], drift = 0.12, lights = [], avoid }) => {
   const [x0, x1, y0, y1, z0, z1] = box;
   const W = x1 - x0;
   const out: React.ReactNode[] = [];
@@ -99,8 +101,10 @@ export const FogBank: React.FC<{ box: [number, number, number, number, number, n
     const e = Math.min(1, (x - x0) / 1.2, (x1 - x) / 1.2);
     const s = size[0] + (size[1] - size[0]) * hash(i * 9.1 + seed);
     const p: V3 = [x, y, z];
+    const near = avoid ? Math.min(1, Math.max(0, (Math.hypot(x - avoid[0], y - avoid[1], z - avoid[2]) - s * 0.42) / 0.6)) : 1;
+    if (near <= 0) continue;
     const c = lights.length ? litColor(color, p, lights) : color;
-    const m = spriteMat(c, q(op * Math.max(0, e) * (0.6 + 0.4 * h1)), i % 3);
+    const m = spriteMat(c, q(op * Math.max(0, e) * (0.6 + 0.4 * h1) * near), i % 3);
     out.push(<sprite key={i} position={p} scale={[s, s * 0.62, 1]} material={m} renderOrder={5} />);
   }
   return <>{out}</>;

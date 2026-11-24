@@ -75,10 +75,13 @@ const runAB = (a: [number, number], b: [number, number], t: number, t0: number, 
   const yaw = toward(a, b);
   const x = lerp(a[0], b[0], k), z = lerp(a[1], b[1], k);
   if (k >= 1) return stand(x, z, yaw, s, o);
-  return { ...run(x, z, yaw, t, t0, 0, s, o), x, z };
+  // the stride dies out over the last 15 % (no snap into the standing pose)
+  const r = run(x, z, yaw, t, t0, 0, s, o);
+  const f = 1 - ss(0.85, 1, k);
+  return { ...r, x, z, legL: r.legL * f, legR: r.legR * f, armL: r.armL * f + (o.armL ?? 0.06) * (1 - f), armR: r.armR * f + (o.armR ?? 0.06) * (1 - f), pitch: r.pitch * f, bob: (r.bob ?? 0) * f };
 };
 const hugP = (p: Pose, t: number): Pose => ({ ...p, armL: 1.45, armR: 1.45, outL: -0.38, outR: -0.38, sway: 0.05 * Math.sin(t * 2.4) });
-const armsWide = (p: Pose): Pose => ({ ...p, armL: 1.5, armR: 1.5, outL: 0.9, outR: 0.9 });
+const armsWide = (p: Pose, k = 1): Pose => ({ ...p, armL: lerp(p.armL, 1.5, k), armR: lerp(p.armR, 1.5, k), outL: lerp(p.outL, 0.9, k), outR: lerp(p.outR, 0.9, k) });
 /** emotions over time: [[t0, emotion], ...]; a change dissolves over dur seconds */
 const emo = (t: number, steps: [number, Emotion][], dur = 0.35): { emotion: Emotion; face2?: { emotion: Emotion; k: number } } => {
   let cur = steps[0][1];
@@ -261,9 +264,13 @@ SHOT.F02 = ({ t, u }) => ({
   set: "village",
   items: [demon([9 - 0.4 * u, NR - 1.0 - 1.4 * u, N_RIDGE_Z + 1.2 + 1.4 * u], -0.15, 0.8, { crawl: 0.8, rise: 0.65, reach: 1 }, 2), demon([12.6, NR - 1.3 - 0.8 * u, N_RIDGE_Z + 1.6 + 0.8 * u], -0.35, 0.7, { crawl: 0.8, rise: 0.6, reach: 1 }, 3), demon([15.4, NR - 0.7, N_RIDGE_Z + 1.0 + u], -0.2, 0.72, { crawl: 0.8, rise: 0.6, reach: 1 }, 4), demon([6.8, 0, 1.0 + u], -0.5, 0.7, { crawl: 0.6, rise: 0.7, reach: 1 }, 6)],
 });
+/** a hunter slashing again and again: down in 0.3 s, then the blade rises smoothly back up (no snapping) */
 const fightH = (i: number, x: number, z: number, yaw: number, t: number, ph: number) => {
-  const sl = slashArm(stand(x, z, yaw, SC.hunter, { legL: 0.3, legR: -0.3 }), t, ph + Math.floor((t - ph) / 0.9) * 0.9);
-  return hunter(i, sl.pose, "brave", { held: sword(red(1), sl.tilt) });
+  const c = ((((t - ph) % 0.9) + 0.9) % 0.9) / 0.9;
+  const k = c < 0.35 ? ss(0, 0.35, c) : 1 - ss(0.35, 1, c);
+  const p = stand(x, z, yaw, SC.hunter, { legL: 0.3, legR: -0.3 });
+  const pose = { ...p, armR: lerp(2.7, 0.4, k), outR: lerp(0.3, -0.25, k), twist: lerp(0.35, -0.4, k), pitch: lerp(-0.05, 0.12, k) };
+  return hunter(i, pose, "brave", { held: sword(red(1), [lerp(0.2, 1.7, k), lerp(-0.4, 0.4, k)]) });
 };
 SHOT.F03 = ({ t }) => ({
   set: "village",
@@ -293,8 +300,8 @@ SHOT.F08 = ({ t }) => ({ set: "village", hums: [renCornered(emo(t, [[0, "brave"]
 const MEI_G: [number, number] = [-6, VIL.sz - 1.35];
 SHOT.G01 = ({ t, u, d }) => {
   const p = runAB([-2.5, 5.2], MEI_G, t, ST("G01"), ST("G01") + 0.6 * d, MS);
-  const there = ss(0.6, 0.75, u / d);
-  return { set: "village", hums: [renCornered("shock"), mei(there > 0.5 ? armsWide(stand(MEI_G[0], MEI_G[1], PI, MS)) : p, emo(t, [[0, "shock"], [ST("G01") + 0.7 * d, "brave"]]))], items: [BIGD(t)] };
+  const there = ss(0.6, 0.8, u / d);
+  return { set: "village", hums: [renCornered("shock"), mei(armsWide(p, there), emo(t, [[0, "shock"], [ST("G01") + 0.7 * d, "brave"]]))], items: [BIGD(t)] };
 };
 SHOT.G02 = ({ t }) => ({ set: "village", hums: [renCornered("shock"), mei(armsWide(stand(MEI_G[0], MEI_G[1], PI, MS)), "brave")], items: [BIGD(t)] });
 SHOT.G03 = ({ t, u, d }) => ({

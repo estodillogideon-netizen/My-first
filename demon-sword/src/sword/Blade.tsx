@@ -13,6 +13,7 @@ import { canvasTexture, geoOf, plastic } from "../blocky/mat";
 import { hash } from "../blocky/motion";
 import type { V3 } from "../blocky/motion";
 import { Glow } from "../goodbye/Fog";
+import { mix } from "../engine/util";
 
 export const BLADE = { grip: 0.27, guardY: 0.15, len: 0.82, w: 0.034, th: 0.007, curve: 0.035 };
 
@@ -190,7 +191,7 @@ export const Sheath: React.FC<{ glow?: GlowState; t: number; wrapped?: number }>
       <mesh geometry={geoOf("tsukaS", () => new THREE.BoxGeometry(0.036, grip, 0.028))} material={plastic("#ffffff", { rough: 0.8, map: wrapTex() })} castShadow />
       <mesh geometry={geoOf("tsubaS", () => new THREE.CylinderGeometry(0.058, 0.058, 0.012, 28))} material={plastic("#2a2228", { rough: 0.3 })} position={[0, guardY, 0]} />
       <mesh geometry={geoOf("tsubaRimS", () => new THREE.TorusGeometry(0.058, 0.005, 6, 28))} material={plastic("#c8a040", { rough: 0.25 })} position={[0, guardY, 0]} rotation={[Math.PI / 2, 0, 0]} />
-      <mesh geometry={geoOf("saya", () => new THREE.BoxGeometry(0.05, len + 0.05, 0.03))} material={plastic(wrapped > 0.5 ? "#d8cdb4" : "#1a1420", { rough: wrapped > 0.5 ? 0.9 : 0.22 })} position={[0, guardY + 0.01 + (len + 0.05) / 2, 0]} castShadow />
+      <mesh geometry={geoOf("saya", () => new THREE.BoxGeometry(0.05, len + 0.05, 0.03))} material={plastic(mix("#1a1420", "#d8cdb4", Math.round(wrapped * 10) / 10), { rough: Math.round((0.22 + 0.68 * wrapped) * 10) / 10 })} position={[0, guardY + 0.01 + (len + 0.05) / 2, 0]} castShadow />
       <mesh geometry={geoOf("sayaCollar", () => new THREE.BoxGeometry(0.056, 0.03, 0.036))} material={plastic("#c8a040", { rough: 0.25 })} position={[0, guardY + 0.035, 0]} />
       {glow && gk > 0.01 ? (
         <>
