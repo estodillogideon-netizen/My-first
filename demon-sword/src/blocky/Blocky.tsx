@@ -697,7 +697,7 @@ export const Blocky: React.FC<{ pose: Pose; look: Look; emotion: Emotion; blink?
   const midBlink = face2 ? fk > 0.3 && fk < 0.7 : false;
   // shade: the face lost in a hood's shadow (the head darkens, the features fade)
   const headSkin = shade > 0.01 ? plastic(mix(look.skin, "#050508", Math.round(shade * 0.85 * 20) / 20), { rough: 0.6 }) : skin;
-  const face = plastic("#ffffff", { decal: true, rough: 0.45, opacity: (face2 ? 1 - fk : 1) * (1 - Math.round(shade * 20) / 20), map: faceTex(emotion, blink || midBlink, look.cheeks, look.eyeScale ?? 1, look.lashes, face2 ? 0 : talk) });
+  const face = plastic("#ffffff", { decal: true, rough: 0.45, opacity: shade >= 0.8 ? 0.001 : (face2 ? 1 - fk : 1) * (1 - Math.round(shade * 20) / 20), map: faceTex(emotion, blink || midBlink, look.cheeks, look.eyeScale ?? 1, look.lashes, face2 ? 0 : talk) });
   const faceB = face2 && fk > 0 ? plastic("#ffffff", { decal: true, rough: 0.45, opacity: fk, map: faceTex(face2.emotion, blink || midBlink, look.cheeks, look.eyeScale ?? 1, look.lashes, talk) }) : null;
   const print = plastic("#ffffff", { decal: true, rough: 0.55, map: printTex(look.print, look.accent) });
   const arm = (side: "L" | "R") => {

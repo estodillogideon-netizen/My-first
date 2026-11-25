@@ -287,7 +287,7 @@ export const Living: React.FC<{ night: boolean; t: number; door: number; bolt: n
       {/* the party: the table, the cake, balloons */}
       {party ? (
         <>
-          <B s={[1.6, 0.06, 1.0]} p={[HS.table[0], 0.75, HS.table[1]]} c="#e8e0d0" />
+          <B s={[1.6, 0.06, 1.0]} p={[HS.table[0], 0.75, HS.table[1]]} c="#8a5a3a" rough={0.45} />
           {[[-0.7, -0.4], [0.7, -0.4], [-0.7, 0.4], [0.7, 0.4]].map(([x, z], i) => (
             <B key={i} s={[0.06, 0.75, 0.06]} p={[HS.table[0] + x, 0.375, HS.table[1] + z]} c="#6a4a2e" />
           ))}
