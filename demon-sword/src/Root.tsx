@@ -5,6 +5,7 @@ import { BLOCKY_FRAMES, BlockyTest } from "./blocky/BlockyTest";
 import { SwordShort } from "./sword/SwordShort";
 import { Avatar } from "./sword/Avatar";
 import { Thumb } from "./sword/Thumb";
+import { Sample, SAMPLE_FRAMES } from "./sample/Sample";
 import { FRAMES } from "./sword/time";
 
 // Sword: the Short (sharp, for stills); SwordSub2: 2 sub-frames per output frame at 60 fps for motion blur
@@ -24,6 +25,8 @@ export const Root: React.FC = () => (
     <Composition id="AvatarMei" component={Avatar} durationInFrames={1} fps={30} width={1080} height={1080} defaultProps={{ who: "mei" as const }} />
     <Composition id="Thumb" component={Thumb} durationInFrames={1} fps={30} width={1080} height={1920} defaultProps={{ wide: false }} />
     <Composition id="ThumbWide" component={Thumb} durationInFrames={1} fps={30} width={1280} height={720} defaultProps={{ wide: true }} />
+    <Composition id="Sample" component={Sample} durationInFrames={SAMPLE_FRAMES} fps={30} width={1080} height={1920} defaultProps={{ sub: false }} />
+    <Composition id="SampleSub2" component={Sample} durationInFrames={SAMPLE_FRAMES * 2} fps={60} width={1080} height={1920} defaultProps={{ sub: true, subN: 2 }} />
     <Composition id="SwordPick" component={SwordPick} durationInFrames={PICK.length || 1} fps={30} width={1080} height={1920} />
   </>
 );
