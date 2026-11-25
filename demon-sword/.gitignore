@@ -11,3 +11,4 @@ vo/p*/mix.wav
 build3/
 vo/p*/*_v1.wav
 node_modules
+__pycache__/
