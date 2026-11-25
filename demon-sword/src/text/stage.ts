@@ -7,7 +7,7 @@ import type { Emotion, Pose, V3 } from "../blocky/motion";
 import { alive, base, blinkAt, facePoint, heldWorld, SINK } from "../library/characters";
 import { BED, DRESSER } from "../monster/Sets";
 import { DAD, ELLIE, ELLIE_DAY, futureHood, MAX, MOM, NOAH, NOAH_HOME, SC, ZOE } from "./cast";
-import type { Msg } from "./Sets";
+import type { BikeRig, Msg } from "./Sets";
 import { HS, LAKE } from "./Sets";
 import { shot, ST, W } from "./time";
 
@@ -17,7 +17,7 @@ export type Hum = { key: string; look: Look; pose: Pose; emotion: Emotion; s: nu
 export const INSERT_AT: Record<"party" | "bedroom", V3> = { party: [0.6, 1.2, -2.0], bedroom: [0.3, 1.25, 0.9] };
 export type Item =
   | { k: "phone"; p: V3; rot: V3; s: number; msg: Msg }
-  | { k: "bike"; p: V3; yaw: number }
+  | { k: "bike"; p: V3; yaw: number; rig?: BikeRig }
   | { k: "teddy"; p: V3; rot: V3 }
   | { k: "glow"; p: V3; s: number; c: string; op: number }
   | { k: "mist"; c: V3; u: number }
@@ -139,9 +139,25 @@ SHOT.B06 = ({ t }) => ({ set: "house", env: { cake: 0 }, hums: partyHums(t, emo(
 SHOT.B07 = () => ({ set: "house", env: { lamp: 0.25 } });
 
 // ================================================================== B: the street by day
+/** a rider on a bike: the hips on the saddle, the legs pumping (feet on the pedals), leaning to the bar, hands on the
+ *  grips; returns the pose and the bike's rig in the bike's own frame */
+const ride = (x: number, z: number, yaw: number, s: number, t: number, dist: number): { pose: Pose; rig: BikeRig } => {
+  const hipY = 0.68;
+  const ph = 2 * PI * 1.5 * t;
+  const sw = (k: number) => 0.55 + 0.4 * Math.sin(ph + k * PI);
+  const pose: Pose = { ...stand(x, z, yaw, s), y: hipY, legL: sw(0), legR: sw(1), armL: 1.02, armR: 1.02, outL: -0.12, outR: -0.12, pitch: 0.45, headPitch: -0.32, bob: 0.008 * Math.sin(2 * ph) };
+  const toLocal = (w: V3): V3 => {
+    const dx = w[0] - x, dz = w[2] - z;
+    return [dx * Math.cos(yaw) - dz * Math.sin(yaw), w[1], dx * Math.sin(yaw) + dz * Math.cos(yaw)];
+  };
+  const foot = (side: 1 | -1, a: number): V3 => [side * SPEC.hipX * U * s, hipY - L * s * Math.cos(a), L * s * Math.sin(a)];
+  const rig: BikeRig = { hipY, feet: [foot(1, sw(0)), foot(-1, sw(1))], hands: [toLocal(heldWorld(pose, "L", s)), toLocal(heldWorld(pose, "R", s))], spin: dist / 0.28 };
+  return { pose, rig };
+};
 SHOT.B01 = ({ t, u }) => {
   const x = lerp(-9, 2.2, ss(0, 2.6, u));
-  return { set: "outside", hums: [hum("max", MAX, NS, { ...sitAt(x, 9.0, PI / 2, NS, 0.66), armL: 1.2, armR: 1.2, outL: -0.2, outR: -0.2, legL: 1.0 + 0.4 * Math.sin(u * 9), legR: 1.0 - 0.4 * Math.sin(u * 9), pitch: 0.25, headPitch: -0.2 }, "joy", 31)], items: [{ k: "bike", p: [x, 0, 9.0], yaw: PI / 2 }] };
+  const r = ride(x, 9.0, PI / 2, NS, t, x + 9);
+  return { set: "outside", hums: [hum("max", MAX, NS, r.pose, "joy", 31)], items: [{ k: "bike", p: [x, 0, 9.0], yaw: PI / 2, rig: r.rig }] };
 };
 SHOT.B02 = ({ t }) => ({ set: "outside", hums: [hum("max", MAX, NS, stand(2.6, 6.6, PI - 0.4, NS, { armR: 2.2, outR: 0.2, headPitch: -0.1 }), "joy", 31, { held: phoneR("lock", [0.1, 0]) })], items: [{ k: "bike", p: [3.3, 0, 7.0], yaw: PI / 2 + 0.3 }] });
 const ZOE_P: [number, number] = [7.0, 4.2];

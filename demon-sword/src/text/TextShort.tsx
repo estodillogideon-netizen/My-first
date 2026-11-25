@@ -47,8 +47,8 @@ const ItemView: React.FC<{ it: Item; t: number }> = ({ it, t }) => {
       );
     case "bike":
       return (
-        <group position={it.p} rotation={[0, it.yaw - Math.PI / 2, 0]}>
-          <Bike />
+        <group position={it.p} rotation={[0, it.yaw, 0]}>
+          <Bike rig={it.rig} />
         </group>
       );
     case "teddy":

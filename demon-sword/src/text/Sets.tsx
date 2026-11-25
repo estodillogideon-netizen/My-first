@@ -587,26 +587,76 @@ export const Phone: React.FC<{ msg: Msg; glow?: number }> = ({ msg, glow = 1 }) 
     {msg !== "off" && glow > 0.02 ? <pointLight position={[0, 0, 0.12]} color="#a8c0ff" intensity={0.9 * glow} distance={1.2} decay={2} /> : null}
   </group>
 );
-export const Bike: React.FC = () => {
+/** where a rider touches the bike, in the bike's own frame (z forward, x to the rider's left, y up): the hip pivot,
+ *  the two soles (the pedals sit under them, the cranks run from the bottom bracket to them), the two hands (the
+ *  grips), and the wheel turn in radians */
+export type BikeRig = { hipY: number; feet: [V3, V3]; hands: [V3, V3]; spin: number };
+export const BIKE_PARKED: BikeRig = { hipY: 0.68, feet: [[0.11, 0.2, 0.1], [-0.11, 0.38, 0.34]], hands: [[0.27, 0.95, 0.5], [-0.27, 0.95, 0.5]], spin: 0 };
+const WR = 0.28; // wheel radius (a kid's 20-inch bike)
+const AX_R = -0.45, AX_F = 0.78;
+/** a kid's bike built round its rider: frame, fork, stem and bar reaching the hands, saddle under the hips, cranks
+ *  and pedals under the soles, spoked wheels that turn */
+export const Bike: React.FC<{ rig?: BikeRig }> = ({ rig = BIKE_PARKED }) => {
   const red = plastic("#d8201a", { rough: 0.25 });
-  const tube = (a: V3, b: V3, k: number) => {
+  const black = plastic("#16161a", { rough: 0.7 });
+  const steel = plastic("#c8ccd4", { rough: 0.3 });
+  const tube = (a: V3, b: V3, k: string, r = 0.024, m = red) => {
     const d = new THREE.Vector3(b[0] - a[0], b[1] - a[1], b[2] - a[2]);
-    const l = d.length();
+    const l = Math.max(1e-4, d.length());
     const q = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), d.normalize());
-    return <mesh key={k} geometry={geoOf("bikeTube", () => new THREE.CylinderGeometry(0.025, 0.025, 1, 8))} material={red} position={[(a[0] + b[0]) / 2, (a[1] + b[1]) / 2, (a[2] + b[2]) / 2]} quaternion={q} scale={[1, l, 1]} castShadow />;
+    return <mesh key={k} geometry={geoOf("bikeTube", () => new THREE.CylinderGeometry(1, 1, 1, 10))} material={m} position={[(a[0] + b[0]) / 2, (a[1] + b[1]) / 2, (a[2] + b[2]) / 2]} quaternion={q} scale={[r, l, r]} castShadow />;
   };
+  const saddleY = rig.hipY - 0.11;
+  const seat: V3 = [0, saddleY - 0.04, -0.06];
+  const bb: V3 = [0, (rig.feet[0][1] + rig.feet[1][1]) / 2 + 0.02, (rig.feet[0][2] + rig.feet[1][2]) / 2];
+  const rear: V3 = [0, WR, AX_R];
+  const front: V3 = [0, WR, AX_F];
+  const bar: V3 = [0, (rig.hands[0][1] + rig.hands[1][1]) / 2, (rig.hands[0][2] + rig.hands[1][2]) / 2];
+  const head: V3 = [0, bar[1] - 0.14, bar[2] + 0.06];
+  const headLo: V3 = [0, head[1] - 0.16, head[2] + 0.05];
+  const wheel = (z: number, k: string) => (
+    <group key={k} position={[0, WR, z]} rotation={[rig.spin, 0, 0]}>
+      <mesh geometry={geoOf("bikeTyre", () => new THREE.TorusGeometry(WR, 0.032, 10, 36))} material={black} rotation={[0, Math.PI / 2, 0]} castShadow />
+      <mesh geometry={geoOf("bikeRim", () => new THREE.TorusGeometry(WR - 0.035, 0.008, 6, 36))} material={steel} rotation={[0, Math.PI / 2, 0]} />
+      {[0, 1, 2, 3, 4, 5].map((i) => (
+        <mesh key={i} geometry={geoOf("bikeSpoke", () => new THREE.BoxGeometry(0.006, 2 * (WR - 0.035), 0.006))} material={steel} rotation={[(i * Math.PI) / 6, 0, 0]} />
+      ))}
+      <mesh geometry={geoOf("bikeHub", () => new THREE.CylinderGeometry(0.03, 0.03, 0.09, 12))} material={steel} rotation={[0, 0, Math.PI / 2]} />
+    </group>
+  );
   return (
     <group>
-      {[-0.52, 0.52].map((z) => (
-        <mesh key={z} geometry={geoOf("bikeWheel", () => new THREE.TorusGeometry(0.33, 0.035, 8, 28))} material={plastic("#16161a", { rough: 0.7 })} position={[0, 0.34, z]} rotation={[0, Math.PI / 2, 0]} castShadow />
-      ))}
-      {tube([0, 0.34, -0.52], [0, 0.62, -0.05], 1)}
-      {tube([0, 0.34, 0.52], [0, 0.78, 0.38], 2)}
-      {tube([0, 0.62, -0.05], [0, 0.78, 0.38], 3)}
-      {tube([0, 0.34, -0.1], [0, 0.62, -0.05], 4)}
-      {tube([0, 0.34, -0.1], [0, 0.34, -0.52], 5)}
-      <B s={[0.12, 0.04, 0.22]} p={[0, 0.82, -0.08]} c="#16161a" />
-      <B s={[0.5, 0.03, 0.03]} p={[0, 0.95, 0.4]} c="#16161a" />
+      {wheel(AX_R, "r")}
+      {wheel(AX_F, "f")}
+      {/* frame */}
+      {tube(seat, bb, "seatTube", 0.026)}
+      {tube(bb, rear, "chainstay", 0.018)}
+      {tube(seat, rear, "seatstay", 0.016)}
+      {tube(seat, head, "topTube", 0.026)}
+      {tube(headLo, bb, "downTube", 0.03)}
+      {tube(head, headLo, "headTube", 0.032)}
+      {tube(headLo, front, "fork", 0.02)}
+      {/* stem, bar, grips */}
+      {tube(head, bar, "stem", 0.02, steel)}
+      {tube(rig.hands[0], rig.hands[1], "bar", 0.016, steel)}
+      {rig.hands.map((h, i) => tube([h[0] * 0.82, h[1], h[2]], [h[0] * 1.12, h[1], h[2]], `grip${i}`, 0.024, black))}
+      {/* saddle on its post */}
+      {tube([0, saddleY - 0.02, -0.04], seat, "post", 0.016, steel)}
+      <B s={[0.13, 0.05, 0.24]} p={[0, saddleY, -0.04]} c="#16161a" />
+      {/* bottom bracket, chainring, cranks and pedals under the soles */}
+      <mesh geometry={geoOf("bikeRing", () => new THREE.CylinderGeometry(0.075, 0.075, 0.012, 20))} material={steel} position={[-0.05, bb[1], bb[2]]} rotation={[0, 0, Math.PI / 2]} />
+      {tube([0.07, bb[1], bb[2]], [-0.07, bb[1], bb[2]], "bbShell", 0.03, black)}
+      {tube([-0.05, bb[1], bb[2]], [-0.05, WR, AX_R], "chain", 0.007, black)}
+      {rig.feet.map((f, i) => {
+        const sx = f[0] >= 0 ? 1 : -1;
+        const pd: V3 = [sx * 0.1, f[1] - 0.025, f[2]];
+        return (
+          <React.Fragment key={i}>
+            {tube([sx * 0.07, bb[1], bb[2]], pd, `crank${i}`, 0.014, steel)}
+            <B s={[0.1, 0.022, 0.08]} p={[sx * 0.13, pd[1], pd[2]]} c="#2a2a30" />
+          </React.Fragment>
+        );
+      })}
     </group>
   );
 };
