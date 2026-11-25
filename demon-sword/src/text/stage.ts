@@ -192,21 +192,26 @@ const ELLIE_STAIR = (): Pose => {
 };
 SHOT.D01 = ({ t }) => ({ set: "house", env: { lamp: 0.2 }, hums: [ellie({ ...ELLIE_STAIR(), headYaw: 0.2, headPitch: 0.05 }, emo(t, [[0, "curious"], [ST("D01") + 1.4, "smile"]]), { held2: teddyL })] });
 SHOT.D02 = ({ t }) => ({ set: "house", env: { lamp: 0.2 }, hums: [ellie({ ...ELLIE_STAIR(), sway: 0.08 * Math.sin(t * 9), headPitch: -0.08 }, "joy", { held2: teddyL })] });
-const ELLIE_BED: [number, number] = [BED.x1 + 0.28, -0.95];
 const whisperSpan = lineSpan(11, "Is", "back?");
-SHOT.D03 = ({ t }) => ({ set: "bedroom", hums: [noah(NOAH_BED({ headYaw: -0.6 }), "flat"), ellie({ ...stand(ELLIE_BED[0], ELLIE_BED[1], -PI / 2, ES, { pitch: 0.3, armR: 0.8 }), headPitch: 0.2 }, "curious", { held2: teddyL, talk: talkAt(t, whisperSpan[0], whisperSpan[1]) })] });
-SHOT.D03b = ({ t }) => ({ set: "bedroom", hums: [noah(NOAH_BED({ headYaw: -0.6 }), "flat"), ellie({ ...stand(ELLIE_BED[0], ELLIE_BED[1], -PI / 2, ES, { pitch: 0.3, armR: 1.3, outR: -0.3 }), headPitch: 0.15 }, "curious", { held2: teddyL, talk: talkAt(t, whisperSpan[0], whisperSpan[1]) })] });
+// Ellie kneels on the mattress beside him (standing she is shorter than the bed), turned to the lens, whispering
+const ellieOnBed = (o: Partial<Pose> = {}): Pose => {
+  const p = kneel(BED.x1 - 0.17, -1.02, -0.67, ES, 1, o);
+  return { ...p, y: p.y + BED.top - 0.04 };
+};
+SHOT.D03 = ({ t }) => ({ set: "bedroom", hums: [noah(NOAH_BED({ headYaw: -0.3 }), "flat"), ellie(ellieOnBed({ armR: 0.35, outR: -0.15, headYaw: -0.35, headPitch: -0.25 }), "curious", { held2: teddyL, talk: talkAt(t, whisperSpan[0], whisperSpan[1]) })] });
+SHOT.D03b = ({ t }) => ({ set: "bedroom", hums: [noah(NOAH_BED({ headYaw: -0.6 }), "flat"), ellie(ellieOnBed({ armR: 1.3, outR: -0.3, headYaw: -0.35, headPitch: -0.1 }), "curious", { held2: teddyL, talk: talkAt(t, whisperSpan[0], whisperSpan[1]) })] });
 SHOT.D04 = ({ t }) => ({ set: "bedroom", hums: [noah(NOAH_BED({ headYaw: -0.5 }), emo(t, [[0, "flat"], [ST("D04") + 0.6, "shock"]]))] });
 const SIDE: [number, number] = [HS.x0 + 0.45, HS.sideDoor];
 SHOT.D05 = ({ t }) => {
   const kk = knocks(t, ST("D05") + 0.3);
-  return { set: "house", env: { lamp: 0.9 }, hums: [ellie(stand(SIDE[0], SIDE[1], -PI / 2, ES, { armR: 1.5 + 0.35 * kk, outR: -0.1, headPitch: -0.1 }), "sad", { held2: teddyL })] };
+  return { set: "house", env: { lamp: 0.9 }, hums: [ellie(stand(SIDE[0] - 0.1, SIDE[1], -PI / 2 + 0.7, ES, { armR: 1.5 + 0.35 * kk, outR: -0.1, headPitch: -0.1 }), "sad", { held2: teddyL })] };
 };
 SHOT.D05b = ({ t }) => ({ set: "house", env: { lamp: 0.9 }, hums: [ellie(stand(SIDE[0] + 0.2, SIDE[1], -PI / 2 + 1.3, ES, { headPitch: 0.1 }), "sleep", { held2: teddyL, blink: true })] });
-SHOT.D06 = ({ t, u, d }) => ({ set: "bedroom", env: { lamp: 0.9 }, hums: [noah(NOAH_BED({ armL: 1.2, outL: 0.5 }), "smile"), ellie({ ...sitAt(BED.x1 - 0.15, -0.6, -PI / 2 - 0.4, ES, BED.top - 0.05), headPitch: 0.1 }, "smile", { held2: teddyL })] });
+// D06 (memory): both kids tucked in side by side, faces up on the pillow, seen from the foot of the bed
+SHOT.D06 = ({ t }) => ({ set: "bedroom", env: { lamp: 0.9 }, hums: [noah(lieAt(BED.cx - 0.15, -0.95, 0, NS, BED.top + 0.12, { headYaw: -0.3 }), "smile"), ellie(lieAt(BED.x1 - 0.33, -1.08, 0, ES, BED.top + 0.09, { headYaw: 0.35 }), emo(t, [[0, "smile"], [ST("D06") + 1.1, "sleep"]]))] });
 const PROMISE_N: [number, number] = [0.85, -2.2];
 const PROMISE_E: [number, number] = [0.25, -2.2];
-SHOT.D07 = ({ t }) => ({ set: "house", env: { lamp: 0.3 }, hums: [noah(kneel(PROMISE_N[0], PROMISE_N[1], -PI / 2, NS, 1, { armR: 1.3, outR: -0.35 }), "flat"), ellie(stand(PROMISE_E[0], PROMISE_E[1], PI / 2, ES, { armL: 1.35, outL: -0.3 }), "curious", { held2: { ...teddyL, side: "R" } })] });
+SHOT.D07 = ({ t }) => ({ set: "house", env: { lamp: 0.3 }, hums: [noah(kneel(PROMISE_N[0], PROMISE_N[1], -PI / 2 + 0.55, NS, 1, { armR: 1.3, outR: -0.35 }), "flat"), ellie(stand(PROMISE_E[0], PROMISE_E[1], PI / 2 - 0.55, ES, { armL: 1.35, outL: -0.3 }), "curious", { held2: { ...teddyL, side: "R" } })] });
 const promiseSpan = lineSpan(13, "Never", "Ever.");
 SHOT.D08 = ({ t }) => ({ set: "house", env: { lamp: 0.3 }, hums: [noah(kneel(PROMISE_N[0], PROMISE_N[1], -PI / 2, NS, 1, { armR: 1.3, outR: -0.35 }), "flat", { talk: talkAt(t, promiseSpan[0], promiseSpan[1], 3) }), ellie(stand(PROMISE_E[0], PROMISE_E[1], PI / 2, ES, { armL: 1.35, outL: -0.3 }), "curious")] });
 
@@ -230,7 +235,7 @@ const kidNoah = (e: Emotion | Emo, o: Partial<Pose> = {}) => noah(lookAt(stand(N
 SHOT.F02 = ({ t }) => ({ set: "outside", env: { door: 1, bolt: 0 }, hums: [doorEllie("smile"), future(stand(FUT_IN[0], FUT_IN[1], PI, FS, { headPitch: 0.25, armL: 0.1, armR: 0.1 }), "flat", true), kidNoah("shock")] });
 SHOT.F03 = ({ t, u, d }) => {
   const k = ss(0.05, 0.4, u / d) * (1 - ss(0.45, 0.75, u / d));
-  return { set: "outside", env: { door: 1, bolt: 0 }, hums: [doorEllie("curious"), future(stand(FUT_IN[0], FUT_IN[1], PI, FS, { armR: 2.6 * k, outR: 0.3 * k, headPitch: 0.25 - 0.15 * ss(0.4, 0.8, u / d) }), emo(t, [[0, "flat"], [ST("F03") + d * 0.6, "sad"]]), u / d < 0.42), kidNoah("shock")] };
+  return { set: "outside", env: { door: 1, bolt: 0 }, hums: [doorEllie("curious"), future(stand(FUT_IN[0], FUT_IN[1], PI, FS, { armR: 2.6 * k, outR: 0.3 * k, headPitch: 0.25 - 0.15 * ss(0.4, 0.8, u / d) }), emo(t, [[0, "flat"], [ST("F03") + d * 0.6, "sad"]]), u / d < 0.5, { shade: 0.9 * (1 - ss(0.28, 0.5, u / d)) }), kidNoah("shock")] };
 };
 SHOT.F04 = ({ t }) => ({ set: "house", env: { door: 1, bolt: 0, tv: 1, lamp: 0 }, hums: [kidNoah("shock"), doorEllie("smile"), future(stand(FUT_IN[0], FUT_IN[1], PI, FS, { headPitch: 0.2 }), "sad")] });
 SHOT.F05 = ({ t }) => ({ set: "house", env: { door: 1, bolt: 0, tv: 1, lamp: 0 }, hums: [kidNoah("shock"), doorEllie("smile"), future(lookAt(stand(FUT_IN[0], FUT_IN[1], PI, FS), FS, [NOAH_IN[0], faceY(NS), NOAH_IN[1]]), "sad")] });
