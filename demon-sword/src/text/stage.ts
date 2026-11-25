@@ -145,7 +145,7 @@ SHOT.B01 = ({ t, u }) => {
 };
 SHOT.B02 = ({ t }) => ({ set: "outside", hums: [hum("max", MAX, NS, stand(2.6, 6.6, PI - 0.4, NS, { armR: 2.2, outR: 0.2, headPitch: -0.1 }), "joy", 31, { held: phoneR("lock", [0.1, 0]) })], items: [{ k: "bike", p: [3.3, 0, 7.0], yaw: PI / 2 + 0.3 }] });
 const ZOE_P: [number, number] = [7.0, 4.2];
-SHOT.B03 = ({ t }) => ({ set: "outside", hums: [hum("zoe", ZOE, NS, stand(ZOE_P[0], ZOE_P[1], -0.3, NS, { armR: 1.3, outR: -0.25, headPitch: 0.25 }), emo(t, [[0, "curious"], [ST("B03") + 1.0, "shock"]]), 33, { held: { side: "R", kind: "sushi", tilt: [1.3, 0] } })] });
+SHOT.B03 = ({ t }) => ({ set: "outside", hums: [hum("zoe", ZOE, NS, stand(ZOE_P[0], ZOE_P[1], -0.3, NS, { armR: 1.85, outR: -0.32, headPitch: 0.15 }), emo(t, [[0, "curious"], [ST("B03") + 1.0, "shock"]]), 33, { held: { side: "R", kind: "sushi", tilt: [1.45, 0] } })] });
 SHOT.B03b = ({ t }) => ({ set: "outside", hums: [hum("zoe", ZOE, NS, stand(ZOE_P[0], ZOE_P[1], -0.3, NS, { armR: 0.9, outR: -0.2, pitch: 0.12, headPitch: -0.05 }), "silly", 33, { held: { side: "R", kind: "sushi", tilt: [1.4, 0] } })] });
 
 // ================================================================== C: the knocks
