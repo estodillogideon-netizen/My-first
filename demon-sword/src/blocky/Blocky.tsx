@@ -34,6 +34,13 @@ export type Look = {
   /** clothing details: a belt and sleeve cuffs (colours) */
   belt?: string;
   cuffs?: string;
+  /** pants style: jeans (stitched front pockets, rolled cuffs), cargo (side pockets with flaps), joggers (ribbed ankle
+   *  cuffs, a stripe down the side) */
+  pantsStyle?: "jeans" | "cargo" | "joggers";
+  /** an open jacket: the shirt colour is the jacket; tee = the shirt underneath (a strip down the chest) and zip edges */
+  tee?: string;
+  /** sneakers: a coloured stripe on each side */
+  kicks?: string;
   /** accessories (colours): a hat with a band, a shoulder bag, an apron, tiny round glasses, a rocket backpack */
   acc?: { hat?: [string, string]; bag?: string; apron?: string; glasses?: string; backpack?: [string, string]; nose?: string; mustache?: string; helmet?: [string, string]; cap?: [string, string]; beard?: string; hood?: [string, string]; tie?: string; keys?: boolean; bows?: string; skirt?: string; scarf?: string; coat?: string; headband?: string; horns?: string; hornK?: number };
 };
@@ -47,8 +54,8 @@ const DECAL_OFF = 0.0045; // m, decal planes stand this far off their surface
 // ------------------------------------------------------------------ face decal
 const FW = SPEC.head.w - 2 * SPEC.head.r; // flat front of the head (U)
 const FH = SPEC.head.h - 2 * SPEC.head.r;
-const faceTex = (emotion: Emotion, blink: boolean, cheeks: Look["cheeks"], es = 1, lashes = false) =>
-  canvasTexture(`face|${emotion}|${blink ? 1 : 0}|${cheeks}|${es}|${lashes ? 1 : 0}`, 512, Math.round((512 * FH) / FW), (g, W, H) => {
+const faceTex = (emotion: Emotion, blink: boolean, cheeks: Look["cheeks"], es = 1, lashes = false, talk = 0) =>
+  canvasTexture(`face|${emotion}|${blink ? 1 : 0}|${cheeks}|${es}|${lashes ? 1 : 0}|${talk}`, 512, Math.round((512 * FH) / FW), (g, W, H) => {
     // face coordinates in U, origin = head centre, y up
     const X = (x: number) => (x / FW + 0.5) * W;
     const Y = (y: number) => (0.5 - y / FH) * H;
@@ -204,7 +211,32 @@ const faceTex = (emotion: Emotion, blink: boolean, cheeks: Look["cheeks"], es = 
     }
     // mouth
     const my = -0.2;
-    if (emotion === "flat") {
+    if (talk > 0) {
+      // talking: an open mouth (talk 1 = half open, 2 = open), shaped by the mood
+      const wide = emotion === "joy" || emotion === "happy" || emotion === "smile" ? 0.15 : emotion === "sad" || emotion === "sob" ? 0.1 : 0.12;
+      const hh = 0.04 + 0.045 * talk;
+      const down = emotion === "sad" || emotion === "sob" ? -0.02 : 0;
+      g.fillStyle = "#8a1a2e";
+      g.strokeStyle = ink;
+      g.lineWidth = 0.032 * S;
+      g.beginPath();
+      g.ellipse(X(0), Y(my - 0.03 + down), wide * S, hh * S, 0, 0, Math.PI * 2);
+      g.fill();
+      g.save();
+      g.clip();
+      g.fillStyle = "#ff8aa0";
+      g.beginPath();
+      g.ellipse(X(0), Y(my - 0.03 + down - hh * 0.85), wide * 0.7 * S, hh * 0.55 * S, 0, 0, Math.PI * 2);
+      g.fill();
+      if (talk > 1) {
+        g.fillStyle = "#ffffff";
+        g.fillRect(X(-wide * 0.7), Y(my - 0.03 + down + hh * 0.95), wide * 1.4 * S, hh * 0.35 * S);
+      }
+      g.restore();
+      g.beginPath();
+      g.ellipse(X(0), Y(my - 0.03 + down), wide * S, hh * S, 0, 0, Math.PI * 2);
+      g.stroke();
+    } else if (emotion === "flat") {
       g.lineWidth = 0.045 * S;
       g.beginPath();
       g.moveTo(X(-0.13), Y(my - 0.01));
@@ -636,7 +668,7 @@ export const Cone: React.FC<{ scoops: number; colors: string[]; pop?: [number, n
 };
 
 // ------------------------------------------------------------------ the character
-export const Blocky: React.FC<{ pose: Pose; look: Look; emotion: Emotion; blink?: boolean; cone?: ConeProps; held?: Held; held2?: Held; chest?: React.ReactNode; scale?: number; socks?: string; face2?: { emotion: Emotion; k: number }; headOnly?: boolean }> = ({
+export const Blocky: React.FC<{ pose: Pose; look: Look; emotion: Emotion; blink?: boolean; cone?: ConeProps; held?: Held; held2?: Held; chest?: React.ReactNode; scale?: number; socks?: string; face2?: { emotion: Emotion; k: number }; headOnly?: boolean; talk?: number; shade?: number }> = ({
   pose: p,
   look,
   emotion,
@@ -649,6 +681,8 @@ export const Blocky: React.FC<{ pose: Pose; look: Look; emotion: Emotion; blink?
   socks,
   face2,
   headOnly = false,
+  talk = 0,
+  shade = 0,
 }) => {
   const cs = React.useContext(CastCtx);
   const S = SPEC;
@@ -661,8 +695,10 @@ export const Blocky: React.FC<{ pose: Pose; look: Look; emotion: Emotion; blink?
   // smooth emotion change: the old face dissolves into the new one (face2.k 0 -> 1), with a blink at the crossover
   const fk = face2 ? Math.round(Math.min(1, Math.max(0, face2.k)) * 20) / 20 : 0;
   const midBlink = face2 ? fk > 0.3 && fk < 0.7 : false;
-  const face = plastic("#ffffff", { decal: true, rough: 0.45, opacity: face2 ? 1 - fk : 1, map: faceTex(emotion, blink || midBlink, look.cheeks, look.eyeScale ?? 1, look.lashes) });
-  const faceB = face2 && fk > 0 ? plastic("#ffffff", { decal: true, rough: 0.45, opacity: fk, map: faceTex(face2.emotion, blink || midBlink, look.cheeks, look.eyeScale ?? 1, look.lashes) }) : null;
+  // shade: the face lost in a hood's shadow (the head darkens, the features fade)
+  const headSkin = shade > 0.01 ? plastic(mix(look.skin, "#050508", Math.round(shade * 0.85 * 20) / 20), { rough: 0.6 }) : skin;
+  const face = plastic("#ffffff", { decal: true, rough: 0.45, opacity: (face2 ? 1 - fk : 1) * (1 - Math.round(shade * 20) / 20), map: faceTex(emotion, blink || midBlink, look.cheeks, look.eyeScale ?? 1, look.lashes, face2 ? 0 : talk) });
+  const faceB = face2 && fk > 0 ? plastic("#ffffff", { decal: true, rough: 0.45, opacity: fk, map: faceTex(face2.emotion, blink || midBlink, look.cheeks, look.eyeScale ?? 1, look.lashes, talk) }) : null;
   const print = plastic("#ffffff", { decal: true, rough: 0.55, map: printTex(look.print, look.accent) });
   const arm = (side: "L" | "R") => {
     const sx = side === "L" ? 1 : -1;
@@ -723,6 +759,28 @@ export const Blocky: React.FC<{ pose: Pose; look: Look; emotion: Emotion; blink?
         <mesh geometry={rbox(S.leg.w * U, pantsH, S.leg.d * U, EDGE)} material={pants} position={[0, -pantsH / 2, 0]} castShadow={cs} receiveShadow />
         <mesh geometry={rbox(S.shoe.w * U, shoeH * 0.78, S.shoe.d * U, EDGE)} material={shoes} position={[0, -S.leg.h * U + shoeH * 0.22 + (shoeH * 0.78) / 2, 0]} castShadow={cs} receiveShadow />
         <mesh geometry={rbox((S.shoe.w + 0.02) * U, shoeH * 0.24, (S.shoe.d + 0.02) * U, 0.02 * U)} material={sole} position={[0, -S.leg.h * U + (shoeH * 0.24) / 2 + 0.002, 0]} castShadow={cs} receiveShadow />
+        {look.kicks && !socks ? (
+          <mesh geometry={rbox((S.shoe.w + 0.012) * U, shoeH * 0.16, (S.shoe.d * 0.55) * U, 0.02 * U)} material={plastic(look.kicks, { rough: 0.4 })} position={[0, -S.leg.h * U + shoeH * 0.5, 0.02 * U]} />
+        ) : null}
+        {look.pantsStyle === "jeans" ? (
+          <>
+            {/* a rolled cuff and the front pocket seam */}
+            <mesh geometry={rbox((S.leg.w + 0.06) * U, 0.2 * U, (S.leg.d + 0.06) * U, 0.04 * U)} material={plastic(mix(look.pants, "#ffffff", 0.22), { rough: 0.8, map: fabricTex("denim") })} position={[0, -S.leg.h * U + shoeH + 0.1 * U, 0]} castShadow={cs} />
+            <mesh geometry={rbox(0.06 * U, 0.45 * U, 0.02 * U, 0.01 * U)} material={plastic(mix(look.pants, "#f4d080", 0.55), { rough: 0.6 })} position={[sx * 0.28 * U, -0.3 * U, (S.leg.d / 2 + 0.005) * U]} rotation={[0, 0, sx * 0.5]} />
+          </>
+        ) : null}
+        {look.pantsStyle === "cargo" ? (
+          <>
+            <mesh geometry={rbox(0.1 * U, 0.55 * U, 0.6 * U, 0.04 * U)} material={plastic(mix(look.pants, "#000000", 0.12), { rough: 0.85, map: fabricTex("cotton") })} position={[sx * (S.leg.w / 2 + 0.04) * U, -0.95 * U, 0]} castShadow={cs} />
+            <mesh geometry={rbox(0.12 * U, 0.12 * U, 0.64 * U, 0.03 * U)} material={plastic(mix(look.pants, "#000000", 0.25), { rough: 0.85 })} position={[sx * (S.leg.w / 2 + 0.05) * U, -0.67 * U, 0]} />
+          </>
+        ) : null}
+        {look.pantsStyle === "joggers" ? (
+          <>
+            <mesh geometry={rbox((S.leg.w + 0.04) * U, 0.22 * U, (S.leg.d + 0.04) * U, 0.05 * U)} material={plastic(mix(look.pants, "#000000", 0.3), { rough: 0.9, map: fabricTex("knit") })} position={[0, -S.leg.h * U + shoeH + 0.11 * U, 0]} castShadow={cs} />
+            <mesh geometry={rbox(0.03 * U, (S.leg.h - S.shoe.h - 0.3) * U, 0.12 * U, 0.01 * U)} material={plastic("#f4f4f2", { rough: 0.6 })} position={[sx * (S.leg.w / 2 + 0.012) * U, -((S.leg.h - S.shoe.h - 0.3) * U) / 2 - 0.02 * U, 0]} />
+          </>
+        ) : null}
       </group>
     );
   };
@@ -741,12 +799,21 @@ export const Blocky: React.FC<{ pose: Pose; look: Look; emotion: Emotion; blink?
             {arm("R")}
             {chest ? <group position={[0, 1.0 * U, (S.torso.d * U) / 2]}>{chest}</group> : null}
             <BodyAcc look={look} />
+            {look.tee ? (
+              <>
+                <mesh geometry={rbox(0.62 * U, (S.torso.h - 0.1) * U, 0.04 * U, 0.02 * U)} material={plastic(look.tee, { rough: 0.75, map: fabricTex("cotton") })} position={[0, (S.torso.h * U) / 2, (S.torso.d * U) / 2 + 0.008]} />
+                {[-1, 1].map((sx2) => (
+                  <mesh key={sx2} geometry={rbox(0.07 * U, (S.torso.h - 0.08) * U, 0.05 * U, 0.02 * U)} material={plastic(mix(look.shirt, "#000000", 0.35), { rough: 0.4 })} position={[sx2 * 0.35 * U, (S.torso.h * U) / 2, (S.torso.d * U) / 2 + 0.012]} />
+                ))}
+                <mesh geometry={rbox((S.torso.w + 0.12) * U, 0.22 * U, (S.torso.d + 0.12) * U, 0.05 * U)} material={plastic(mix(look.shirt, "#000000", 0.15), { rough: 0.75, map: fabricTex("knit") })} position={[0, (S.torso.h - 0.08) * U, -0.02 * U]} castShadow={cs} />
+              </>
+            ) : null}
           </>
         )}
         <group position={[0, (S.torso.h + H.gap) * U, 0]} rotation={[0, p.headYaw, 0]}>
           <group rotation={[p.headPitch, 0, 0]}>
             <group position={[0, (H.h * U) / 2, 0]}>
-              <mesh geometry={rbox(H.w * U, H.h * U, H.d * U, H.r * U)} material={skin} castShadow={cs} receiveShadow />
+              <mesh geometry={rbox(H.w * U, H.h * U, H.d * U, H.r * U)} material={headSkin} castShadow={cs} receiveShadow />
               <mesh geometry={geoOf("facePlane", () => new THREE.PlaneGeometry(FW * U, FH * U))} material={face} position={[0, 0, (H.d * U) / 2 + DECAL_OFF]} visible={fk < 1} />
               {faceB ? <mesh geometry={geoOf("facePlane", () => new THREE.PlaneGeometry(FW * U, FH * U))} material={faceB} position={[0, 0, (H.d * U) / 2 + DECAL_OFF * 1.6]} /> : null}
               <Hair look={look} ant={p.ant ?? 0} wob={p.antWob ?? 0} />

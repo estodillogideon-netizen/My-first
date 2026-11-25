@@ -2,11 +2,16 @@
 usage: python3 tools/splice_part.py <P>    (patches: lines "name a b" in out/patches<P>.txt)"""
 import re, subprocess, sys
 P = sys.argv[1]
-N = int(re.search(r"DURATION = (\d+)", open(f"src/plan{P}.gen.ts").read()).group(1))
+import os
+PLAN = os.environ.get("PLAN", f"src/plan{P}.gen.ts")
+PRE = os.environ.get("PRE", f"p{P}")
+MIX = os.environ.get("MIX", f"vo/p{P}/mix.wav")
+PATCHES = os.environ.get("PATCHES", f"out/patches{P}.txt")
+N = int(re.search(r"DURATION = (\d+)", open(PLAN).read()).group(1))
 A, B = N // 3, 2 * N // 3
-srcs = [(f"p{P}_part1", 0, A - 1), (f"p{P}_part2", A, B - 1), (f"p{P}_part3", B, N - 1)]
+srcs = [(f"{PRE}_part1", 0, A - 1), (f"{PRE}_part2", A, B - 1), (f"{PRE}_part3", B, N - 1)]
 try:
-    srcs += [(n, int(a), int(b)) for n, a, b in (l.split() for l in open(f"out/patches{P}.txt") if l.strip())]
+    srcs += [(n, int(a), int(b)) for n, a, b in (l.split() for l in open(PATCHES) if l.strip())]
 except FileNotFoundError:
     pass
 owner = [None] * N
@@ -26,7 +31,7 @@ for n in names:
     idx[n] = len(inputs) // 2
     inputs += ["-i", f"out/final/{n}.mp4"]
 mix = len(names)
-inputs += ["-i", f"vo/p{P}/mix.wav"]
+inputs += ["-i", MIX]
 uses = {n: sum(1 for s in segs if s[0] == n) for n in names}
 fc = []
 for n in names:
@@ -40,7 +45,7 @@ for j, (n, a, b, base) in enumerate(segs):
     labels.append(f"[s{j}]")
 fc.append("".join(labels) + f"concat=n={len(segs)}:v=1:a=0,fps=30[v]")
 print("segments:", [(s[0], s[1], s[2]) for s in segs])
-out = f"out/final/TheSwordThatCantLie.mp4"
+out = os.environ.get("OUT", "out/final/TheSwordThatCantLie.mp4")
 cmd = ["ffmpeg", "-v", "error", "-y", *inputs, "-filter_complex", ";".join(fc), "-map", "[v]", "-map", f"{mix}:a",
        "-c:v", "libx264", "-b:v", "3200k", "-maxrate", "4200k", "-bufsize", "8400k", "-preset", "slow", "-pix_fmt", "yuv420p",
        "-c:a", "aac", "-b:a", "192k", "-shortest", "-movflags", "+faststart", out]

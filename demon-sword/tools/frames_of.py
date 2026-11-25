@@ -2,7 +2,7 @@
 import json, re, sys
 from pathlib import Path
 import os
-src = Path(__file__).resolve().parent.parent / "src" / f"plan{os.environ.get('PART', '1')}.gen.ts"
+src = Path(__file__).resolve().parent.parent / "src" / (os.environ["PLAN"] if "PLAN" in os.environ else f"plan{os.environ.get('PART', '1')}.gen.ts")
 shots = json.loads(re.search(r"export const SHOTS = (\[.*?\]) as const;", src.read_text()).group(1))
 by = {s["id"]: s for s in shots}
 u = float(dict(a.split("=") for a in sys.argv[1:] if "=" in a).get("u", 0.45))
