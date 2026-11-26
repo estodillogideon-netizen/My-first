@@ -13,6 +13,9 @@ import numpy as np
 
 SR = 22050
 GAP_SENT, GAP_LINE, LEAD, TAIL = 0.2, 0.36, 0.12, 1.1
+# nonstop narration: GAPS="0.07,0.11" (sentence, line) leaves only a breath between phrases
+if os.environ.get("GAPS"):
+    GAP_SENT, GAP_LINE = (float(x) for x in os.environ["GAPS"].split(","))
 # dramatic beats: extra silence before these lines (1-based)
 EXTRA = {int(k): v for k, v in json.loads(os.environ.get("EXTRA_JSON", "{}")).items()}
 

@@ -13,7 +13,7 @@ import { mix } from "../engine/util";
 export const CastCtx = React.createContext(true);
 
 export type Fabric = "knit" | "denim" | "plaid" | "cord" | "cotton";
-export type HairStyle = "shaggy" | "puffs" | "antennae" | "antenna1" | "bald" | "tuft";
+export type HairStyle = "shaggy" | "puffs" | "antennae" | "antenna1" | "bald" | "tuft" | "spiky" | "swept" | "pony" | "twin" | "long";
 export type Look = {
   skin: string;
   shirt: string;
@@ -29,6 +29,10 @@ export type Look = {
   eyeScale?: number;
   /** long eyelashes (cute) */
   lashes?: boolean;
+  /** anime eyes: a coloured iris (gradient), a pupil, two highlights and a heavy upper lash line */
+  iris?: string;
+  /** gloves: the forearms and hands in this colour */
+  gloves?: string;
   /** fabric of the top / the bottom (default: knit top, denim bottom; same colour top + bottom = twill) */
   fabric?: { top?: Fabric; bottom?: Fabric };
   /** clothing details: a belt and sleeve cuffs (colours) */
@@ -42,7 +46,7 @@ export type Look = {
   /** sneakers: a coloured stripe on each side */
   kicks?: string;
   /** accessories (colours): a hat with a band, a shoulder bag, an apron, tiny round glasses, a rocket backpack */
-  acc?: { hat?: [string, string]; bag?: string; apron?: string; glasses?: string; backpack?: [string, string]; nose?: string; mustache?: string; helmet?: [string, string]; cap?: [string, string]; beard?: string; hood?: [string, string]; tie?: string; keys?: boolean; bows?: string; skirt?: string; scarf?: string; coat?: string; headband?: string; horns?: string; hornK?: number };
+  acc?: { hat?: [string, string]; bag?: string; apron?: string; glasses?: string; backpack?: [string, string]; nose?: string; mustache?: string; helmet?: [string, string]; cap?: [string, string]; beard?: string; hood?: [string, string]; tie?: string; cape?: [string, string]; collar?: string; necklace?: string; crest?: string; keys?: boolean; bows?: string; skirt?: string; scarf?: string; coat?: string; headband?: string; horns?: string; hornK?: number };
 };
 /** something held in one hand (kept upright in the world, like the cone) or hugged against the chest */
 export type Held = { side: "L" | "R"; node: React.ReactNode; tilt?: [number, number] };
@@ -54,8 +58,8 @@ const DECAL_OFF = 0.0045; // m, decal planes stand this far off their surface
 // ------------------------------------------------------------------ face decal
 const FW = SPEC.head.w - 2 * SPEC.head.r; // flat front of the head (U)
 const FH = SPEC.head.h - 2 * SPEC.head.r;
-const faceTex = (emotion: Emotion, blink: boolean, cheeks: Look["cheeks"], es = 1, lashes = false, talk = 0) =>
-  canvasTexture(`face|${emotion}|${blink ? 1 : 0}|${cheeks}|${es}|${lashes ? 1 : 0}|${talk}`, 512, Math.round((512 * FH) / FW), (g, W, H) => {
+const faceTex = (emotion: Emotion, blink: boolean, cheeks: Look["cheeks"], es = 1, lashes = false, talk = 0, iris?: string) =>
+  canvasTexture(`face|${emotion}|${blink ? 1 : 0}|${cheeks}|${es}|${lashes ? 1 : 0}|${talk}|${iris ?? ""}`, 512, Math.round((512 * FH) / FW), (g, W, H) => {
     // face coordinates in U, origin = head centre, y up
     const X = (x: number) => (x / FW + 0.5) * W;
     const Y = (y: number) => (0.5 - y / FH) * H;
@@ -127,6 +131,48 @@ const faceTex = (emotion: Emotion, blink: boolean, cheeks: Look["cheeks"], es = 
         g.stroke();
         continue;
       }
+      if ((emotion === "fierce" || emotion === "angry") && !blink) {
+        // narrowed, sharp: the oval clipped by a slanted upper lid (inner end low), a heavy lid line
+        const r1 = 0.105 * es, r2 = 0.13 * es;
+        g.save();
+        g.beginPath();
+        g.moveTo(cx - 0.16 * S, cy + 0.2 * S);
+        g.lineTo(cx - 0.16 * S, cy - (0.02 - s * 0.05) * S);
+        g.lineTo(cx + 0.16 * S, cy - (0.02 + s * 0.05) * S);
+        g.lineTo(cx + 0.16 * S, cy + 0.2 * S);
+        g.closePath();
+        g.clip();
+        g.fillStyle = ink;
+        g.beginPath();
+        g.ellipse(cx, cy + 0.02 * S, r1 * S, r2 * S, 0, 0, Math.PI * 2);
+        g.fill();
+        if (iris) {
+          const gr = g.createLinearGradient(cx, cy - r2 * S, cx, cy + r2 * S);
+          gr.addColorStop(0, mix(iris, "#000000", 0.55));
+          gr.addColorStop(1, iris);
+          g.fillStyle = gr;
+          g.beginPath();
+          g.ellipse(cx, cy + 0.03 * S, r1 * 0.78 * S, r2 * 0.8 * S, 0, 0, Math.PI * 2);
+          g.fill();
+          g.fillStyle = ink;
+          g.beginPath();
+          g.ellipse(cx, cy + 0.04 * S, r1 * 0.36 * S, r2 * 0.42 * S, 0, 0, Math.PI * 2);
+          g.fill();
+        }
+        g.fillStyle = "#ffffff";
+        g.beginPath();
+        g.arc(cx + 0.035 * S, cy + 0.02 * S, 0.026 * S, 0, Math.PI * 2);
+        g.fill();
+        g.restore();
+        g.strokeStyle = ink;
+        g.lineWidth = 0.05 * S;
+        g.beginPath();
+        g.moveTo(cx - 0.15 * S, cy - (0.02 - s * 0.05) * S);
+        g.lineTo(cx + 0.15 * S, cy - (0.02 + s * 0.05) * S);
+        g.stroke();
+        g.fillStyle = ink;
+        continue;
+      }
       if (emotion === "sleep" || emotion === "sob" || ((emotion === "smile" || emotion === "brave") && blink)) {
         // closed, relaxed: a soft downward arc
         g.lineWidth = 0.045 * S;
@@ -168,10 +214,52 @@ const faceTex = (emotion: Emotion, blink: boolean, cheeks: Look["cheeks"], es = 
           g.stroke();
         }
       } else {
-        const big = (emotion === "shock" ? 1.14 : emotion === "sad" ? 0.94 : 1) * es;
+        const big = (emotion === "shock" ? 1.14 : emotion === "sparkle" ? 1.12 : emotion === "sad" || emotion === "gloom" ? 0.94 : 1) * es;
         g.beginPath();
         g.ellipse(cx, cy, 0.105 * big * S, 0.15 * big * S, 0, 0, Math.PI * 2);
         g.fill();
+        if (iris) {
+          // anime eye: a coloured iris darkening to the top, a pupil, a heavy upper lash line with a flick
+          const gr = g.createLinearGradient(cx, cy - 0.15 * big * S, cx, cy + 0.15 * big * S);
+          gr.addColorStop(0, mix(iris, "#000000", 0.6));
+          gr.addColorStop(0.55, iris);
+          gr.addColorStop(1, mix(iris, "#ffffff", 0.35));
+          g.fillStyle = gr;
+          g.beginPath();
+          g.ellipse(cx, cy + 0.01 * S, 0.083 * big * S, 0.125 * big * S, 0, 0, Math.PI * 2);
+          g.fill();
+          g.fillStyle = ink;
+          g.beginPath();
+          g.ellipse(cx, cy + 0.0 * S, 0.04 * big * S, 0.065 * big * S, 0, 0, Math.PI * 2);
+          g.fill();
+          g.strokeStyle = ink;
+          g.lineWidth = 0.05 * S;
+          g.beginPath();
+          g.ellipse(cx, cy + 0.01 * S, 0.112 * big * S, 0.158 * big * S, 0, Math.PI * 1.12, Math.PI * 1.88);
+          g.stroke();
+          g.beginPath();
+          g.moveTo(cx + s * 0.1 * big * S, cy - 0.08 * big * S);
+          g.lineTo(cx + s * 0.15 * big * S, cy - 0.12 * big * S);
+          g.stroke();
+          g.fillStyle = ink;
+        }
+        if (emotion === "sparkle") {
+          // star highlights: a four-point twinkle in each eye
+          g.fillStyle = "#ffffff";
+          const tw = (x0: number, y0: number, r: number) => {
+            g.beginPath();
+            g.moveTo(x0, y0 - r);
+            g.quadraticCurveTo(x0, y0, x0 + r, y0);
+            g.quadraticCurveTo(x0, y0, x0, y0 + r);
+            g.quadraticCurveTo(x0, y0, x0 - r, y0);
+            g.quadraticCurveTo(x0, y0, x0, y0 - r);
+            g.fill();
+          };
+          tw(cx + 0.03 * S, cy - 0.04 * S, 0.075 * S);
+          tw(cx - 0.04 * S, cy + 0.07 * S, 0.035 * S);
+          g.fillStyle = ink;
+          continue;
+        }
         if (lashes) {
           // three little lashes flicking up and out from the top-outer edge
           g.lineWidth = 0.028 * S;
@@ -199,9 +287,9 @@ const faceTex = (emotion: Emotion, blink: boolean, cheeks: Look["cheeks"], es = 
     // one angled brow stroke each
     g.lineWidth = 0.05 * S;
     for (const s of [-1, 1]) {
-      const by = (es - 1) * 0.14 + (emotion === "shock" ? 0.31 : emotion === "joy" || emotion === "love" || emotion === "smile" ? 0.29 : emotion === "curious" ? (s < 0 ? 0.33 : 0.25) : emotion === "sly" || emotion === "flat" ? 0.22 : emotion === "silly" ? (s < 0 ? 0.34 : 0.24) : emotion === "cry" ? 0.27 : 0.26);
+      const by = (es - 1) * 0.14 + (emotion === "shock" ? 0.31 : emotion === "joy" || emotion === "love" || emotion === "smile" ? 0.29 : emotion === "curious" ? (s < 0 ? 0.33 : 0.25) : emotion === "sly" || emotion === "flat" ? 0.22 : emotion === "silly" ? (s < 0 ? 0.34 : 0.24) : emotion === "cry" ? 0.27 : emotion === "fierce" || emotion === "angry" ? 0.22 : emotion === "nervous" || emotion === "gloom" ? 0.28 : emotion === "sparkle" ? 0.31 : 0.26);
       // angle: + = inner end up (sad/worried), - = inner end down
-      const tilt = emotion === "sad" || emotion === "cry" || emotion === "sob" || emotion === "brave" ? 0.42 : emotion === "shock" ? 0.12 : emotion === "joy" || emotion === "love" || emotion === "smile" || emotion === "sleep" ? -0.05 : emotion === "sly" ? -0.4 : emotion === "flat" ? -0.12 : emotion === "curious" ? (s < 0 ? 0.2 : -0.15) : emotion === "silly" ? (s < 0 ? 0.3 : -0.2) : -0.08;
+      const tilt = emotion === "fierce" ? -0.5 : emotion === "angry" ? -0.7 : emotion === "gloom" || emotion === "nervous" ? 0.5 : emotion === "sparkle" ? -0.05 : emotion === "sad" || emotion === "cry" || emotion === "sob" || emotion === "brave" ? 0.42 : emotion === "shock" ? 0.12 : emotion === "joy" || emotion === "love" || emotion === "smile" || emotion === "sleep" ? -0.05 : emotion === "sly" ? -0.4 : emotion === "flat" ? -0.12 : emotion === "curious" ? (s < 0 ? 0.2 : -0.15) : emotion === "silly" ? (s < 0 ? 0.3 : -0.2) : -0.08;
       const cx = s * 0.22, len = 0.085;
       g.beginPath();
       const dy = tilt * 0.12; // inner end up by dy, outer end down by dy
@@ -235,6 +323,61 @@ const faceTex = (emotion: Emotion, blink: boolean, cheeks: Look["cheeks"], es = 
       g.restore();
       g.beginPath();
       g.ellipse(X(0), Y(my - 0.03 + down), wide * S, hh * S, 0, 0, Math.PI * 2);
+      g.stroke();
+    } else if (emotion === "angry") {
+      // gritted teeth: a white bar with a tooth line, inked
+      g.fillStyle = "#ffffff";
+      g.strokeStyle = ink;
+      g.lineWidth = 0.03 * S;
+      g.beginPath();
+      g.roundRect(X(-0.15), Y(my + 0.04), 0.3 * S, 0.1 * S, 0.03 * S);
+      g.fill();
+      g.stroke();
+      g.beginPath();
+      g.moveTo(X(-0.15), Y(my - 0.01));
+      g.lineTo(X(0.15), Y(my - 0.01));
+      for (const x of [-0.075, 0, 0.075]) {
+        g.moveTo(X(x), Y(my + 0.04));
+        g.lineTo(X(x), Y(my - 0.06));
+      }
+      g.stroke();
+    } else if (emotion === "fierce") {
+      // set jaw: a short firm line, one corner up
+      g.lineWidth = 0.045 * S;
+      g.beginPath();
+      g.moveTo(X(-0.11), Y(my - 0.02));
+      g.lineTo(X(0.1), Y(my - 0.0));
+      g.stroke();
+    } else if (emotion === "nervous" || emotion === "gloom") {
+      // a wobbly line
+      g.lineWidth = 0.04 * S;
+      g.beginPath();
+      g.moveTo(X(-0.14), Y(my - 0.01));
+      for (let k = 1; k <= 6; k++) g.lineTo(X(-0.14 + k * (0.28 / 6)), Y(my - 0.01 + (k % 2 ? 0.025 : -0.015) * (emotion === "gloom" ? 0.6 : 1)));
+      g.stroke();
+    } else if (emotion === "sparkle") {
+      // a big open smile
+      g.save();
+      g.beginPath();
+      g.moveTo(X(-0.16), Y(my + 0.03));
+      g.lineTo(X(0.16), Y(my + 0.03));
+      g.ellipse(X(0), Y(my + 0.03), 0.16 * S, 0.14 * S, 0, 0, Math.PI);
+      g.closePath();
+      g.fillStyle = "#c81a36";
+      g.fill();
+      g.clip();
+      g.fillStyle = "#ff8aa0";
+      g.beginPath();
+      g.ellipse(X(0), Y(my - 0.1), 0.09 * S, 0.06 * S, 0, 0, Math.PI * 2);
+      g.fill();
+      g.restore();
+      g.strokeStyle = ink;
+      g.lineWidth = 0.03 * S;
+      g.beginPath();
+      g.moveTo(X(-0.16), Y(my + 0.03));
+      g.lineTo(X(0.16), Y(my + 0.03));
+      g.ellipse(X(0), Y(my + 0.03), 0.16 * S, 0.14 * S, 0, 0, Math.PI);
+      g.closePath();
       g.stroke();
     } else if (emotion === "flat") {
       g.lineWidth = 0.045 * S;
@@ -338,6 +481,59 @@ const faceTex = (emotion: Emotion, blink: boolean, cheeks: Look["cheeks"], es = 
       g.ellipse(X(0), Y(my + 0.03), 0.19 * S, 0.17 * S, 0, 0, Math.PI);
       g.closePath();
       g.stroke();
+    }
+    if (emotion === "nervous" || emotion === "gloom") {
+      // the anime sweat drop on the temple
+      const sx0 = X(0.38), sy0 = Y(0.3);
+      g.fillStyle = "#9ad8ff";
+      g.strokeStyle = "#3a8ac8";
+      g.lineWidth = 0.018 * S;
+      g.beginPath();
+      g.moveTo(sx0, sy0 - 0.09 * S);
+      g.quadraticCurveTo(sx0 + 0.06 * S, sy0 + 0.02 * S, sx0, sy0 + 0.05 * S);
+      g.quadraticCurveTo(sx0 - 0.06 * S, sy0 + 0.02 * S, sx0, sy0 - 0.09 * S);
+      g.fill();
+      g.stroke();
+      g.fillStyle = "#ffffff";
+      g.beginPath();
+      g.arc(sx0 - 0.012 * S, sy0 + 0.005 * S, 0.012 * S, 0, Math.PI * 2);
+      g.fill();
+    }
+    if (emotion === "gloom") {
+      // gloom: vertical shadow lines down from the top of the face
+      g.strokeStyle = "rgba(60,50,110,0.55)";
+      g.lineWidth = 0.022 * S;
+      for (let k = 0; k < 9; k++) {
+        const x = -0.36 + k * 0.09;
+        g.beginPath();
+        g.moveTo(X(x), Y(0.48));
+        g.lineTo(X(x), Y(0.3 - (k % 3) * 0.05));
+        g.stroke();
+      }
+    }
+    if (emotion === "angry") {
+      // the cross-popping vein mark
+      const vx = X(0.33), vy = Y(0.38), r = 0.05 * S;
+      g.strokeStyle = "#e0203a";
+      g.lineWidth = 0.025 * S;
+      for (const [dx, dy] of [[-1, -1], [1, -1], [-1, 1], [1, 1]]) {
+        g.beginPath();
+        g.arc(vx + dx * r, vy + dy * r, r * 0.8, dx < 0 ? (dy < 0 ? 0 : -Math.PI / 2) : dy < 0 ? Math.PI / 2 : Math.PI, dx < 0 ? (dy < 0 ? Math.PI / 2 : 0) : dy < 0 ? Math.PI : Math.PI * 1.5);
+        g.stroke();
+      }
+    }
+    if (emotion === "sparkle" || ((emotion === "smile" || emotion === "joy") && cheeks === "blush")) {
+      // blush hatching under the eyes
+      g.strokeStyle = "rgba(230,70,100,0.6)";
+      g.lineWidth = 0.016 * S;
+      for (const s of [-1, 1])
+        for (let k = 0; k < 3; k++) {
+          const x = s * (0.22 + k * 0.045);
+          g.beginPath();
+          g.moveTo(X(x - 0.02), Y(-0.15));
+          g.lineTo(X(x + 0.02), Y(-0.08));
+          g.stroke();
+        }
     }
     if (emotion === "cry" || emotion === "sob") {
       g.fillStyle = "#6cc8ff";
@@ -597,6 +793,7 @@ const Hair: React.FC<{ look: Look; ant?: number; wob?: number }> = ({ look, ant 
     );
   }
   const m = plastic(look.hair, { rough: 0.62 });
+  if (["spiky", "swept", "pony", "twin", "long"].includes(look.hairStyle)) return <AnimeHair look={look} m={m} />;
   const shaggy = look.hairStyle === "shaggy";
   const kx = (shaggy ? 0.85 : 0.92) * (H.w / 1.1);
   // the cap is built at the real head size (never narrower than the head); the other pieces are authored for a
@@ -647,6 +844,60 @@ const Hair: React.FC<{ look: Look; ant?: number; wob?: number }> = ({ look, ant 
   );
 };
 
+// ------------------------------------------------------------------ anime hair: sharp spikes and locks (pyramids)
+/** a tapered lock / spike: a 4-sided pyramid (crisp anime silhouettes), base radius r, length l, pointing +y */
+const spikeGeo = (r: number, l: number) =>
+  geoOf(`hairSpike|${r.toFixed(3)}|${l.toFixed(3)}`, () => {
+    const g = new THREE.ConeGeometry(r, l, 4, 1);
+    g.rotateY(Math.PI / 4);
+    g.translate(0, l / 2, 0);
+    return g;
+  });
+const AnimeHair: React.FC<{ look: Look; m: THREE.Material }> = ({ look, m }) => {
+  const cs = React.useContext(CastCtx);
+  const H = SPEC.head;
+  const hw = (H.w / 2) * U, hd = (H.d / 2) * U, top = (H.h / 2) * U;
+  const st = look.hairStyle;
+  const tie = plastic(look.accent, { rough: 0.35 });
+  // [radius, length, position, rotation (x, z: the direction the tip points, from +y)]
+  const P: { r: number; l: number; p: V3; rx: number; rz: number; mat?: THREE.Material }[] = [];
+  // a shell over the head (top, back, sides) so the scalp never shows
+  const shell = rbox((H.w + 0.1) * U, 0.42 * U, (H.d + 0.1) * U, 0.18 * U);
+  const back = rbox((H.w + 0.08) * U, (st === "long" ? 1.5 : st === "spiky" ? 0.95 : 0.85) * U, 0.18 * U, 0.08 * U);
+  // the fringe: locks hanging over the forehead, tips down, stopping above the brows
+  const fringe = st === "swept" ? [[-0.36, 0.42, 0.5], [-0.16, 0.5, 0.65], [0.06, 0.56, 0.8], [0.26, 0.6, 0.95], [0.42, 0.5, 1.1]] : [[-0.38, 0.38, -0.25], [-0.19, 0.44, -0.1], [0, 0.46, 0], [0.19, 0.44, 0.1], [0.38, 0.38, 0.25]];
+  for (const [x, l, a] of fringe) P.push({ r: 0.13 * U, l: l * U, p: [x * U, top + 0.02 * U, hd + 0.05 * U], rx: Math.PI - 0.32, rz: a * 0.5 });
+  if (st === "spiky") {
+    // big hero spikes sweeping up and back
+    const sp: [number, number, number, number, number][] = [[-0.3, 0.1, 0.62, -0.55, 0.45], [0, 0.2, 0.75, -0.75, 0], [0.3, 0.1, 0.62, -0.55, -0.45], [-0.18, -0.25, 0.7, -1.2, 0.3], [0.2, -0.25, 0.72, -1.2, -0.3], [0, -0.42, 0.62, -1.75, 0], [-0.45, -0.1, 0.5, -1.0, 0.95], [0.45, -0.1, 0.5, -1.0, -0.95]];
+    for (const [x, z, l, rx, rz] of sp) P.push({ r: 0.17 * U, l: l * U, p: [x * U, top - 0.05 * U, z * U], rx, rz });
+    for (const sx of [-1, 1]) P.push({ r: 0.12 * U, l: 0.5 * U, p: [sx * (hw + 0.03 * U), top - 0.1 * U, 0.15 * U], rx: Math.PI - 0.15, rz: sx * 0.12 });
+  } else {
+    // smooth crown locks and side locks framing the face
+    for (const x of [-0.3, 0, 0.3]) P.push({ r: 0.16 * U, l: 0.34 * U, p: [x * U, top - 0.05 * U, -0.1 * U], rx: -1.35, rz: -x * 0.8 });
+    const sideL = st === "long" || st === "swept" ? 0.95 : 0.75;
+    for (const sx of [-1, 1]) P.push({ r: 0.12 * U, l: sideL * U, p: [sx * (hw + 0.04 * U), top - 0.05 * U, 0.28 * U], rx: Math.PI - 0.06, rz: sx * 0.05 });
+  }
+  const tails: { p: V3; rx: number; rz: number; l: number }[] = [];
+  if (st === "pony") tails.push({ p: [0, top - 0.1 * U, -hd - 0.12 * U], rx: Math.PI - 0.55, rz: 0, l: 1.15 * U });
+  if (st === "twin") for (const sx of [-1, 1]) tails.push({ p: [sx * (hw + 0.1 * U), top - 0.12 * U, -0.15 * U], rx: Math.PI - 0.2, rz: sx * -0.35, l: 1.35 * U });
+  return (
+    <>
+      <mesh geometry={shell} material={m} position={[0, top - 0.08 * U, -0.03 * U]} castShadow={cs} receiveShadow />
+      <mesh geometry={back} material={m} position={[0, top - (st === "long" ? 0.75 : 0.42) * U, -hd - 0.05 * U]} castShadow={cs} receiveShadow />
+      {P.map((q, i) => (
+        <mesh key={i} geometry={spikeGeo(q.r, q.l)} material={q.mat ?? m} position={q.p} rotation={[q.rx, 0, q.rz]} castShadow={cs} receiveShadow />
+      ))}
+      {tails.map((q, i) => (
+        <group key={`t${i}`} position={q.p}>
+          <mesh geometry={geoOf("hairTie", () => new THREE.CylinderGeometry(0.1 * U, 0.1 * U, 0.1 * U, 12))} material={tie} rotation={[q.rx, 0, q.rz]} />
+          <mesh geometry={spikeGeo(0.2 * U, q.l)} material={m} rotation={[q.rx, 0, q.rz]} castShadow={cs} receiveShadow />
+        </group>
+      ))}
+    </>
+  );
+};
+
 // ------------------------------------------------------------------ held cone
 /** pop = [width, height] scale of the top scoop (landing squash) */
 export const Cone: React.FC<{ scoops: number; colors: string[]; pop?: [number, number] }> = ({ scoops, colors, pop = [1, 1] }) => {
@@ -687,7 +938,8 @@ export const Blocky: React.FC<{ pose: Pose; look: Look; emotion: Emotion; blink?
   const cs = React.useContext(CastCtx);
   const S = SPEC;
   const skin = plastic(look.skin, { rough: 0.42 });
-  const hand = plastic(mix(look.skin, "#fff4e8", 0.28), { rough: 0.4 });
+  const glove = look.gloves ? plastic(look.gloves, { rough: 0.5, map: fabricTex("cotton") }) : null;
+  const hand = glove ?? plastic(mix(look.skin, "#fff4e8", 0.28), { rough: 0.4 });
   const shirt = plastic(look.shirt, { rough: 0.72, map: fabricTex(look.fabric?.top ?? (look.shirt === look.pants ? "denim" : "knit")) });
   const pants = plastic(look.pants, { rough: 0.75, map: fabricTex(look.fabric?.bottom ?? "denim") });
   const shoes = plastic(socks ?? look.shoes, { rough: socks ? 0.8 : 0.45 });
@@ -697,8 +949,8 @@ export const Blocky: React.FC<{ pose: Pose; look: Look; emotion: Emotion; blink?
   const midBlink = face2 ? fk > 0.3 && fk < 0.7 : false;
   // shade: the face lost in a hood's shadow (the head darkens, the features fade)
   const headSkin = shade > 0.01 ? plastic(mix(look.skin, "#050508", Math.round(shade * 0.85 * 20) / 20), { rough: 0.6 }) : skin;
-  const face = plastic("#ffffff", { decal: true, rough: 0.45, opacity: shade >= 0.8 ? 0.001 : (face2 ? 1 - fk : 1) * (1 - Math.round(shade * 20) / 20), map: faceTex(emotion, blink || midBlink, look.cheeks, look.eyeScale ?? 1, look.lashes, face2 ? 0 : talk) });
-  const faceB = face2 && fk > 0 ? plastic("#ffffff", { decal: true, rough: 0.45, opacity: fk, map: faceTex(face2.emotion, blink || midBlink, look.cheeks, look.eyeScale ?? 1, look.lashes, talk) }) : null;
+  const face = plastic("#ffffff", { decal: true, rough: 0.45, opacity: shade >= 0.8 ? 0.001 : (face2 ? 1 - fk : 1) * (1 - Math.round(shade * 20) / 20), map: faceTex(emotion, blink || midBlink, look.cheeks, look.eyeScale ?? 1, look.lashes, face2 ? 0 : talk, look.iris) });
+  const faceB = face2 && fk > 0 ? plastic("#ffffff", { decal: true, rough: 0.45, opacity: fk, map: faceTex(face2.emotion, blink || midBlink, look.cheeks, look.eyeScale ?? 1, look.lashes, talk, look.iris) }) : null;
   const print = plastic("#ffffff", { decal: true, rough: 0.55, map: printTex(look.print, look.accent) });
   const arm = (side: "L" | "R") => {
     const sx = side === "L" ? 1 : -1;
@@ -711,7 +963,7 @@ export const Blocky: React.FC<{ pose: Pose; look: Look; emotion: Emotion; blink?
         <group rotation={[-raise, 0, 0]}>
           <mesh geometry={rbox((S.arm.w + 0.06) * U, sl, (S.arm.d + 0.06) * U, EDGE)} material={shirt} position={[0, top - sl / 2, 0]} castShadow={cs} receiveShadow />
           {look.cuffs ? <mesh geometry={rbox((S.arm.w + 0.1) * U, 0.14 * U, (S.arm.d + 0.1) * U, EDGE)} material={plastic(look.cuffs, { rough: 0.5 })} position={[0, top - sl + 0.05 * U, 0]} castShadow={cs} /> : null}
-          <mesh geometry={rbox(S.arm.w * U, (S.arm.h - S.sleeve + 0.02) * U, S.arm.d * U, EDGE)} material={skin} position={[0, top - sl - ((S.arm.h - S.sleeve - 0.02) * U) / 2, 0]} castShadow={cs} receiveShadow />
+          <mesh geometry={rbox(S.arm.w * U, (S.arm.h - S.sleeve + 0.02) * U, S.arm.d * U, EDGE)} material={glove ?? skin} position={[0, top - sl - ((S.arm.h - S.sleeve - 0.02) * U) / 2, 0]} castShadow={cs} receiveShadow />
           {/* hand: a lighter end cap, so a raised arm doesn't read as a plain box */}
           <mesh geometry={rbox((S.arm.w + 0.03) * U, 0.26 * U, (S.arm.d + 0.03) * U, EDGE)} material={hand} position={[0, -HAND + 0.12 * U, 0]} castShadow={cs} receiveShadow />
           {cone && cone.side === side ? (
@@ -975,6 +1227,44 @@ const BodyAcc: React.FC<{ look: Look }> = ({ look }) => {
           <mesh geometry={rbox(0.24 * U, 1.25 * U, 0.04 * U, 0.02 * U)} material={plastic(a.tie, { rough: 0.45 })} position={[0, 1.22 * U, fz + 0.03 * U]} />
           <mesh geometry={rbox(0.3 * U, 0.2 * U, 0.06 * U, 0.03 * U)} material={plastic(a.tie, { rough: 0.45 })} position={[0, 1.9 * U, fz + 0.04 * U]} />
         </>
+      ) : null}
+      {a.collar ? (
+        // a sailor collar: a square flap over the back of the shoulders, a V of the collar down the front, white trim
+        <>
+          <mesh geometry={rbox((S.torso.w + 0.1) * U, 0.9 * U, 0.06 * U, 0.03 * U)} material={plastic(a.collar, { rough: 0.6, map: fabricTex("cotton") })} position={[0, 1.6 * U, -fz - 0.04 * U]} castShadow={cs} />
+          <mesh geometry={rbox((S.torso.w + 0.14) * U, 0.08 * U, (S.torso.d + 0.14) * U, 0.03 * U)} material={plastic(a.collar, { rough: 0.6 })} position={[0, 1.97 * U, 0]} castShadow={cs} />
+          {[-1, 1].map((k) => (
+            <mesh key={k} geometry={rbox(0.16 * U, 0.75 * U, 0.04 * U, 0.02 * U)} material={plastic(a.collar ?? "#1a2a5a", { rough: 0.6 })} position={[k * 0.3 * U, 1.62 * U, fz + 0.025 * U]} rotation={[0, 0, k * 0.55]} />
+          ))}
+          {[-1, 1].map((k) => (
+            <mesh key={`w${k}`} geometry={rbox(0.04 * U, 0.75 * U, 0.045 * U, 0.01 * U)} material={plastic("#ffffff", { rough: 0.5 })} position={[k * 0.38 * U, 1.64 * U, fz + 0.03 * U]} rotation={[0, 0, k * 0.55]} />
+          ))}
+          <mesh geometry={rbox((S.torso.w + 0.1) * U, 0.05 * U, 0.07 * U, 0.01 * U)} material={plastic("#ffffff", { rough: 0.5 })} position={[0, 1.2 * U, -fz - 0.05 * U]} />
+        </>
+      ) : null}
+      {a.necklace ? (
+        // a bead necklace hanging in a V on the chest
+        <>
+          {Array.from({ length: 11 }, (_, i) => {
+            const u = i / 10 - 0.5;
+            return <mesh key={i} geometry={geoOf("bead", () => new THREE.IcosahedronGeometry(0.06 * U, 1))} material={plastic(a.necklace!, { rough: 0.2 })} position={[u * 1.1 * U, (1.92 - 0.75 * (1 - 4 * u * u) * 0.55) * U, fz + 0.04 * U]} />;
+          })}
+        </>
+      ) : null}
+      {a.crest ? (
+        // a blazer crest on the left chest: a gold-edged shield
+        <>
+          <mesh geometry={rbox(0.34 * U, 0.4 * U, 0.03 * U, 0.1 * U)} material={plastic("#ffd23a", { rough: 0.3 })} position={[0.55 * U, 1.45 * U, fz + 0.02 * U]} />
+          <mesh geometry={rbox(0.26 * U, 0.32 * U, 0.04 * U, 0.08 * U)} material={plastic(a.crest, { rough: 0.4 })} position={[0.55 * U, 1.46 * U, fz + 0.025 * U]} />
+        </>
+      ) : null}
+      {a.cape ? (
+        // a hero cape: hangs from the shoulders, flaring out behind (outer / inner colour)
+        <group position={[0, 1.95 * U, -fz - 0.05 * U]} rotation={[0.22, 0, 0]}>
+          <mesh geometry={rbox((S.torso.w + 0.5) * U, 3.1 * U, 0.06 * U, 0.04 * U)} material={plastic(a.cape[0], { rough: 0.55, map: fabricTex("cotton") })} position={[0, -1.55 * U, -0.02 * U]} castShadow={cs} />
+          <mesh geometry={rbox((S.torso.w + 0.44) * U, 3.04 * U, 0.02 * U, 0.02 * U)} material={plastic(a.cape[1], { rough: 0.5 })} position={[0, -1.55 * U, 0.025 * U]} />
+          <mesh geometry={rbox((S.torso.w + 0.3) * U, 0.16 * U, (S.torso.d + 0.2) * U, 0.05 * U)} material={plastic(a.cape[0], { rough: 0.55 })} position={[0, 0.02 * U, 0.4 * U]} />
+        </group>
       ) : null}
       {a.keys ? (
         <group position={[-1.04 * U, 0.05 * U, 0.2 * U]}>

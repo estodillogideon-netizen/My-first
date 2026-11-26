@@ -8,6 +8,8 @@ import { Thumb } from "./sword/Thumb";
 import { Sample, SAMPLE_FRAMES } from "./sample/Sample";
 import { TextShort } from "./text/TextShort";
 import { FRAMES as TEXT_FRAMES } from "./text/time";
+import { HeroShort } from "./hero/HeroShort";
+import { FRAMES as HERO_FRAMES } from "./hero/time";
 import { FRAMES } from "./sword/time";
 
 // Sword: the Short (sharp, for stills); SwordSub2: 2 sub-frames per output frame at 60 fps for motion blur
@@ -17,6 +19,10 @@ const PICK: number[] = (PROPS.frames ?? []).map(Number);
 const TextPick: React.FC = () => {
   const f = useCurrentFrame();
   return <TextShort at={PICK[Math.min(f, PICK.length - 1)] ?? 0} />;
+};
+const HeroPick: React.FC = () => {
+  const f = useCurrentFrame();
+  return <HeroShort at={PICK[Math.min(f, PICK.length - 1)] ?? 0} />;
 };
 const SwordPick: React.FC = () => {
   const f = useCurrentFrame();
@@ -36,6 +42,9 @@ export const Root: React.FC = () => (
     <Composition id="Text" component={TextShort} durationInFrames={TEXT_FRAMES} fps={30} width={1080} height={1920} defaultProps={{ sub: false }} />
     <Composition id="TextSub2" component={TextShort} durationInFrames={TEXT_FRAMES * 2} fps={60} width={1080} height={1920} defaultProps={{ sub: true, subN: 2 }} />
     <Composition id="TextPick" component={TextPick} durationInFrames={PICK.length || 1} fps={30} width={1080} height={1920} />
+    <Composition id="Hero" component={HeroShort} durationInFrames={HERO_FRAMES} fps={30} width={1080} height={1920} defaultProps={{ sub: false }} />
+    <Composition id="HeroSub2" component={HeroShort} durationInFrames={HERO_FRAMES * 2} fps={60} width={1080} height={1920} defaultProps={{ sub: true, subN: 2 }} />
+    <Composition id="HeroPick" component={HeroPick} durationInFrames={PICK.length || 1} fps={30} width={1080} height={1920} />
     <Composition id="SwordPick" component={SwordPick} durationInFrames={PICK.length || 1} fps={30} width={1080} height={1920} />
   </>
 );
