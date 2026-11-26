@@ -325,15 +325,16 @@ SHOT.F06 = ({ t, u }) => {
 };
 // home: the hug, the necklace
 const MOMP: [number, number] = [1.0, -2.2];
-SHOT.F07 = ({ t }) => ({ set: "home", hums: [hum("mom", MOM, AS, { ...hugP(stand(MOMP[0], MOMP[1], PI / 2, AS, { headPitch: 0.25, headYaw: -0.85 }), t), armL: 1.05, armR: 1.05, outL: -0.5, outR: -0.5 }, "smile", 90), noah({ ...hugP(stand(MOMP[0] + 0.5, MOMP[1], -PI / 2, KS, { headPitch: -0.2, headYaw: 0.95 }), t), armL: 1.3, armR: 1.3 }, "smile")] });
+// shot from the room side (-z): mom's near arm (L) low round his waist, the far one (R) round his shoulders; heads turned to the lens
+SHOT.F07 = ({ t }) => ({ set: "home", hums: [hum("mom", MOM, AS, { ...hugP(stand(MOMP[0], MOMP[1], PI / 2, AS, { headPitch: 0.25, headYaw: 0.85 }), t), armL: 0.6, armR: 1.15, outL: -0.6, outR: -0.55 }, "smile", 90), noah({ ...hugP(stand(MOMP[0] + 0.5, MOMP[1], -PI / 2, KS, { headPitch: -0.2, headYaw: -0.95 }), t), armL: 1.3, armR: 1.3 }, "smile")] });
 SHOT.F08 = ({ t, u }) => {
   const snap = ST("F08") + 0.12;
   const after = t > snap;
-  const mp = stand(MOMP[0], MOMP[1], PI / 2, AS, { headPitch: 0.3, headYaw: -0.85 });
+  const mp = stand(MOMP[0], MOMP[1], PI / 2, AS, { headPitch: 0.3, headYaw: 0.85 });
   const chest = facePoint(mp, AS);
   return {
     set: "home",
-    hums: [hum("mom", after ? MOM_SNAPPED : MOM, AS, { ...mp, armL: lerp(1.05, 1.9, ss(0.1, 0.4, u)), armR: lerp(1.05, 1.8, ss(0.1, 0.4, u)), outL: lerp(-0.5, 0.2, ss(0.1, 0.4, u)), outR: lerp(-0.5, 0.2, ss(0.1, 0.4, u)) }, emo(t, [[0, "smile"], [snap, "shock"]]), 90), noah(stand(MOMP[0] + 0.58, MOMP[1], -PI / 2, KS, { armL: lerp(1.45, 1.0, ss(0.1, 0.4, u)), armR: lerp(1.45, 1.0, ss(0.1, 0.4, u)), headPitch: -0.15, headYaw: 0.95, pitch: -0.08 }), emo(t, [[0, "smile"], [snap + 0.1, "shock"]]))],
+    hums: [hum("mom", after ? MOM_SNAPPED : MOM, AS, { ...mp, armR: lerp(1.15, 1.75, ss(0.1, 0.4, u)), armL: lerp(0.6, 0.25, ss(0.1, 0.4, u)), outR: lerp(-0.55, -0.75, ss(0.1, 0.4, u)), outL: lerp(-0.6, 0.1, ss(0.1, 0.4, u)) }, emo(t, [[0, "smile"], [snap, "shock"]]), 90), noah(stand(MOMP[0] + 0.58, MOMP[1], -PI / 2, KS, { armL: lerp(1.45, 1.0, ss(0.1, 0.4, u)), armR: lerp(1.45, 1.0, ss(0.1, 0.4, u)), headPitch: -0.15, headYaw: -0.95, pitch: -0.08 }), emo(t, [[0, "smile"], [snap + 0.1, "shock"]]))],
     items: [{ k: "beads", p0: [chest[0] + 0.1, chest[1] - 0.45 * AS, chest[2]], tau: t - snap }],
   };
 };
@@ -459,7 +460,8 @@ const machineAt = (t: number, o: Partial<MachineP> = {}): MachineP => {
   const armsOff = t >= W(26, "arms.") ? t - W(26, "arms.") : -1;
   const eyeOff = t >= W(26, "eye.") ? t - W(26, "eye.") : -1;
   const down = ss(W(26, "whole"), W(26, "down.") + 0.25, t);
-  const close = t < ST("L05") + 0.1 ? ss(ST("L05") - 0.05, ST("L05") + 0.15, t) : t < DROP() ? 1 : 1 - ss(DROP(), DROP() + 0.2, t);
+  const HOLD = 0.68; // a loose grip: the fingers round her, her face between them
+  const close = t < ST("L05") + 0.1 ? HOLD * ss(ST("L05") - 0.05, ST("L05") + 0.15, t) : t < DROP() ? HOLD : HOLD * (1 - ss(DROP(), DROP() + 0.2, t));
   const offR = t - (DROP() + 0.25);
   return { t, rise, unfold, eye, drain, reachR: reachAt(t), clawClose: close, crack, armsOff: armsOff >= 0 ? armsOff : undefined, armsOffR: offR >= 0 ? offR : undefined, eyeOff: eyeOff >= 0 ? eyeOff : undefined, down, ...o };
 };
@@ -469,9 +471,10 @@ const ellieHeld = (t: number): Pose => {
   const a = armPose(-1, m);
   const dir: V3 = [a.wrist[0] - a.elbow[0], a.wrist[1] - a.elbow[1], a.wrist[2] - a.elbow[2]];
   const l = Math.hypot(dir[0], dir[1], dir[2]);
-  const c: V3 = [a.wrist[0] + (dir[0] / l) * 1.7, a.wrist[1] + (dir[1] / l) * 1.7, a.wrist[2] + (dir[2] / l) * 1.7];
+  const HANG = 2.5; // below the hub, the fingertips round her middle
+  const c: V3 = [a.wrist[0] + (dir[0] / l) * HANG, a.wrist[1] + (dir[1] / l) * HANG, a.wrist[2] + (dir[2] / l) * HANG];
   const kick = Math.sin(t * 9);
-  return { ...stand(c[0], c[2], 0.4, ES), y: c[1] - 0.55 * ES, legL: 0.4 * kick, legR: -0.4 * kick, armL: 2.4 + 0.3 * Math.sin(t * 7), armR: 2.3 + 0.3 * Math.sin(t * 8), outL: 0.4, outR: 0.4, headPitch: 0.25 };
+  return { ...stand(c[0], c[2], 0.4, ES), y: c[1] - 0.55 * ES, legL: 0.4 * kick, legR: -0.4 * kick, armL: 1.9 + 0.25 * Math.sin(t * 7), armR: 1.85 + 0.25 * Math.sin(t * 8), outL: 1.0, outR: 1.0, headPitch: -0.1 };
 };
 const CATCH_SPOT: [number, number] = [CLAW_SAG[0] + 1.4, CLAW_SAG[2] + 2.0];
 const ellieFall = (t: number): Pose => {
@@ -491,7 +494,12 @@ SHOT.K01 = ({ t }) => ({ set: "square", env: dark(t), hums: [...heroes(t, (i) =>
 SHOT.K02 = ({ t }) => ({ set: "square", env: dark(t), hums: heroes(t, "shock"), items: darkItems(t) });
 SHOT.K03 = ({ t }) => ({ set: "square", env: dark(t), items: darkItems(t) });
 // the heroes attack: K04 they leap; laser (0), ice (1), strong (3) ends by the front-right leg
-const STRONG_LEG: [number, number] = [MACH.foot - 0.6, MACH.base[2] + MACH.footZ + 1.0];
+// the front-right leg at punch height, and the strong hero's spot just in front of it (his right fist on the leg)
+const LEG_FR: V3 = [MACH.foot + 1.4 * (0.85 / 6.4), 0.85, MACH.base[2] + MACH.footZ + 0.8 * (0.85 / 6.4)];
+const LEG_DIR: [number, number] = (() => { const dx = LEG_FR[0] - (MACH.foot - 0.6), dz = LEG_FR[2] - (MACH.base[2] + MACH.footZ + 1.0), l = Math.hypot(dx, dz); return [dx / l, dz / l]; })();
+const STRONG_LEG: [number, number] = [LEG_FR[0] - 0.92 * LEG_DIR[0], LEG_FR[2] - 0.92 * LEG_DIR[1]];
+const PUNCH_AT: V3 = [LEG_FR[0] - 0.5 * LEG_DIR[0], LEG_FR[1], LEG_FR[2] - 0.5 * LEG_DIR[1]];
+const PUNCH_YAW = Math.atan2(LEG_DIR[0], LEG_DIR[1]) + 0.36;
 const heroAttack = (t: number): Hum[] => {
   const t0 = ST("K04");
   return heroes(t, (i) => (i === 2 ? "fierce" : "angry"), (i, p) => {
@@ -500,7 +508,7 @@ const heroAttack = (t: number): Hum[] => {
       const k = ss(t0, ST("K07"), t);
       const x = lerp(p.x, STRONG_LEG[0], k), z = lerp(p.z, STRONG_LEG[1], k);
       const hop = Math.sin(clamp(k) * PI) * 1.2;
-      return { ...p, x, z, y: lerp(p.y, (L - SINK) * KS, k) + hop, yaw: toward([p.x, p.z], STRONG_LEG) , armL: 1.4, armR: t > ST("K07") ? lerp(1.4, 1.65, ss(ST("K07"), ST("K07") + 0.12, t)) : 1.0, legL: 0.6 * Math.sin(k * 20) * (1 - ss(0.9, 1, k)), legR: -0.6 * Math.sin(k * 20) * (1 - ss(0.9, 1, k)), pitch: 0.3 };
+      return { ...p, x, z, y: lerp(p.y, (L - SINK) * KS, k) + hop, yaw: lerp(toward([p.x, p.z], STRONG_LEG), PUNCH_YAW, ss(0.75, 1, k)), armL: 1.4, armR: t > ST("K07") ? lerp(1.4, 1.65, ss(ST("K07"), ST("K07") + 0.12, t)) : 1.0, legL: 0.6 * Math.sin(k * 20) * (1 - ss(0.9, 1, k)), legR: -0.6 * Math.sin(k * 20) * (1 - ss(0.9, 1, k)), pitch: 0.3 };
     }
     if (i === 0) return lookAt({ ...p, armR: 1.55 + 0.25, outR: 0.05, armL: 1.5 + 0.25, outL: 0.05, pitch: 0.1 }, KS, EYE);
     if (i === 1) return lookAt({ ...p, armR: 1.75, armL: 1.75, outL: -0.15, outR: -0.15, pitch: 0.1 }, KS, [0, MACH.up, MACH.base[2] + 3]);
@@ -523,8 +531,7 @@ SHOT.K06 = ({ t, u }) => {
 };
 SHOT.K07 = ({ t, u }) => {
   const hs = heroAttack(t);
-  const sh = hs[3];
-  return { set: "square", env: dark(t), hums: hs, items: [...darkItems(t), { k: "impact", p: heldWorld(sh.pose, "R", sh.s, [0, 0.1, 0]), u: clamp((u - 0.1) * 1.5), c: "#ffffff", s: 1.0, r: [0, 0, 0] }] };
+  return { set: "square", env: dark(t), hums: hs, items: [...darkItems(t), { k: "impact", p: PUNCH_AT, u: clamp((u - 0.1) * 1.5), c: "#ffd8a0", s: 0.55, r: [0, 0, 0] }] };
 };
 SHOT.K08 = ({ t }) => ({ set: "square", env: dark(t), items: darkItems(t) });
 // the drain: orbs from each hero to the eye; they fall
@@ -641,7 +648,11 @@ SHOT.P07 = ({ t, u }) => {
   const ep: Pose = stand(NF[0] - Math.cos(fy) * 0.42, NF[1] + Math.sin(fy) * 0.42, fy + 0.3, ES, { armL: 1.4, outL: -0.6, armR: 0.4, headYaw: 0.5, headPitch: -0.3 });
   return { set: "square", env: dark(t), hums: [noahFinal({ armL: 1.0, outL: -0.5, armR: 1.3, outR: -0.15, headPitch: 0.25 }, "joy", { held: card("R", "hero", { glow: 1.4 }, [-0.1, 0]) }), ellie(ep, "sparkle"), max(stand(NF[0] + Math.cos(fy) * 1.1 + Math.sin(fy) * 0.3, NF[1] - Math.sin(fy) * 1.1 + Math.cos(fy) * 0.3, fy - 0.3, KS, { armR: 2.6, outR: 0.3 }), "joy", {}, MAX_HERO), ...folk(t, "cheer", 0, [0, 5, 10])], items: [...after(t), { k: "confetti", c: [NF[0], 0, NF[1]], tau: t - ST("P07") + 1.0, spread: 6, h: 4 }] };
 };
-SHOT.P08 = ({ t }) => ({ set: "square", env: dark(t), hums: [noahFinal({ armR: 2.6, outR: 0.2 }, "joy", { held: card("R", "hero", { glow: 1.2 }, [-0.1, 0]) }), ellie(stand(NF[0] + 0.55, NF[1] + 0.45, 0.5, ES, { armL: 2.5, outL: 0.3 }), "sparkle"), max(stand(MAXP[0] + 0.4, MAXP[1] - 0.2, 0.6, KS, { armL: 2.4, outL: 0.3 }), "joy", {}, MAX_HERO), ...heroes(t, "joy", (i, p) => cheer(p, t, i), [2])], items: after(t) });
+// P08: the three side by side across the lens (screen right = R8), facing it
+const D8: [number, number] = [-0.593, -0.806];
+const R8: [number, number] = [-D8[1], D8[0]];
+const Y8 = Math.atan2(-D8[0], -D8[1]);
+SHOT.P08 = ({ t }) => ({ set: "square", env: dark(t), hums: [noah(stand(NF[0], NF[1], Y8 - 0.1, KS, { armL: 0.2, armR: 2.6, outR: 0.2 }), "joy", { held: card("R", "hero", { glow: 1.2 }, [-0.1, 0]) }), ellie(stand(NF[0] - 0.62 * R8[0], NF[1] - 0.62 * R8[1], Y8 + 0.15, ES, { armR: 2.5, outR: 0.3 }), "sparkle"), max(stand(NF[0] + 0.8 * R8[0], NF[1] + 0.8 * R8[1], Y8 - 0.2, KS, { armL: 2.4, outL: 0.3 }), "joy", {}, MAX_HERO), ...heroes(t, "joy", (i, p) => cheer(p, t, i), [2])], items: after(t) });
 // Q: Max's room at night
 const MAX_BED = (o: Partial<Pose> = {}): Pose => lieAt(BED.cx, -0.95, 0, KS, BED.top + 0.12, o);
 const MAX_CARD: V3 = NIGHT_CARD;
@@ -669,5 +680,5 @@ export const stageAt = (t: number, id: string): Stage => {
 };
 export const humOf = (st: Stage, key: string) => st.hums.find((a) => a.key === key);
 export const SHOT_IDS = () => Object.keys(SHOT);
-export { facePoint, heldWorld, hash, ST, YAW_NM, EYE, LEG_HAND, NOAH_LEG, NOAH_SQ, ELLIE_SQ, SPK, NOAH_C, MAX_C, LOCK, WALK_Z, LEE, MOMP, PC_SPOT, BENCH, HERO_SPOTS, NOAH_FINAL, MAXP, CATCH_SPOT, CLAW_UP, MAX_CARD, NIGHT_CARD, STRONG_LEG, DESK_B, TEACH };
+export { PUNCH_AT, LEG_FR, facePoint, heldWorld, hash, ST, YAW_NM, EYE, LEG_HAND, NOAH_LEG, NOAH_SQ, ELLIE_SQ, SPK, NOAH_C, MAX_C, LOCK, WALK_Z, LEE, MOMP, PC_SPOT, BENCH, HERO_SPOTS, NOAH_FINAL, MAXP, CATCH_SPOT, CLAW_UP, MAX_CARD, NIGHT_CARD, STRONG_LEG, DESK_B, TEACH };
 export const _keepStage = [HS, ellieNow, cardAt];
