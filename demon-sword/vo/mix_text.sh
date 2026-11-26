@@ -3,7 +3,7 @@
 # usage: bash vo/mix_part.sh <1|2>
 set -euo pipefail
 cd "$(dirname "$0")/.."
-P="$1"; D="vo/t1"
+P="$1"; D="${VODIR:-vo/t1}"
 ffmpeg -v error -y -i "$D/voice.wav" -i "$D/music.wav" -i "$D/sfx.wav" -filter_complex "\
 [0:a]aformat=sample_rates=48000:channel_layouts=stereo,volume=1.0,asplit=2[v][vk];\
 [1:a]volume=0.36[m];[m][vk]sidechaincompress=threshold=0.03:ratio=5:attack=20:release=400[md];\

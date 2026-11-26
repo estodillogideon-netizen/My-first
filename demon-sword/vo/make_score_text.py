@@ -236,8 +236,10 @@ def write(path, buf, peak=0.9):
 
 if __name__ == "__main__":
     root = Path(__file__).resolve().parent.parent
-    ws = words(root / "vo/t1/timings.json")
-    S, total = shots(root / "src/planT.gen.ts")
-    write(root / "vo/t1/music.wav", music(ws, S, total), 0.85)
-    write(root / "vo/t1/sfx.wav", sfx(ws, S, total), 0.85)
+    import os
+    VD = os.environ.get("VODIR", "vo/t1")  # vo/t2: the nonstop cut (tools/nonstop.py)
+    ws = words(root / VD / "timings.json")
+    S, total = shots(root / os.environ.get("PLAN", "src/planT.gen.ts"))
+    write(root / VD / "music.wav", music(ws, S, total), 0.85)
+    write(root / VD / "sfx.wav", sfx(ws, S, total), 0.85)
     print(f"wrote music + sfx ({total:.2f} s)")
