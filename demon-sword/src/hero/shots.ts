@@ -6,7 +6,7 @@ import { lerp } from "../blocky/motion";
 import type { V3 } from "../blocky/motion";
 import { facePoint, heldWorld } from "../library/characters";
 import { BED } from "../monster/Sets";
-import { EYE, humOf, MAX_CARD, NIGHT_CARD, stageAt } from "./stage";
+import { cardLocal, EYE, humOf, MAX_CARD, NIGHT_CARD, stageAt } from "./stage";
 import type { Stage } from "./stage";
 import { shot } from "./time";
 
@@ -30,7 +30,7 @@ export const facingOf = (st: Stage, key: string): number | null => {
 /** the centre of the card in a character's hand */
 export const cardOf = (key: string, side: "L" | "R" = "R"): Subj => (st) => {
   const h = humOf(st, key);
-  return h ? heldWorld(h.pose, side, h.s, [0, 0.1, 0]) : [0, 1, 0];
+  return h ? heldWorld(h.pose, side, h.s, cardLocal((side === "R" ? h.held : h.held2)?.tilt?.[0] ?? 0)) : [0, 1, 0];
 };
 /** in front of the card a character holds (along their facing), up a little */
 const beforeCard = (key: string, d: number, dy = 0.03, side = 0): Subj => (st, t) => {
@@ -53,28 +53,28 @@ export const LENSES: Record<string, Lens> = {
   // A: Card Day
   A01: F("noah", 20, 1.05, -0.17, 40),
   A02: X([4.9, 3.3, 1.6], at([0, 1.1, -6.3]), 50, 0.5),
-  A03: R(beforeCard("noah", 0.42, 0.1, 0.12), mid(cardOf("noah"), head("noah"), 0.25), 40, { push: 0.03 }),
+  A03: R(beforeCard("noah", 0.6, 0.14, 0.08), mid(cardOf("noah"), head("noah"), 0.15), 40, { push: 0.03 }),
   A04: F("girl", 12, 1.35, -0.22, 42),
   A05: F("noah", -15, 0.78, 0.0, 36),
   // B: Max
-  B01: X([3.0, 1.9, -8.6], head("max"), 44),
+  B01: X([3.4, 2.0, -8.9], head("max"), 44),
   B02: F("max", 15, 1.0, -0.18, 40),
-  B03: R(beforeCard("max", 0.4, 0.02), cardOf("max"), 36, { push: 0.03 }),
-  B04: X([6.4, 1.15, -5.5], head("max"), 46, 0.46),
+  B03: R(beforeCard("max", 0.6, 0.03), cardOf("max"), 36, { push: 0.03 }),
+  B04: X([6.3, 1.3, -6.25], head("max"), 46, 0.46),
   B05: X([3.9, 2.4, -7.7], at([-0.6, 1.0, -4.6]), 52, 0.5),
   // C: Noah's card
   C01: F("noah", 15, 1.15, -0.22, 42),
   C02: R(beforeCard("noah", 0.65, 0.12, 0.08), mid(cardOf("noah"), head("noah"), 0.4), 42, { push: 0.03 }),
-  C04: R(beforeCard("noah", 0.4, 0.02), cardOf("noah"), 36, { push: 0.03 }),
-  C05: X([2.3, 1.95, -7.1], mid(head("noah"), at([1.15, 1.68, -8.3]), 0.45), 44, 0.48),
+  C04: R(beforeCard("noah", 0.6, 0.03), cardOf("noah"), 36, { push: 0.03 }),
+  C05: X([2.3, 1.95, -7.1], mid(head("noah"), at([1.15, 1.43, -8.3]), 0.45), 44, 0.48),
   // D: the silence
   D01: X([2.7, 2.4, -7.6], at([0, 1.0, -4.5]), 52, 0.5),
   D02: F("max", 20, 1.15, 0.0, 40),
-  D03: X([1.9, 1.3, -3.4], mid(head("max"), head("noah"), 0.45), 46, 0.48),
+  D03: X([-0.13, 1.45, -2.8], mid(head("max"), head("noah"), 0.5), 50, 0.48),
   // E: the corridor, the street, the classroom
   E01: X([7.4, 1.5, 0.5], head("noah"), 40),
   E01b: X([2.5, 1.3, -0.65], mid(head("noah"), at([1.35, 1.25, -1.35]), 0.35), 50, 0.48),
-  E02: X([-10.4, 1.45, 7.0], head("noah"), 40),
+  E02: X([-9.6, 1.45, 6.6], head("noah"), 40),
   E03: F("noah", 10, 0.95, 0.0, 40),
   E04: X([-3.6, 1.7, -2.2], mid(head("teacher"), head("noah")), 48, 0.48),
   E04b: X([0.5, 1.7, -0.3], head("teacher", -0.3), 46),
@@ -83,7 +83,7 @@ export const LENSES: Record<string, Lens> = {
   F01: F("noah", 20, 1.25, -0.06, 42),
   F02: X([2.8, 1.45, 8.0], mid(head("noah"), head("lee")), 46, 0.48),
   F02b: X([5.2, 1.4, 6.9], mid(head("noah"), head("lee")), 44, 0.48),
-  F03: F("noah", 30, 1.25, -0.28, 44),
+  F03: F("noah", -35, 1.25, -0.28, 44),
   F04: X([3.8, 1.05, 7.4], mid(head("noah"), head("lee"), 0.5), 50, 0.5),
   F05: X([-4.25, 1.35, 1.0], head("noah"), 42),
   F06: X([-4.2, 1.5, 1.7], mid(head("noah"), at([-3.9, 1.1, -0.2]), 0.4), 48, 0.48),
@@ -91,10 +91,10 @@ export const LENSES: Record<string, Lens> = {
   F08: X([1.3, 1.4, -0.4], mid(head("mom"), head("noah"), 0.4), 48, 0.5),
   // G: the red card at night, the gloves
   G01: X([0.9, 1.5, 0.9], head("noah"), 46),
-  G01b: R(beforeCard("noah", 0.4, 0.22), mid(cardOf("noah"), head("noah"), 0.3), 40, { push: 0.03 }),
+  G01b: R(beforeCard("noah", 0.5, 0.3), mid(cardOf("noah"), head("noah"), 0.15), 40, { push: 0.03 }),
   G02: F("noah", 15, 0.82, 0.0, 36),
-  G03: R(() => off(NIGHT_CARD, [-0.15, 0.4, 0.35]), at(NIGHT_CARD), 36, { push: 0.04 }),
-  G04: F("noah", 15, 1.15, -0.16, 44),
+  G03: R(() => off(NIGHT_CARD, [0.3, 0.45, 0.35]), at(NIGHT_CARD), 36, { push: 0.04 }),
+  G04: F("noah", 20, 1.65, -0.45, 46),
   G05: X([0.8, 1.4, 7.4], head("noah"), 42),
   // H: lunch with Ellie
   H01: X([1.0, 1.3, 6.9], head("noah"), 44),
@@ -106,7 +106,7 @@ export const LENSES: Record<string, Lens> = {
   J01: X([9.5, 4.5, 11.5], at([0, 2.6, -5]), 50, 0.5),
   J02: X([1.6, 1.0, -3.4], head("max"), 40),
   J03: X([-3.5, 1.2, -1.6], mid(head("noah"), head("ellie")), 42, 0.48),
-  J04: X([0.5, 0.9, -3.4], at([0, 2.6, 3]), 52, 0.5),
+  J04: X([0.5, 2.6, -4.4], at([0, 2.2, 4]), 54, 0.5),
   K01: X([3.5, 1.2, 7.5], at([0, 8, -13]), 54, 0.5),
   K02: X([6.0, 2.0, 2.0], at([0, 12, -12]), 50, 0.5),
   K03: R(() => off(EYE, [1.0, -0.6, 5.5]), at(EYE), 30, { push: 0.04 }),
@@ -118,34 +118,34 @@ export const LENSES: Record<string, Lens> = {
   L01: X([0, 1.3, -1.0], at([0, 6, -8]), 54, 0.5),
   L02: X([2.5, 2.0, -3.4], at([0, 1.8, -6.5]), 48, 0.5),
   L03: F("max", 20, 1.1, 0.05, 42),
-  L04: X([-2.4, 1.0, -2.2], at([-3.8, 2.4, 1.2]), 52, 0.5),
+  L04: X([-2.1, 1.2, -1.5], at([-3.9, 1.3, 1.3]), 52, 0.5),
   L05: X([0.2, 2.0, 5.5], head("ellie"), 50),
   L06: X([1.0, 0.9, 7.5], at([-1, 2.0, 0]), 52, 0.5),
   // M: Noah
   M01: F("noah", 0, 1.5, 0.1, 46),
   M02: F("noah", 10, 1.0, -0.2, 40),
-  M03: X([-5.0, 1.3, -10.6], head("noah"), 46),
-  M04: X([-6.0, 1.7, -7.8], at([-7.6, 2.8, -10.0]), 46, 0.5),
+  M03: X([-9.6, 1.4, -11.4], head("noah"), 46),
+  M04: X([-6.2, 1.5, -7.9], at([-7.45, 1.5, -10.0]), 46, 0.5),
   M05: X([4.5, 2.0, 4.0], at([0, 9, -12]), 52, 0.5),
   M06: R(() => off(EYE, [0.8, -0.5, 5.0]), at(EYE), 34, { push: 0.04 }),
   M07: X([6.0, 1.6, 8.0], at([0, 5, -12]), 54, 0.5),
   // N: the powers back; Max's dash; the catch
   N01: X([0.5, 1.4, -1.2], at([0, 4, -7]), 52, 0.5),
   N02: X([0.5, 1.3, 3.2], head("max"), 46),
-  N03: F("max", 25, 1.45, -0.12, 44),
+  N03: F("max", 25, 1.9, -0.08, 46),
   N04: X([-3.4, 1.5, -1.2], head("noah"), 44),
   // P: Max and Noah; the card
-  P01: X([-3.85, 1.45, -5.6], mid(head("max"), head("noah")), 46, 0.48),
+  P01: F("max", 10, 2.0, 0.1, 46),
   P02: F("max", 0, 0.95, 0.0, 38),
   P03: F("noah", -30, 1.3, -0.45, 44),
   P04: F("noah", 15, 1.05, -0.2, 40),
-  P05: R(beforeCard("noah", 0.4, 0.02), cardOf("noah"), 34, { push: 0.03 }),
-  P06: R(beforeCard("noah", 0.42, 0.02), cardOf("noah"), 36, { push: 0.03 }),
+  P05: R(beforeCard("noah", 0.6, 0.03), cardOf("noah"), 34, { push: 0.03 }),
+  P06: R(beforeCard("noah", 0.62, 0.03), cardOf("noah"), 36, { push: 0.03 }),
   P07: F("noah", -20, 1.8, -0.1, 46),
-  P08: X([-1.6, 1.6, 2.2], at([-6.5, 1.2, -5.0]), 48, 0.5),
+  P08: X([-4.6, 1.5, 0.2], at([-7.4, 1.1, -3.6]), 50, 0.5),
   // Q: Max's room
-  Q01: X([0.8, 1.6, 1.4], mid(head("max"), at(MAX_CARD)), 46, 0.5),
-  Q02: R(() => off(MAX_CARD, [-0.15, 0.4, 0.35]), at(MAX_CARD), 36, { push: 0.04 }),
+  Q01: X([-1.2, 1.95, -0.55], mid(head("max"), at(MAX_CARD)), 44, 0.5),
+  Q02: R(() => off(MAX_CARD, [0.3, 0.45, 0.35]), at(MAX_CARD), 36, { push: 0.04 }),
   Q03: F("max", 15, 0.82, 0.0, 36),
 };
 

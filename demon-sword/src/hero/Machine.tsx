@@ -97,7 +97,7 @@ const Joint: React.FC<{ p: V3; r: number; m: THREE.Material }> = ({ p, r, m }) =
 const CrackNet: React.FC<{ o: V3; ax: V3; ay: V3; k: number; size: number; seed: number }> = ({ o, ax, ay, k, size, seed }) => {
   if (k <= 0.01) return null;
   const r = mulberry(seed);
-  const m = plastic("#ff4a1a", { emissive: "#ff3a10", ei: 3.0, rough: 0.5 });
+  const m = plastic("#d81a0a", { emissive: "#ff2a08", ei: 0.7, rough: 0.5 });
   const segs: React.ReactNode[] = [];
   const branches = 9;
   for (let b = 0; b < branches; b++) {
@@ -111,7 +111,7 @@ const CrackNet: React.FC<{ o: V3; ax: V3; ay: V3; k: number; size: number; seed:
       const q: [number, number] = [p[0] + Math.cos(a) * l, p[1] + Math.sin(a) * l];
       const A = add(add(o, ax, p[0]), ay, p[1]);
       const B = add(add(o, ax, q[0]), ay, q[1]);
-      segs.push(<Strut key={`${b}|${s}`} a={A} b={B} r={0.035 * (1 - s / n) + 0.015} m={m} />);
+      segs.push(<Strut key={`${b}|${s}`} a={A} b={B} r={0.02 * (1 - s / n) + 0.01} m={m} />);
       p = q;
     }
   }
@@ -137,12 +137,12 @@ const Claw: React.FC<{ p: V3; dir: V3; close: number; m: THREE.Material; mDark: 
     </group>
   );
 };
-export type MachineP = { t: number; rise: number; unfold: number; eye: number; drain?: number; reachR?: { to: V3; k: number }; reachL?: { to: V3; k: number }; clawClose?: number; crack?: number; armsOff?: number; eyeOff?: number; down?: number };
+export type MachineP = { t: number; rise: number; unfold: number; eye: number; drain?: number; reachR?: { to: V3; k: number }; reachL?: { to: V3; k: number }; clawClose?: number; crack?: number; armsOff?: number; armsOffR?: number; eyeOff?: number; down?: number };
 /** the right claw's wrist in the world (for carrying Ellie) */
 export const armPose = (side: 1 | -1, P: MachineP): { s: V3; elbow: V3; wrist: V3 } => {
   const B = MACH.base;
   const y = -18 * (1 - ease(P.rise));
-  const s: V3 = [B[0] + side * 4.3, B[1] + y + MACH.up + 1.2, B[2] + 0.8];
+  const s: V3 = [B[0] + side * 4.3, B[1] + y + MACH.up + 1.2 - (MACH.up - 3.2) * ease(P.down ?? 0), B[2] + 0.8];
   const fold: V3 = [B[0] + side * 5.2, B[1] + y + 3.5, B[2] + 1.5];
   const raised: V3 = [B[0] + side * 11.5, B[1] + y + 14.5, B[2] + 7.0];
   let tgt: V3 = add(fold, v(fold, raised), ease(P.unfold));
@@ -163,7 +163,7 @@ export const Machine: React.FC<MachineP> = (P) => {
   const hazard = plastic("#ffffff", { rough: 0.5, map: hazardTex() });
   const vent = plastic("#ff3a1a", { emissive: "#ff2a10", ei: 1.6 + 1.2 * Math.sin(t * 6) * 0.5 });
   const eyeDead = (P.eyeOff ?? -1) >= 0;
-  const eyeM = plastic(eyeDead ? "#2a0a08" : "#ff2a1a", { emissive: eyeDead ? "#1a0000" : "#ff1a0a", ei: eyeDead ? 0.1 : 3.5 + 2.5 * (P.drain ?? 0) });
+  const eyeM = plastic(eyeDead ? "#2a0a08" : "#9a0e08", { emissive: eyeDead ? "#1a0000" : "#e8140a", ei: eyeDead ? 0.1 : 0.45 + 0.6 * (P.drain ?? 0) });
   const legs: { hip: V3; knee: V3; foot: V3 }[] = [-1, 1].flatMap((sx) =>
     [-1, 1].map((sz) => {
       const hip: V3 = [sx * 3.0, MACH.up - 1.2, sz * 1.9];
@@ -174,7 +174,7 @@ export const Machine: React.FC<MachineP> = (P) => {
     }),
   );
   // the crash: the body tilts forward and sinks
-  const tilt = 0.55 * down;
+  const tilt = 0.3 * down;
   const sink = -(MACH.up - 3.2) * down;
   const armsOff = P.armsOff ?? -1;
   const eyeOff = P.eyeOff ?? -1;
@@ -184,7 +184,8 @@ export const Machine: React.FC<MachineP> = (P) => {
     const s = local(a.s), e = local(a.elbow), w = local(a.wrist);
     const dir = v(e, w);
     // snapped off: the forearm and claw fall (gravity) and tumble
-    const fall = armsOff >= 0 ? Math.min(armsOff, 1.6) : -1;
+    const off = side > 0 ? armsOff : P.armsOffR ?? -1;
+    const fall = off >= 0 ? Math.min(off, 1.6) : -1;
     const drop = fall >= 0 ? Math.min(w[1] + 6, 0.5 * 9.8 * fall * fall) : 0;
     const spin = fall >= 0 ? fall * 1.6 * side : 0;
     return (
@@ -203,7 +204,7 @@ export const Machine: React.FC<MachineP> = (P) => {
   };
   return (
     <group position={[B[0], B[1] + y, B[2]]}>
-      <group position={[0, sink, 3.0 * down]} rotation={[tilt, 0, 0.12 * down]}>
+      <group position={[0, sink, 0]} rotation={[tilt, 0, 0.1 * down]}>
         {/* the body: a heavy hull with hazard bands, vents, pipes */}
         <mesh geometry={rbox(7.2, 4.4, 5.6, 0.6)} material={metal} position={[0, MACH.up, 0]} castShadow receiveShadow />
         <mesh geometry={rbox(7.4, 0.5, 5.8, 0.2)} material={hazard} position={[0, MACH.up - 1.9, 0]} />
@@ -225,7 +226,7 @@ export const Machine: React.FC<MachineP> = (P) => {
             <>
               <mesh geometry={geoOf("eyeBall", () => new THREE.SphereGeometry(0.95, 28, 20))} material={eyeM} position={[0, 0, 1.1]} />
               <mesh geometry={rbox(0.22, 1.2, 0.1, 0.08)} material={plastic("#1a0000", { rough: 0.3 })} position={[0, 0, 2.03]} />
-              {!eyeDead ? <Glow p={[0, 0, 2.3]} s={4.5 + 4 * (P.drain ?? 0)} c="#ff3a1a" op={0.55 * eye} /> : null}
+              {!eyeDead ? <Glow p={[0, 0, 2.3]} s={3.5 + 3 * (P.drain ?? 0)} c="#ff3a1a" op={0.3 * eye} /> : null}
             </>
           ) : (
             // shattered: a dark broken socket, shards flying out
@@ -250,7 +251,7 @@ export const Machine: React.FC<MachineP> = (P) => {
       </group>
       {legs.map((L, i) => (
         <group key={i}>
-          <Strut a={[L.hip[0], L.hip[1] + sink, L.hip[2] + 3 * down]} b={L.knee} r={0.6} m={metal} />
+          <Strut a={[L.hip[0], L.hip[1] + sink, L.hip[2]]} b={L.knee} r={0.6} m={metal} />
           <Joint p={L.knee} r={0.85} m={dark} />
           <Strut a={L.knee} b={L.foot} r={0.5} m={metal} />
           <Strut a={add(L.knee, v(L.knee, L.foot), 0.55)} b={add(L.knee, v(L.knee, L.foot), 0.68)} r={0.56} m={hazard} />

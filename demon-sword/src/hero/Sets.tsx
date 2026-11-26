@@ -157,14 +157,14 @@ export const Podium: React.FC<{ crack: number; split?: number }> = ({ crack, spl
     <group position={[x, y, z]}>
       {[-1, 1].map((s) => (
         <group key={s} position={[s * split * 0.06, 0, 0]} rotation={[0, 0, -s * split * 0.08]}>
-          <mesh geometry={rbox(0.42, 0.85, 0.55, 0.02)} material={wood} position={[s * 0.21, 0.425, 0]} castShadow receiveShadow />
-          <mesh geometry={rbox(0.46, 0.06, 0.66, 0.02)} material={plastic("#5a3418", { rough: 0.45 })} position={[s * 0.23, 0.88, 0.02]} rotation={[-0.25, 0, 0]} castShadow />
+          <mesh geometry={rbox(0.42, 0.6, 0.55, 0.02)} material={wood} position={[s * 0.21, 0.3, 0]} castShadow receiveShadow />
+          <mesh geometry={rbox(0.46, 0.06, 0.66, 0.02)} material={plastic("#5a3418", { rough: 0.45 })} position={[s * 0.23, 0.63, 0.02]} rotation={[-0.25, 0, 0]} castShadow />
         </group>
       ))}
       {/* the school crest on the front */}
-      <mesh geometry={geoOf("crestPl", () => new THREE.PlaneGeometry(0.4, 0.46))} material={plastic("#ffffff", { map: textTex("crestHall", ["★"], { w: 256, h: 300, bg: "#1e2a4e", fg: "#ffd23a", border: "#ffd23a", px: 170 }), transparent: true, rough: 0.5 })} position={[0, 0.48, 0.281]} />
-      <Cracks p={[0, 0.922, 0.03]} r={[-Math.PI / 2 - 0.25, 0, 0]} s={0.75} k={crack} />
-      <Cracks p={[0, 0.5, 0.283]} s={0.8} k={crack * 0.9} />
+      <mesh geometry={geoOf("crestPl", () => new THREE.PlaneGeometry(0.4, 0.46))} material={plastic("#ffffff", { map: textTex("crestHall", ["★"], { w: 256, h: 300, bg: "#1e2a4e", fg: "#ffd23a", border: "#ffd23a", px: 170 }), transparent: true, rough: 0.5 })} position={[0, 0.33, 0.281]} />
+      <Cracks p={[0, 0.672, 0.03]} r={[-Math.PI / 2 - 0.25, 0, 0]} s={0.75} k={crack} />
+      <Cracks p={[0, 0.33, 0.283]} s={0.6} k={crack * 0.9} />
     </group>
   );
 };

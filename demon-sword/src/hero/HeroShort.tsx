@@ -11,7 +11,7 @@ import { Bedroom, ThemeCtx } from "../monster/Sets";
 import type { RoomTheme } from "../monster/Sets";
 import { Fire } from "../sword/Sets";
 import { Living, Outside } from "../text/Sets";
-import { Beads, Burst, Card, Clouds, Confetti, Cookie, Crackle, Debris, Dust, GroceryBag, IceBlast, Impact, Laser, Orbs, Smoke, Spill, Streak } from "./fx";
+import { Beads, Burst, Card, CARD_OFF, Clouds, Confetti, Cookie, Crackle, Debris, Dust, GroceryBag, IceBlast, Impact, Laser, Orbs, Smoke, Spill, Streak } from "./fx";
 import { Machine } from "./Machine";
 import { moodOfShot } from "./mood";
 import { CardHall, Classroom, Corridor, Square, YardH } from "./Sets";
@@ -26,7 +26,11 @@ const FAST = new Set(["B04", "K04", "L06", "M03", "N02", "M07"]);
 const INSERTS = new Set(["A03", "B03", "C04", "G01b", "G03", "K03", "K08", "M06", "P05", "P06", "Q02"]);
 
 const heldNode = (h: HeldKind) =>
-  h.kind === "card" && h.card ? <Card kind={h.card.kind} to={h.card.to} morph={h.card.morph} glow={h.card.glow} /> : h.kind === "cookie" ? <Cookie /> : <GroceryBag torn={h.kind === "bagTorn"} />;
+  h.kind === "card" && h.card ? (
+    <group position={CARD_OFF}>
+      <Card kind={h.card.kind} to={h.card.to} morph={h.card.morph} glow={h.card.glow} s={1.25} />
+    </group>
+  ) : h.kind === "cookie" ? <Cookie /> : <GroceryBag torn={h.kind === "bagTorn"} />;
 const HumView: React.FC<{ a: Hum }> = ({ a }) => {
   const held = a.held ? { side: a.held.side, node: heldNode(a.held), tilt: a.held.tilt } : undefined;
   const held2 = a.held2 ? { side: a.held2.side, node: heldNode(a.held2), tilt: a.held2.tilt } : undefined;
@@ -127,7 +131,7 @@ export const HeroShort: React.FC<{ sub?: boolean; subN?: number; at?: number }> 
           {st.hums.map((a) => (
             <HumView key={a.key} a={a} />
           ))}
-          {e.red > 0.02 ? <pointLight position={[cam.pos[0], cam.pos[1] + 0.5, cam.pos[2]]} color="#ff2a1a" intensity={5 * e.red} distance={8} decay={1.5} /> : null}
+          {e.red > 0.02 ? <pointLight position={[cam.pos[0], cam.pos[1] + 1.2, cam.pos[2] + 0.5]} color="#ff2a1a" intensity={1.4 * e.red} distance={6} decay={2} /> : null}
         </LensCtx.Provider>
       </View>
       {e.red > 0.02 ? <AbsoluteFill style={{ background: `radial-gradient(circle at 50% 45%, rgba(255,20,10,0) 35%, rgba(160,0,0,${(0.35 * e.red).toFixed(3)}) 100%)` }} /> : null}

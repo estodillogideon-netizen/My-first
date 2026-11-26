@@ -61,7 +61,7 @@ export const moodOfShot = (id: string, scene: string, cam: Cam, dark = 0): MoodP
   let m: MoodPreset;
   if (id === "J04") {
     const sk = SKY_DAY.map((c, i) => mix(c, SKY_DARK[i], kd)) as [string, string, string];
-    m = skyed(build(lerpOpts(SQUARE, DARK, kd), cam), mix("#d8e8f8", "#1a1420", kd), 0.004 + 0.01 * kd, sk, { clouds: 0.35 * (1 - kd), cloudColor: "#ffffff", cloudLit: "#ffffff" });
+    m = skyed(build(lerpOpts(SQUARE, DARK, kd), cam), mix("#d8e8f8", "#1a1420", kd), 0.004 + 0.01 * kd, sk, { clouds: 0.35 * (1 - kd), cloudColor: mix("#ffffff", "#2a2a36", kd), cloudLit: mix("#ffffff", "#3a3a46", kd) });
   } else
     switch (scene) {
       case "hall":

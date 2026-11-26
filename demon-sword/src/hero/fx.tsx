@@ -10,6 +10,8 @@ import type { V3 } from "../blocky/motion";
 import { Glow } from "../goodbye/Fog";
 
 // ------------------------------------------------------------------ the cards
+/** where a held card sits relative to the grip (in front of the fist, up a little) */
+export const CARD_OFF: [number, number, number] = [0, 0.06, 0.17];
 export type CardKind = "sealed" | "hero" | "villain" | "heroMax";
 const CW = 0.16, CH = 0.24;
 const cardTex = (kind: CardKind) =>
@@ -134,8 +136,8 @@ export const Card: React.FC<{ kind: CardKind; to?: CardKind; morph?: number; glo
   return (
     <group scale={s}>
       <mesh geometry={rbox(CW, CH, 0.006, 0.012)} material={plastic("#14121a", { rough: 0.4 })} castShadow />
-      <mesh geometry={geoOf("cardFace", () => new THREE.PlaneGeometry(CW * 0.98, CH * 0.98))} material={plastic("#ffffff", { map: cardTex(kind), transparent: true, rough: 0.3, emissive: emis(kind), ei: glow * (1 - k) * 0.5 })} position={[0, 0, 0.0035]} />
-      {to && k > 0 ? <mesh geometry={geoOf("cardFace", () => new THREE.PlaneGeometry(CW * 0.98, CH * 0.98))} material={plastic("#ffffff", { map: cardTex(to), transparent: true, opacity: k, rough: 0.3, emissive: emis(to), ei: glow * k * 0.5 })} position={[0, 0, 0.0045]} /> : null}
+      <mesh geometry={geoOf("cardFace", () => new THREE.PlaneGeometry(CW * 0.98, CH * 0.98))} material={plastic("#ffffff", { map: cardTex(kind), transparent: true, rough: 0.3, emissive: emis(kind), ei: glow * (1 - k) * 0.12 })} position={[0, 0, 0.0035]} />
+      {to && k > 0 ? <mesh geometry={geoOf("cardFace", () => new THREE.PlaneGeometry(CW * 0.98, CH * 0.98))} material={plastic("#ffffff", { map: cardTex(to), transparent: true, opacity: k, rough: 0.3, emissive: emis(to), ei: glow * k * 0.12 })} position={[0, 0, 0.0045]} /> : null}
       <mesh geometry={geoOf("cardBackPl", () => new THREE.PlaneGeometry(CW * 0.98, CH * 0.98))} material={plastic("#ffffff", { map: backTex(), rough: 0.35 })} position={[0, 0, -0.0035]} rotation={[0, Math.PI, 0]} />
     </group>
   );
@@ -183,9 +185,9 @@ export const Burst: React.FC<{ p: V3; u: number; c: string; s?: number; rays?: n
   return (
     <>
       {out}
-      <Glow p={p} s={s * (0.6 + 2.2 * Math.min(1, u * 2))} c={c} op={0.9 * f} />
-      <Glow p={p} s={s * 0.5} c="#ffffff" op={0.9 * f} />
-      {light ? <pointLight position={p} color={c} intensity={14 * f * s} distance={6 * s} decay={2} /> : null}
+      <Glow p={p} s={s * (0.5 + 1.6 * Math.min(1, u * 2))} c={c} op={0.55 * f} />
+      <Glow p={p} s={s * 0.35} c="#ffffff" op={0.6 * f} />
+      {light ? <pointLight position={[p[0], p[1] + 0.3, p[2] + 0.4]} color={c} intensity={4 * f * s} distance={5 * s} decay={2} /> : null}
     </>
   );
 };
