@@ -13,7 +13,7 @@ import { mix } from "../engine/util";
 export const CastCtx = React.createContext(true);
 
 export type Fabric = "knit" | "denim" | "plaid" | "cord" | "cotton";
-export type HairStyle = "shaggy" | "puffs" | "antennae" | "antenna1" | "bald" | "tuft" | "spiky" | "swept" | "pony" | "twin" | "long";
+export type HairStyle = "shaggy" | "puffs" | "antennae" | "antenna1" | "bald" | "tuft" | "spiky" | "swept" | "pony" | "twin" | "long" | "ren" | "haru" | "bob" | "flow" | "bun" | "pony2";
 export type Look = {
   skin: string;
   shirt: string;
@@ -23,7 +23,7 @@ export type Look = {
   hair: string;
   hairStyle: HairStyle;
   accent: string; // print / hair ties / antenna tips
-  print: "bolt" | "heart" | "ring" | "star" | "bow" | "none" | "patch" | "stripe" | "num";
+  print: "bolt" | "heart" | "ring" | "star" | "bow" | "none" | "patch" | "stripe" | "num" | "buttons";
   cheeks: "freckles" | "blush" | "none";
   /** eye size (1 = the family default) */
   eyeScale?: number;
@@ -701,6 +701,22 @@ const printTex = (kind: Look["print"], color: string) =>
       return;
     } else if (kind === "none") {
       return;
+    } else if (kind === "buttons") {
+      // a school jacket front: a placket line and five brass buttons
+      g.fillStyle = "rgba(0,0,0,0.35)";
+      g.fillRect(0.495 * W, 0, 0.012 * W, W);
+      for (let i = 0; i < 5; i++) {
+        const y = (0.08 + i * 0.2) * W;
+        const gr = g.createRadialGradient(0.47 * W, y - 0.012 * W, 2, 0.5 * W, y, 0.045 * W);
+        gr.addColorStop(0, "#fff4c0");
+        gr.addColorStop(0.5, color);
+        gr.addColorStop(1, "#7a5a18");
+        g.fillStyle = gr;
+        g.beginPath();
+        g.arc(0.5 * W, y, 0.042 * W, 0, Math.PI * 2);
+        g.fill();
+      }
+      return;
     } else if (kind === "patch") {
       // a name patch on the left chest
       g.fillStyle = "#f4f0e6";
@@ -775,7 +791,7 @@ const Antennae: React.FC<{ look: Look; ant: number; wob?: number; lift?: number 
 const HAT_CROWN = 0.5 * U; // the dad's hat crown height (antennae come out on top)
 const lerpN = (a: number, b: number, u: number) => a + (b - a) * Math.min(1, Math.max(0, u));
 
-const Hair: React.FC<{ look: Look; ant?: number; wob?: number }> = ({ look, ant = 0, wob = 0 }) => {
+const Hair: React.FC<{ look: Look; ant?: number; wob?: number; noFringe?: boolean }> = ({ look, ant = 0, wob = 0, noFringe = false }) => {
   const cs = React.useContext(CastCtx);
   if (look.hairStyle === "antennae" || look.hairStyle === "antenna1") return <Antennae look={look} ant={ant} wob={wob} lift={look.acc?.hat ? HAT_CROWN : 0} />;
   const H = SPEC.head;
@@ -794,6 +810,7 @@ const Hair: React.FC<{ look: Look; ant?: number; wob?: number }> = ({ look, ant 
   }
   const m = plastic(look.hair, { rough: 0.62 });
   if (["spiky", "swept", "pony", "twin", "long"].includes(look.hairStyle)) return <AnimeHair look={look} m={m} />;
+  if (["ren", "haru", "bob", "flow", "bun", "pony2"].includes(look.hairStyle)) return <AnimeHair2 look={look} noFringe={noFringe} />;
   const shaggy = look.hairStyle === "shaggy";
   const kx = (shaggy ? 0.85 : 0.92) * (H.w / 1.1);
   // the cap is built at the real head size (never narrower than the head); the other pieces are authored for a
@@ -898,6 +915,136 @@ const AnimeHair: React.FC<{ look: Look; m: THREE.Material }> = ({ look, m }) => 
   );
 };
 
+
+// ------------------------------------------------------------------ anime hair 2: curved, tapered locks with strands
+/** strand texture: fine lines along the lock (v = along) and a soft light band ("angel ring") */
+const hairStrandTex = () =>
+  canvasTexture("hairStrands2", 256, 256, (g, W, H) => {
+    g.fillStyle = "#c8c8c8";
+    g.fillRect(0, 0, W, H);
+    for (let x = 0; x < W; x += 2) {
+      const v = 150 + Math.floor(70 * Math.abs(Math.sin(x * 12.9898) * 43758.5453 % 1));
+      g.fillStyle = `rgba(${v},${v},${v},0.55)`;
+      g.fillRect(x, 0, 1, H);
+    }
+    // the light band: a third of the way down each lock
+    const gr = g.createLinearGradient(0, 0, 0, H);
+    gr.addColorStop(0.0, "rgba(255,255,255,0)");
+    gr.addColorStop(0.22, "rgba(255,255,255,0)");
+    gr.addColorStop(0.3, "rgba(255,255,255,0.75)");
+    gr.addColorStop(0.36, "rgba(255,255,255,0.15)");
+    gr.addColorStop(0.42, "rgba(255,255,255,0)");
+    gr.addColorStop(1.0, "rgba(0,0,0,0.18)");
+    g.fillStyle = gr;
+    g.fillRect(0, 0, W, H);
+  });
+/** a lock: tapered, flattened (w x th), curving toward local +z by bend (x length), pointing +y */
+const lockGeo = (r: number, l: number, bend: number, flat: number) =>
+  geoOf(`lock2|${r.toFixed(3)}|${l.toFixed(3)}|${bend.toFixed(2)}|${flat.toFixed(2)}`, () => {
+    const n = 10, ring = 6;
+    const pos: number[] = [], uv: number[] = [], idx: number[] = [];
+    for (let i = 0; i <= n; i++) {
+      const s = i / n;
+      const rr = r * Math.pow(1 - s, 0.75) + (i === n ? 0 : 0.0006);
+      const cy = s * l, cz = bend * l * s * s;
+      for (let j = 0; j <= ring; j++) {
+        const a = (j / ring) * Math.PI * 2;
+        pos.push(Math.cos(a) * rr, cy, cz + Math.sin(a) * rr * flat);
+        uv.push(j / ring, s);
+      }
+    }
+    for (let i = 0; i < n; i++)
+      for (let j = 0; j < ring; j++) {
+        const a = i * (ring + 1) + j, b = a + ring + 1;
+        idx.push(a, b, a + 1, a + 1, b, b + 1);
+      }
+    const g = new THREE.BufferGeometry();
+    g.setAttribute("position", new THREE.Float32BufferAttribute(pos, 3));
+    g.setAttribute("uv", new THREE.Float32BufferAttribute(uv, 2));
+    g.setIndex(idx);
+    g.computeVertexNormals();
+    return g;
+  });
+type Lock = { r: number; l: number; p: V3; rx: number; ry?: number; rz: number; bend?: number; flat?: number; fr?: boolean };
+const AnimeHair2: React.FC<{ look: Look; noFringe?: boolean }> = ({ look, noFringe = false }) => {
+  const cs = React.useContext(CastCtx);
+  const H = SPEC.head;
+  const hw = (H.w / 2) * U, hd = (H.d / 2) * U, top = (H.h / 2) * U;
+  const st = look.hairStyle;
+  const m = plastic(look.hair, { rough: 0.42, map: hairStrandTex() });
+  const tie = plastic(look.accent, { rough: 0.35 });
+  const P: Lock[] = [];
+  const shellH = st === "bun" ? 0.3 : 0.4;
+  const shell = rbox((H.w + 0.1) * U, shellH * U, (H.d + 0.1) * U, 0.17 * U);
+  const backL = st === "flow" ? 1.9 : st === "bob" ? 1.05 : st === "haru" ? 0.95 : st === "ren" ? 0.85 : st === "pony2" ? 0.7 : 0.6;
+  const back = rbox((H.w + 0.1) * U, backL * U, 0.2 * U, 0.09 * U);
+  const F = Math.PI;
+  if (st === "ren") {
+    // fringe: seven sharp locks of mixed length falling over the brow, tips flicking
+    const fr: [number, number, number][] = [[-0.42, 0.36, 0.35], [-0.27, 0.48, 0.2], [-0.12, 0.42, 0.05], [0.02, 0.55, -0.05], [0.16, 0.45, -0.15], [0.3, 0.5, -0.3], [0.44, 0.34, -0.45]];
+    for (const [x, l, a] of fr) P.push({ r: 0.12 * U, l: l * U, p: [x * U, top + 0.03 * U, hd + 0.04 * U], rx: F - 0.3, rz: a * 0.55, bend: -0.25, flat: 0.45 });
+    // big swept spikes up and back
+    const sp: [number, number, number, number, number][] = [[-0.32, 0.12, 0.72, -0.55, 0.55], [-0.05, 0.22, 0.85, -0.7, 0.1], [0.28, 0.12, 0.75, -0.6, -0.5], [-0.2, -0.2, 0.78, -1.15, 0.35], [0.18, -0.22, 0.8, -1.2, -0.3], [0, -0.42, 0.7, -1.7, 0.05], [-0.48, -0.1, 0.6, -0.95, 1.0], [0.48, -0.08, 0.6, -0.95, -1.0]];
+    for (const [x, z, l, rx, rz] of sp) P.push({ r: 0.16 * U, l: l * U, p: [x * U, top - 0.04 * U, z * U], rx, rz, bend: 0.22, flat: 0.55 });
+    // side locks over the ears, nape spikes
+    for (const sx of [-1, 1]) {
+      P.push({ r: 0.11 * U, l: 0.62 * U, p: [sx * (hw + 0.03 * U), top - 0.05 * U, 0.22 * U], rx: F - 0.08, rz: sx * 0.1, bend: -0.15, flat: 0.5 });
+      P.push({ r: 0.12 * U, l: 0.5 * U, p: [sx * (hw + 0.02 * U), top - 0.15 * U, -0.1 * U], rx: F - 0.2, rz: sx * 0.25, bend: 0.2, flat: 0.5 });
+      P.push({ r: 0.13 * U, l: 0.45 * U, p: [sx * 0.25 * U, -0.1 * U, -hd - 0.08 * U], rx: F + 0.55, rz: sx * 0.35, bend: 0.1, flat: 0.5 });
+    }
+  } else if (st === "haru") {
+    // soft fringe swept to one side, covering the brow (not the eyes)
+    const fr: [number, number, number][] = [[-0.42, 0.34, 0.6], [-0.26, 0.4, 0.55], [-0.1, 0.44, 0.45], [0.06, 0.46, 0.35], [0.22, 0.44, 0.25], [0.38, 0.4, 0.1], [0.5, 0.36, -0.05]];
+    for (const [x, l, a] of fr) P.push({ r: 0.15 * U, l: l * U, p: [x * U, top + 0.04 * U, hd + 0.05 * U], rx: F - 0.38, rz: a * 0.55, bend: -0.35, flat: 0.5 });
+    // fluffy crown: rounded locks lying back
+    for (const [x, z, rz] of [[-0.3, 0.1, 0.4], [0, 0.15, 0], [0.3, 0.1, -0.4], [-0.2, -0.25, 0.3], [0.2, -0.25, -0.3]] as [number, number, number][]) P.push({ r: 0.2 * U, l: 0.52 * U, p: [x * U, top - 0.02 * U, z * U], rx: -1.4, rz, bend: 0.45, flat: 0.55 });
+    for (const sx of [-1, 1]) {
+      P.push({ r: 0.13 * U, l: 0.85 * U, p: [sx * (hw + 0.035 * U), top - 0.04 * U, 0.25 * U], rx: F - 0.05, rz: sx * 0.08, bend: -0.2, flat: 0.5 });
+      P.push({ r: 0.14 * U, l: 0.75 * U, p: [sx * (hw + 0.03 * U), top - 0.1 * U, -0.08 * U], rx: F - 0.12, rz: sx * 0.15, bend: 0.15, flat: 0.5 });
+      P.push({ r: 0.15 * U, l: 0.55 * U, p: [sx * 0.22 * U, -0.05 * U, -hd - 0.09 * U], rx: F + 0.3, rz: sx * 0.2, bend: 0.2, flat: 0.5 });
+    }
+  } else if (st === "bob" || st === "flow" || st === "pony2") {
+    // a blunt, slightly parted fringe
+    for (const x of [-0.4, -0.24, -0.08, 0.08, 0.24, 0.4]) P.push({ r: 0.14 * U, l: (0.4 + 0.04 * Math.cos(x * 9)) * U, p: [x * U, top + 0.03 * U, hd + 0.05 * U], rx: F - 0.25, rz: x * 0.15, bend: -0.2, flat: 0.45 });
+    const sideL = st === "flow" ? 1.6 : st === "bob" ? 1.0 : 0.85;
+    for (const sx of [-1, 1]) {
+      P.push({ r: 0.15 * U, l: sideL * U, p: [sx * (hw + 0.04 * U), top - 0.03 * U, 0.24 * U], rx: F - 0.04, rz: sx * 0.03, bend: st === "bob" ? -0.25 : -0.08, flat: 0.5 });
+      P.push({ r: 0.16 * U, l: sideL * 0.95 * U, p: [sx * (hw + 0.04 * U), top - 0.05 * U, -0.1 * U], rx: F - 0.03, rz: sx * 0.05, bend: 0.05, flat: 0.5 });
+    }
+    for (const [x, rz] of [[-0.3, 0.3], [0, 0], [0.3, -0.3]] as [number, number][]) P.push({ r: 0.2 * U, l: 0.45 * U, p: [x * U, top - 0.02 * U, 0.05 * U], rx: -1.45, rz, bend: 0.4, flat: 0.55 });
+    if (st === "flow") for (const x of [-0.34, -0.11, 0.11, 0.34]) P.push({ r: 0.16 * U, l: 1.9 * U, p: [x * U, top - 0.1 * U, -hd - 0.08 * U], rx: F - 0.04, rz: x * 0.1, bend: 0.06, flat: 0.45 });
+  } else if (st === "bun") {
+    // swept back with a side part, a bun and a hairpin
+    // swept-back locks lying flat over the crown, a soft wave at each temple
+    for (const [x, rz] of [[-0.28, 0.12], [0, 0], [0.28, -0.12]] as [number, number][]) P.push({ r: 0.17 * U, l: 0.7 * U, p: [x * U, top + 0.0 * U, hd - 0.02 * U], rx: -1.62, rz, bend: 0.18, flat: 0.4 });
+    for (const sx of [-1, 1]) P.push({ r: 0.12 * U, l: 0.55 * U, p: [sx * (hw + 0.02 * U), top - 0.08 * U, 0.3 * U], rx: -1.75, rz: sx * 0.05, bend: 0.12, flat: 0.45 });
+  }
+  const tails: { p: V3; rx: number; rz: number; l: number }[] = [];
+  if (st === "pony2") tails.push({ p: [0, top + 0.02 * U, -hd - 0.06 * U], rx: F - 0.7, rz: 0, l: 1.35 * U });
+  return (
+    <>
+      <mesh geometry={shell} material={m} position={[0, top - 0.09 * U, -0.03 * U]} castShadow={cs} receiveShadow />
+      {st !== "bun" ? <mesh geometry={back} material={m} position={[0, top - (backL / 2 - 0.02) * U, -hd - 0.05 * U]} castShadow={cs} receiveShadow /> : null}
+      {P.filter((q) => !(noFringe && q.p[2] > hd)).map((q, i) => (
+        <mesh key={i} geometry={lockGeo(q.r, q.l, q.bend ?? 0, q.flat ?? 0.5)} material={m} position={q.p} rotation={[q.rx, q.ry ?? 0, q.rz]} castShadow={cs} receiveShadow />
+      ))}
+      {tails.map((q, i) => (
+        <group key={`t${i}`} position={q.p}>
+          <mesh geometry={geoOf("hairTie", () => new THREE.CylinderGeometry(0.1 * U, 0.1 * U, 0.1 * U, 12))} material={tie} rotation={[q.rx, 0, q.rz]} />
+          <mesh geometry={lockGeo(0.22 * U, q.l, 0.3, 0.6)} material={m} rotation={[q.rx, 0, q.rz]} castShadow={cs} receiveShadow />
+        </group>
+      ))}
+      {st === "bun" ? (
+        <group position={[0, top - 0.02 * U, -hd - 0.1 * U]}>
+          <mesh geometry={geoOf("bun2", () => new THREE.SphereGeometry(0.26 * U, 20, 14))} material={m} scale={[1, 0.9, 0.85]} castShadow={cs} />
+          <mesh geometry={geoOf("hairpin", () => new THREE.CylinderGeometry(0.018 * U, 0.018 * U, 0.8 * U, 8))} material={plastic(look.accent, { rough: 0.3 })} rotation={[0, 0, 1.2]} position={[0, 0.02 * U, -0.05 * U]} />
+          <mesh geometry={geoOf("hairpinBead", () => new THREE.SphereGeometry(0.055 * U, 10, 8))} material={plastic("#d82a3a", { rough: 0.25 })} position={[0.37 * U, 0.17 * U, -0.05 * U]} />
+        </group>
+      ) : null}
+    </>
+  );
+};
+
 // ------------------------------------------------------------------ held cone
 /** pop = [width, height] scale of the top scoop (landing squash) */
 export const Cone: React.FC<{ scoops: number; colors: string[]; pop?: [number, number] }> = ({ scoops, colors, pop = [1, 1] }) => {
@@ -919,7 +1066,7 @@ export const Cone: React.FC<{ scoops: number; colors: string[]; pop?: [number, n
 };
 
 // ------------------------------------------------------------------ the character
-export const Blocky: React.FC<{ pose: Pose; look: Look; emotion: Emotion; blink?: boolean; cone?: ConeProps; held?: Held; held2?: Held; chest?: React.ReactNode; scale?: number; socks?: string; face2?: { emotion: Emotion; k: number }; headOnly?: boolean; talk?: number; shade?: number }> = ({
+export const Blocky: React.FC<{ pose: Pose; look: Look; emotion: Emotion; blink?: boolean; cone?: ConeProps; held?: Held; held2?: Held; chest?: React.ReactNode; scale?: number; socks?: string; face2?: { emotion: Emotion; k: number }; headOnly?: boolean; talk?: number; shade?: number; headNode?: React.ReactNode; noFringe?: boolean }> = ({
   pose: p,
   look,
   emotion,
@@ -934,6 +1081,8 @@ export const Blocky: React.FC<{ pose: Pose; look: Look; emotion: Emotion; blink?
   headOnly = false,
   talk = 0,
   shade = 0,
+  headNode,
+  noFringe = false,
 }) => {
   const cs = React.useContext(CastCtx);
   const S = SPEC;
@@ -1068,8 +1217,9 @@ export const Blocky: React.FC<{ pose: Pose; look: Look; emotion: Emotion; blink?
               <mesh geometry={rbox(H.w * U, H.h * U, H.d * U, H.r * U)} material={headSkin} castShadow={cs} receiveShadow />
               <mesh geometry={geoOf("facePlane", () => new THREE.PlaneGeometry(FW * U, FH * U))} material={face} position={[0, 0, (H.d * U) / 2 + DECAL_OFF]} visible={fk < 1} />
               {faceB ? <mesh geometry={geoOf("facePlane", () => new THREE.PlaneGeometry(FW * U, FH * U))} material={faceB} position={[0, 0, (H.d * U) / 2 + DECAL_OFF * 1.6]} /> : null}
-              <Hair look={look} ant={p.ant ?? 0} wob={p.antWob ?? 0} />
+              <Hair look={look} ant={p.ant ?? 0} wob={p.antWob ?? 0} noFringe={noFringe} />
               <HeadAcc look={look} />
+              {headNode}
             </group>
           </group>
         </group>

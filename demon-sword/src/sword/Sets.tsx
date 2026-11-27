@@ -22,7 +22,7 @@ export const B: React.FC<{ s: V3; p: V3; c: string; r?: V3; rough?: number; cast
 );
 
 // ------------------------------------------------------------------ textures
-const slatTex = () => {
+export const slatTex = () => {
   const t = canvasTexture("slats", 256, 256, (g, W, H) => {
     g.fillStyle = "#4a2e1c";
     g.fillRect(0, 0, W, H);
@@ -45,7 +45,7 @@ const slatTex = () => {
   t.wrapS = t.wrapT = THREE.RepeatWrapping;
   return t;
 };
-const shojiTex = (key: string, paper: string, frame: string) =>
+export const shojiTex = (key: string, paper: string, frame: string) =>
   canvasTexture(`shoji|${key}`, 256, 256, (g, W, H) => {
     g.fillStyle = paper;
     g.fillRect(0, 0, W, H);
@@ -55,7 +55,7 @@ const shojiTex = (key: string, paper: string, frame: string) =>
     g.fillRect(0, 0, W, 10);
     g.fillRect(0, H - 10, W, 10);
   });
-const tileTex = () => {
+export const tileTex = () => {
   const t = canvasTexture("roofTiles", 256, 256, (g, W, H) => {
     g.fillStyle = "#24262e";
     g.fillRect(0, 0, W, H);
@@ -75,7 +75,7 @@ const tileTex = () => {
   t.wrapS = t.wrapT = THREE.RepeatWrapping;
   return t;
 };
-const plasterTex = () =>
+export const plasterTex = () =>
   canvasTexture("plaster", 128, 128, (g, W, H) => {
     const n = vnoise(10, 9);
     const img = g.createImageData(W, H);
@@ -88,7 +88,7 @@ const plasterTex = () =>
     }
     g.putImageData(img, 0, 0);
   });
-const tatamiTex = () => {
+export const tatamiTex = () => {
   const t = canvasTexture("tatami", 256, 256, (g, W, H) => {
     g.fillStyle = "#b8b070";
     g.fillRect(0, 0, W, H);
@@ -104,7 +104,7 @@ const tatamiTex = () => {
   t.repeat.set(3, 3);
   return t;
 };
-const groundTex = (key: string, a: string, b: string, cells = 14) => {
+export const groundTex = (key: string, a: string, b: string, cells = 14) => {
   const t = canvasTexture(`ground|${key}`, 256, 256, (g, W, H) => {
     const n = vnoise(cells, 4), m = vnoise(cells * 3, 8);
     const ca = new THREE.Color(a), cb = new THREE.Color(b);
@@ -124,7 +124,7 @@ const groundTex = (key: string, a: string, b: string, cells = 14) => {
   t.repeat.set(8, 8);
   return t;
 };
-const fusumaTex = () =>
+export const fusumaTex = () =>
   canvasTexture("fusuma", 256, 256, (g, W, H) => {
     g.fillStyle = "#e8dcc0";
     g.fillRect(0, 0, W, H);
@@ -200,7 +200,7 @@ export const VIL = {
   stageH: 0.7,
   roofY: 5.7, // top of a house's ridge (walkable)
 };
-const House: React.FC<{ x: number; z: number; face: 1 | -1; seed: number; night: boolean; lit: number }> = ({ x, z, face, seed, night, lit }) => {
+export const House: React.FC<{ x: number; z: number; face: 1 | -1; seed: number; night: boolean; lit: number }> = ({ x, z, face, seed, night, lit }) => {
   const w = 5.2, d = 4.4, h1 = 2.6, h2 = 1.7;
   const roofH = 1.3;
   const slat = slatTex();
