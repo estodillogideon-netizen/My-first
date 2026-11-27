@@ -73,7 +73,7 @@ export const moodOfShot = (id: string, scene: string, cam: Cam): MoodPreset => {
       m = nightSky(HOMEN, "#0e1424", 0.002);
       break;
     case "lake":
-      m = nightSky(LAKE, "#1a2a4a", 0.0018);
+      m = nightSky(id === "K02" ? { ...LAKE, exposure: 0.42, bloom: [0.6, 0.8, 50] } : LAKE, "#1a2a4a", 0.0018);
       break;
     case "white":
       m = skyed(build(WHITE, cam), "#ffffff", 0.05, ["#ffffff", "#f0f8ff", "#ffffff"]);
