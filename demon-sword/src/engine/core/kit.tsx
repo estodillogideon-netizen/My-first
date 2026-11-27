@@ -5,6 +5,7 @@ import { toonMaterial } from "../mat/materials";
 import type { TexKind } from "../mat/materials";
 
 import type { V3 } from "../types";
+import { evictOld } from "../../blocky/mat";
 export type { V3 };
 
 // ------------------------------------------------------------------ bounded caches (never keyed by Object3D.id)
@@ -12,7 +13,7 @@ const geoCache = new Map<string, THREE.BufferGeometry>();
 const geo = (key: string, make: () => THREE.BufferGeometry) => {
   let g = geoCache.get(key);
   if (!g) {
-    if (geoCache.size > 300) geoCache.clear();
+    evictOld(geoCache, 300);
     g = make();
     geoCache.set(key, g);
   }
@@ -37,7 +38,7 @@ export const coreMat = (col: string, k: number, op = 1) => {
   const key = `${col}|${k.toFixed(2)}|${op.toFixed(2)}`;
   let m = coreCache.get(key);
   if (!m) {
-    if (coreCache.size > 200) coreCache.clear();
+    evictOld(coreCache, 200);
     const c = new THREE.Color(col).multiplyScalar(k);
     m = new THREE.MeshBasicMaterial({ color: c, toneMapped: false, transparent: op < 1, opacity: op, depthWrite: op >= 1 });
     coreCache.set(key, m);
@@ -50,7 +51,7 @@ const texCache = new Map<string, THREE.CanvasTexture>();
 export const canvasTex = (key: string, w: number, h: number, draw: (g: CanvasRenderingContext2D, w: number, h: number) => void) => {
   let t = texCache.get(key);
   if (!t) {
-    if (texCache.size > 120) texCache.clear();
+    evictOld(texCache, 120);
     const c = document.createElement("canvas");
     c.width = w;
     c.height = h;
@@ -68,7 +69,7 @@ export const Label: React.FC<{ text: string; p: V3; r?: V3; w: number; h: number
   const key = `${text}|${fg}|${bg}|${w}|${h}|${font}|${stamp ? 1 : 0}`;
   let m = labelMats.get(key);
   if (!m) {
-    if (labelMats.size > 80) labelMats.clear();
+    evictOld(labelMats, 80);
     const W = 1024;
     const H = Math.max(64, Math.round((W * h) / w));
     const tex = canvasTex(`L${key}`, W, H, (g) => {

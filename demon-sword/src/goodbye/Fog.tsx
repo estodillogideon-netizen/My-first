@@ -13,7 +13,7 @@
 // Every frame is a pure function of t.
 import React from "react";
 import * as THREE from "three";
-import { canvasTexture, geoOf } from "../blocky/mat";
+import { canvasTexture, geoOf, evictOld } from "../blocky/mat";
 import { hash } from "../blocky/motion";
 import type { V3 } from "../blocky/motion";
 import { mix } from "../engine/util";
@@ -64,7 +64,7 @@ const spriteMat = (color: string, op: number, k: number, add = false) => {
   const key = `${color}|${op.toFixed(2)}|${k}|${add ? 1 : 0}`;
   let m = sMats.get(key);
   if (!m) {
-    if (sMats.size > 900) sMats.clear();
+    evictOld(sMats, 900);
     m = new THREE.SpriteMaterial({ map: add ? glowTex() : puffTex(k), color, opacity: op, transparent: true, depthWrite: false, fog: !add, blending: add ? THREE.AdditiveBlending : THREE.NormalBlending });
     sMats.set(key, m);
   }
@@ -127,7 +127,7 @@ const coneMat = (color: string, op: number) => {
   const key = `${color}|${op.toFixed(2)}`;
   let m = coneMats.get(key);
   if (!m) {
-    if (coneMats.size > 200) coneMats.clear();
+    evictOld(coneMats, 200);
     m = new THREE.ShaderMaterial({
       uniforms: { uColor: { value: new THREE.Color(color) }, uOp: { value: op } },
       vertexShader: `varying float vH; varying vec3 vN; varying vec3 vV;

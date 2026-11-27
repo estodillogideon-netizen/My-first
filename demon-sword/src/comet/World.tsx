@@ -345,9 +345,18 @@ const flakeTex = () => {
 };
 let FLAKE: THREE.DataTexture | null = null;
 const flakeMats = new Map<string, THREE.PointsMaterial>();
+const flakeGeos = new Map<number, THREE.BufferGeometry>();
 export const Snowfall: React.FC<{ c: V3; t: number; n?: number; size?: [number, number, number]; s?: number; wind?: number; op?: number }> = ({ c, t, n = 900, size = [18, 10, 18], s = 0.06, wind = 0.4, op = 0.9 }) => {
   if (!FLAKE) FLAKE = flakeTex();
-  const pos = new Float32Array(n * 3);
+  // one geometry per flake count, updated in place (a new one every frame leaked GPU memory)
+  let geo = flakeGeos.get(n);
+  if (!geo) {
+    geo = new THREE.BufferGeometry();
+    geo.setAttribute("position", new THREE.BufferAttribute(new Float32Array(n * 3), 3));
+    flakeGeos.set(n, geo);
+  }
+  const attr = geo.attributes.position as THREE.BufferAttribute;
+  const pos = attr.array as Float32Array;
   for (let i = 0; i < n; i++) {
     const v = 0.6 + 0.6 * hash(i * 3.1);
     const y0 = hash(i * 1.7) * size[1];
@@ -356,8 +365,7 @@ export const Snowfall: React.FC<{ c: V3; t: number; n?: number; size?: [number, 
     const z = (hash(i * 7.9) - 0.5) * size[2] + Math.cos(t * 0.7 + i * 1.3) * 0.25;
     pos.set([c[0] + x, c[1] + y, c[2] + z], i * 3);
   }
-  const geo = new THREE.BufferGeometry();
-  geo.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+  attr.needsUpdate = true;
   const key = `${s}|${op}`;
   let m = flakeMats.get(key);
   if (!m) {

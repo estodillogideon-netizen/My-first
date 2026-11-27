@@ -10,6 +10,7 @@ import * as THREE from "three";
 import type { V3 } from "../blocky/motion";
 import { hash } from "../blocky/motion";
 import { LensCtx } from "../goodbye/Fog";
+import { evictOld } from "../blocky/mat";
 
 const VERT = `varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }`;
 const FRAG = `uniform vec3 uA; uniform vec3 uB; uniform float uOp; uniform float uT; uniform float uStri; uniform float uSharp; uniform float uFall;
@@ -73,18 +74,37 @@ const glowMat = (c: string, op: number) => {
   const key = `${c}|${op.toFixed(2)}`;
   let m = spriteMats.get(key);
   if (!m) {
-    if (spriteMats.size > 400) spriteMats.clear();
+    evictOld(spriteMats, 400);
     m = new THREE.SpriteMaterial({ map: glowTex(), color: c, opacity: op, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, fog: false });
     spriteMats.set(key, m);
   }
   return m;
 };
 
-/** a ribbon from the head along a (curving) path, facing the lens */
-const ribbon = (head: THREE.Vector3, dir: THREE.Vector3, bend: THREE.Vector3, len: number, w0: number, w1: number, toLens: THREE.Vector3, n = 48) => {
-  const pos = new Float32Array((n + 1) * 2 * 3);
-  const uv = new Float32Array((n + 1) * 2 * 2);
-  const idx: number[] = [];
+/** a ribbon from the head along a (curving) path, facing the lens. One geometry per `key`, updated in place each frame
+ *  (a new BufferGeometry every frame leaked GPU memory and made long renders drop textures / whole frames). */
+const ribbonGeos = new Map<string, THREE.BufferGeometry>();
+const ribbon = (key: string, head: THREE.Vector3, dir: THREE.Vector3, bend: THREE.Vector3, len: number, w0: number, w1: number, toLens: THREE.Vector3, n = 48) => {
+  let g = ribbonGeos.get(key);
+  if (!g) {
+    g = new THREE.BufferGeometry();
+    g.setAttribute("position", new THREE.BufferAttribute(new Float32Array((n + 1) * 2 * 3), 3));
+    const uv = new Float32Array((n + 1) * 2 * 2);
+    const idx: number[] = [];
+    for (let i = 0; i <= n; i++) {
+      const s = i / n;
+      uv.set([s, 0, s, 1], i * 4);
+      if (i < n) {
+        const k = i * 2;
+        idx.push(k, k + 1, k + 2, k + 1, k + 3, k + 2);
+      }
+    }
+    g.setAttribute("uv", new THREE.BufferAttribute(uv, 2));
+    g.setIndex(idx);
+    ribbonGeos.set(key, g);
+  }
+  const attr = g.attributes.position as THREE.BufferAttribute;
+  const pos = attr.array as Float32Array;
   const pt = (s: number) => head.clone().addScaledVector(dir, len * s).addScaledVector(bend, len * s * s);
   for (let i = 0; i <= n; i++) {
     const s = i / n;
@@ -94,16 +114,8 @@ const ribbon = (head: THREE.Vector3, dir: THREE.Vector3, bend: THREE.Vector3, le
     const w = (w0 + (w1 - w0) * Math.pow(s, 0.8)) / 2;
     const a = c.clone().addScaledVector(side, -w), b = c.clone().addScaledVector(side, w);
     pos.set([a.x, a.y, a.z, b.x, b.y, b.z], i * 6);
-    uv.set([s, 0, s, 1], i * 4);
-    if (i < n) {
-      const k = i * 2;
-      idx.push(k, k + 1, k + 2, k + 1, k + 3, k + 2);
-    }
   }
-  const g = new THREE.BufferGeometry();
-  g.setAttribute("position", new THREE.BufferAttribute(pos, 3));
-  g.setAttribute("uv", new THREE.BufferAttribute(uv, 2));
-  g.setIndex(idx);
+  attr.needsUpdate = true;
   return g;
 };
 
@@ -117,12 +129,12 @@ export const Comet: React.FC<CometP> = ({ p, dir, bend = [0.12, -0.42, 0.05], le
   const bd = new THREE.Vector3(...bend);
   const L = len * scale;
   const g = 0.55 + 0.45 * glow;
-  const dust = ribbon(head, d, bd, L, 4 * scale, 58 * scale, toLens);
-  const dustInner = ribbon(head, d, bd.clone().multiplyScalar(0.85), L * 0.85, 2 * scale, 22 * scale, toLens);
+  const dust = ribbon("dust", head, d, bd, L, 4 * scale, 58 * scale, toLens);
+  const dustInner = ribbon("dustIn", head, d, bd.clone().multiplyScalar(0.85), L * 0.85, 2 * scale, 22 * scale, toLens);
   const ionDir = d.clone().add(new THREE.Vector3(0.12, 0.3, -0.05)).normalize();
-  const ion = ribbon(head, ionDir, new THREE.Vector3(0, 0, 0), L * 1.45, 1.2 * scale, 8 * scale, toLens);
-  const ray1 = ribbon(head, ionDir.clone().add(new THREE.Vector3(0.05, 0.04, 0)).normalize(), new THREE.Vector3(0, 0, 0), L * 1.25, 0.5 * scale, 2.6 * scale, toLens);
-  const ray2 = ribbon(head, ionDir.clone().add(new THREE.Vector3(-0.05, -0.03, 0)).normalize(), new THREE.Vector3(0, 0, 0), L * 1.3, 0.5 * scale, 2.2 * scale, toLens);
+  const ion = ribbon("ion", head, ionDir, new THREE.Vector3(0, 0, 0), L * 1.45, 1.2 * scale, 8 * scale, toLens);
+  const ray1 = ribbon("ray1", head, ionDir.clone().add(new THREE.Vector3(0.05, 0.04, 0)).normalize(), new THREE.Vector3(0, 0, 0), L * 1.25, 0.5 * scale, 2.6 * scale, toLens);
+  const ray2 = ribbon("ray2", head, ionDir.clone().add(new THREE.Vector3(-0.05, -0.03, 0)).normalize(), new THREE.Vector3(0, 0, 0), L * 1.3, 0.5 * scale, 2.2 * scale, toLens);
   const mDust = tailMat("dust", "#f4f6ff", "#ffe6c0", 0.8, 2.6, 1.6);
   mDust.uniforms.uOp.value = 0.3 * g;
   mDust.uniforms.uT.value = t;

@@ -4,7 +4,7 @@
 // All pure functions of their parameters (u = progress 0..1, tau = seconds since the event).
 import React from "react";
 import * as THREE from "three";
-import { canvasTexture, geoOf, plastic, rbox } from "../blocky/mat";
+import { canvasTexture, geoOf, plastic, rbox, evictOld } from "../blocky/mat";
 import { hash } from "../blocky/motion";
 import type { V3 } from "../blocky/motion";
 import { Glow } from "../goodbye/Fog";
@@ -149,7 +149,7 @@ const addMat = (c: string, op: number) => {
   const key = `${c}|${op.toFixed(2)}`;
   let m = addMats.get(key);
   if (!m) {
-    if (addMats.size > 300) addMats.clear();
+    evictOld(addMats, 300);
     m = new THREE.MeshBasicMaterial({ color: new THREE.Color(c), transparent: true, opacity: op, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false });
     addMats.set(key, m);
   }

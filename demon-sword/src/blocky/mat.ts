@@ -3,13 +3,45 @@
 import * as THREE from "three";
 import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeometry.js";
 
+/** Bounded cache upkeep: on a hit, move the key to the back (recently used); past `cap`, dispose and drop the oldest quarter.
+ *  (Plain Map.clear() dropped objects without freeing their GPU memory: long renders ran out and lost textures / frames.) */
+export const cacheGet = <V,>(m: Map<string, V>, key: string): V | undefined => {
+  const v = m.get(key);
+  if (v !== undefined) {
+    m.delete(key);
+    m.set(key, v);
+  }
+  return v;
+};
+/** past `cap`, dispose and drop the oldest quarter (for caches that used to Map.clear() without freeing GPU memory) */
+export const evictOld = <V extends { dispose: () => void }>(m: Map<string, V>, cap: number) => {
+  if (m.size <= cap) return;
+  let n = Math.ceil(cap / 4);
+  for (const [k, old] of m) {
+    if (n-- <= 0) break;
+    m.delete(k);
+    old.dispose();
+  }
+};
+export const cachePut = <V extends { dispose: () => void }>(m: Map<string, V>, key: string, v: V, cap: number) => {
+  if (m.size >= cap) {
+    let n = Math.ceil(cap / 4);
+    for (const [k, old] of m) {
+      if (n-- <= 0) break;
+      m.delete(k);
+      old.dispose();
+    }
+  }
+  m.set(key, v);
+  return v;
+};
+
 const mats = new Map<string, THREE.MeshStandardMaterial>();
 export type PlasticOpts = { rough?: number; flat?: boolean; map?: THREE.Texture; alphaMap?: THREE.Texture; transparent?: boolean; opacity?: number; decal?: boolean; side?: THREE.Side; emissive?: string; ei?: number };
 export const plastic = (color: string, o: PlasticOpts = {}) => {
   const key = [color, o.rough ?? 0.5, o.flat ? 1 : 0, o.map?.uuid ?? "", o.alphaMap?.uuid ?? "", o.transparent ? 1 : 0, o.opacity ?? 1, o.decal ? 1 : 0, o.side ?? 0, o.emissive ?? "", o.ei ?? 0].join("|");
-  let m = mats.get(key);
+  let m = cacheGet(mats, key);
   if (!m) {
-    if (mats.size > 400) mats.clear();
     m = new THREE.MeshStandardMaterial({
       color,
       roughness: o.rough ?? 0.5,
@@ -30,18 +62,17 @@ export const plastic = (color: string, o: PlasticOpts = {}) => {
       m.polygonOffsetFactor = -2;
       m.polygonOffsetUnits = -2;
     }
-    mats.set(key, m);
+    cachePut(mats, key, m, 1200);
   }
   return m;
 };
 
 const geos = new Map<string, THREE.BufferGeometry>();
 export const geoOf = (key: string, make: () => THREE.BufferGeometry) => {
-  let g = geos.get(key);
+  let g = cacheGet(geos, key);
   if (!g) {
-    if (geos.size > 400) geos.clear();
     g = make();
-    geos.set(key, g);
+    cachePut(geos, key, g, 2400);
   }
   return g;
 };
@@ -52,9 +83,8 @@ export const rbox = (w: number, h: number, d: number, r: number) =>
 const texs = new Map<string, THREE.CanvasTexture>();
 /** a cached canvas texture (drawn once per key) */
 export const canvasTexture = (key: string, w: number, h: number, draw: (g: CanvasRenderingContext2D, w: number, h: number) => void, srgb = true) => {
-  let t = texs.get(key);
+  let t = cacheGet(texs, key);
   if (!t) {
-    if (texs.size > 120) texs.clear();
     const c = document.createElement("canvas");
     c.width = w;
     c.height = h;
@@ -64,7 +94,7 @@ export const canvasTexture = (key: string, w: number, h: number, draw: (g: Canva
     t.anisotropy = 8;
     t.generateMipmaps = true;
     t.minFilter = THREE.LinearMipmapLinearFilter;
-    texs.set(key, t);
+    cachePut(texs, key, t, 240);
   }
   return t;
 };
