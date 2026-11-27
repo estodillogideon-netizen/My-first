@@ -109,7 +109,7 @@ const ribbon = (head: THREE.Vector3, dir: THREE.Vector3, bend: THREE.Vector3, le
 
 export type CometP = { p: V3; dir: V3; bend?: V3; len: number; t: number; glow?: number; scale?: number };
 /** p: the head in the world (far away, ~300 m); dir: where the tails point (away from the unseen sun) */
-export const Comet: React.FC<CometP> = ({ p, dir, bend = [0.18, -0.12, 0], len, t, glow = 1, scale = 1 }) => {
+export const Comet: React.FC<CometP> = ({ p, dir, bend = [0.12, -0.42, 0.05], len, t, glow = 1, scale = 1 }) => {
   const lens = React.useContext(LensCtx) ?? [0, 1.5, 0];
   const head = new THREE.Vector3(...p);
   const toLens = new THREE.Vector3(lens[0] - p[0], lens[1] - p[1], lens[2] - p[2]).normalize();
@@ -117,18 +117,19 @@ export const Comet: React.FC<CometP> = ({ p, dir, bend = [0.18, -0.12, 0], len, 
   const bd = new THREE.Vector3(...bend);
   const L = len * scale;
   const g = 0.55 + 0.45 * glow;
-  const dust = ribbon(head, d, bd, L, 3 * scale, 34 * scale, toLens);
-  const dustInner = ribbon(head, d, bd.clone().multiplyScalar(0.9), L * 0.8, 1.5 * scale, 14 * scale, toLens);
-  const ion = ribbon(head, d.clone().add(new THREE.Vector3(-0.08, 0.06, 0)).normalize(), new THREE.Vector3(0, 0, 0), L * 1.35, 1.2 * scale, 7 * scale, toLens);
-  const ray1 = ribbon(head, d.clone().add(new THREE.Vector3(-0.13, 0.09, 0)).normalize(), new THREE.Vector3(0, 0, 0), L * 1.1, 0.5 * scale, 2.6 * scale, toLens);
-  const ray2 = ribbon(head, d.clone().add(new THREE.Vector3(-0.03, 0.02, 0)).normalize(), new THREE.Vector3(0, 0, 0), L * 1.2, 0.5 * scale, 2.2 * scale, toLens);
+  const dust = ribbon(head, d, bd, L, 4 * scale, 58 * scale, toLens);
+  const dustInner = ribbon(head, d, bd.clone().multiplyScalar(0.85), L * 0.85, 2 * scale, 22 * scale, toLens);
+  const ionDir = d.clone().add(new THREE.Vector3(0.12, 0.3, -0.05)).normalize();
+  const ion = ribbon(head, ionDir, new THREE.Vector3(0, 0, 0), L * 1.45, 1.2 * scale, 8 * scale, toLens);
+  const ray1 = ribbon(head, ionDir.clone().add(new THREE.Vector3(0.05, 0.04, 0)).normalize(), new THREE.Vector3(0, 0, 0), L * 1.25, 0.5 * scale, 2.6 * scale, toLens);
+  const ray2 = ribbon(head, ionDir.clone().add(new THREE.Vector3(-0.05, -0.03, 0)).normalize(), new THREE.Vector3(0, 0, 0), L * 1.3, 0.5 * scale, 2.2 * scale, toLens);
   const mDust = tailMat("dust", "#f4f6ff", "#ffe6c0", 0.8, 2.6, 1.6);
-  mDust.uniforms.uOp.value = 0.34 * g;
+  mDust.uniforms.uOp.value = 0.3 * g;
   mDust.uniforms.uT.value = t;
   const mDustIn = tailMat("dustIn", "#ffffff", "#f8f0e0", 0.5, 3.5, 2.2);
   mDustIn.uniforms.uOp.value = 0.42 * g;
   const mIon = tailMat("ion", "#9ad8ff", "#2a6aff", 1.0, 3.0, 1.1);
-  mIon.uniforms.uOp.value = (0.5 + 0.06 * Math.sin(t * 1.7)) * g;
+  mIon.uniforms.uOp.value = (0.62 + 0.08 * Math.sin(t * 1.7)) * g;
   mIon.uniforms.uT.value = t;
   const mRay = tailMat("ray", "#bfe6ff", "#3a7aff", 0.6, 6.0, 1.3);
   mRay.uniforms.uOp.value = (0.32 + 0.08 * Math.sin(t * 2.3 + 1)) * g;

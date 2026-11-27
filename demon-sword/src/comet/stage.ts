@@ -268,7 +268,7 @@ SHOT.K04 = ({ t, u, d }) => {
     items: [{ k: "splash", p: [LAKE.hole[0], 0.05, LAKE.hole[2]], tau: u - d * 0.45 }],
   };
 };
-const LEO_IN = (o: Partial<Pose> = {}) => ({ ...LEO_P({ yaw: 0.35, armL: 2.5, armR: 2.6, outL: 0.25, outR: 0.25, headPitch: -0.3, ...o }), y: (L - SINK) * LS - 0.55 + 0.04 * Math.sin(ST("K05") * 7) });
+const LEO_IN = (o: Partial<Pose> = {}) => ({ ...LEO_P({ yaw: 0.75, armL: 2.5, armR: 2.6, outL: 0.25, outR: 0.25, headPitch: -0.3, ...o }), y: (L - SINK) * LS - 0.55 + 0.04 * Math.sin(ST("K05") * 7) });
 SHOT.K05 = ({ t, u, d }) => {
   const k = ss(0, 1, u / d);
   const z = lerp(LAKE.hole[2] + 7.5, LAKE.hole[2] + 1.45, k);

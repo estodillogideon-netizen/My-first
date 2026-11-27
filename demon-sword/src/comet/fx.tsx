@@ -20,7 +20,7 @@ export const Swirl: React.FC<{ c: V3; k: number; t: number; r?: number; h?: numb
     const rr = r * (1 - 0.6 * ph) * (0.6 + 0.6 * hash(i * 4.2));
     const p: V3 = [c[0] + Math.cos(a) * rr, c[1] - 0.2 + ph * h, c[2] + Math.sin(a) * rr];
     const op = k * Math.sin(Math.PI * ph) * (0.6 + 0.4 * Math.sin(t * 9 + i));
-    out.push(<Glow key={i} p={p} s={0.05 + 0.08 * hash(i * 5.5)} c={i % 4 ? "#7ad8ff" : "#ffffff"} op={op} />);
+    out.push(<Glow key={i} p={p} s={0.08 + 0.12 * hash(i * 5.5)} c={i % 4 ? "#7ad8ff" : "#ffffff"} op={Math.min(1, op * 1.3)} />);
   }
   return (
     <>
