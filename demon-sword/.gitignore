@@ -12,3 +12,6 @@ build3/
 vo/p*/*_v1.wav
 node_modules
 __pycache__/
+build4/
+build5/
+build6/
