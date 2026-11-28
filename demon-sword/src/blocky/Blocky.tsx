@@ -13,7 +13,7 @@ import { mix } from "../engine/util";
 export const CastCtx = React.createContext(true);
 
 export type Fabric = "knit" | "denim" | "plaid" | "cord" | "cotton";
-export type HairStyle = "shaggy" | "puffs" | "antennae" | "antenna1" | "bald" | "tuft" | "spiky" | "swept" | "pony" | "twin" | "long" | "ren" | "haru" | "bob" | "flow" | "bun" | "pony2";
+export type HairStyle = "shaggy" | "puffs" | "antennae" | "antenna1" | "bald" | "tuft" | "spiky" | "swept" | "pony" | "twin" | "long" | "ren" | "haru" | "bob" | "flow" | "bun" | "pony2" | "sora";
 export type Look = {
   skin: string;
   shirt: string;
@@ -810,7 +810,7 @@ const Hair: React.FC<{ look: Look; ant?: number; wob?: number; noFringe?: boolea
   }
   const m = plastic(look.hair, { rough: 0.62 });
   if (["spiky", "swept", "pony", "twin", "long"].includes(look.hairStyle)) return <AnimeHair look={look} m={m} />;
-  if (["ren", "haru", "bob", "flow", "bun", "pony2"].includes(look.hairStyle)) return <AnimeHair2 look={look} noFringe={noFringe} />;
+  if (["ren", "haru", "bob", "flow", "bun", "pony2", "sora"].includes(look.hairStyle)) return <AnimeHair2 look={look} noFringe={noFringe} />;
   const shaggy = look.hairStyle === "shaggy";
   const kx = (shaggy ? 0.85 : 0.92) * (H.w / 1.1);
   // the cap is built at the real head size (never narrower than the head); the other pieces are authored for a
@@ -976,7 +976,7 @@ const AnimeHair2: React.FC<{ look: Look; noFringe?: boolean }> = ({ look, noFrin
   const P: Lock[] = [];
   const shellH = st === "bun" ? 0.3 : 0.4;
   const shell = rbox((H.w + 0.1) * U, shellH * U, (H.d + 0.1) * U, 0.17 * U);
-  const backL = st === "flow" ? 1.9 : st === "bob" ? 1.05 : st === "haru" ? 0.95 : st === "ren" ? 0.85 : st === "pony2" ? 0.7 : 0.6;
+  const backL = st === "flow" ? 1.9 : st === "bob" ? 1.05 : st === "sora" ? 1.05 : st === "haru" ? 0.95 : st === "ren" ? 0.85 : st === "pony2" ? 0.7 : 0.6;
   const back = rbox((H.w + 0.1) * U, backL * U, 0.2 * U, 0.09 * U);
   const F = Math.PI;
   if (st === "ren") {
@@ -992,6 +992,24 @@ const AnimeHair2: React.FC<{ look: Look; noFringe?: boolean }> = ({ look, noFrin
       P.push({ r: 0.12 * U, l: 0.5 * U, p: [sx * (hw + 0.02 * U), top - 0.15 * U, -0.1 * U], rx: F - 0.2, rz: sx * 0.25, bend: 0.2, flat: 0.5 });
       P.push({ r: 0.13 * U, l: 0.45 * U, p: [sx * 0.25 * U, -0.1 * U, -hd - 0.08 * U], rx: F + 0.55, rz: sx * 0.35, bend: 0.1, flat: 0.5 });
     }
+  } else if (st === "sora") {
+    // a long fringe swept to his right, the longest lock falling between the eyes; layered, a little messy
+    const fr: [number, number, number][] = [[-0.46, 0.42, 0.5], [-0.32, 0.56, 0.42], [-0.17, 0.66, 0.32], [-0.03, 0.74, 0.22], [0.11, 0.66, 0.12], [0.25, 0.58, 0.02], [0.38, 0.5, -0.12], [0.5, 0.4, -0.25]];
+    for (const [x, l, a] of fr) P.push({ r: 0.13 * U, l: l * U, p: [x * U, top + 0.04 * U, hd + 0.05 * U], rx: F - 0.32, rz: a * 0.6, bend: -0.32, flat: 0.42 });
+    // layered crown: locks lying back with lifted tips
+    for (const [x, z, l, rz] of [[-0.32, 0.18, 0.62, 0.45], [0, 0.22, 0.66, 0], [0.32, 0.18, 0.62, -0.45], [-0.22, -0.18, 0.7, 0.3], [0.22, -0.18, 0.7, -0.3], [0, -0.4, 0.66, 0]] as [number, number, number, number][])
+      P.push({ r: 0.19 * U, l: l * U, p: [x * U, top - 0.02 * U, z * U], rx: -1.32, rz, bend: 0.5, flat: 0.5 });
+    // two thin strands sticking up (ahoge)
+    P.push({ r: 0.06 * U, l: 0.5 * U, p: [0.05 * U, top + 0.06 * U, 0.05 * U], rx: -0.35, rz: -0.15, bend: 0.9, flat: 0.5 });
+    P.push({ r: 0.05 * U, l: 0.36 * U, p: [-0.05 * U, top + 0.06 * U, -0.02 * U], rx: -0.55, rz: 0.35, bend: 0.8, flat: 0.5 });
+    for (const sx of [-1, 1]) {
+      // side locks over the ears to the jaw, a second layer behind
+      P.push({ r: 0.13 * U, l: 0.9 * U, p: [sx * (hw + 0.035 * U), top - 0.03 * U, 0.24 * U], rx: F - 0.06, rz: sx * 0.06, bend: -0.22, flat: 0.48 });
+      P.push({ r: 0.14 * U, l: 0.78 * U, p: [sx * (hw + 0.03 * U), top - 0.08 * U, -0.06 * U], rx: F - 0.14, rz: sx * 0.16, bend: 0.18, flat: 0.5 });
+      // nape: locks flicking out at the back
+      P.push({ r: 0.15 * U, l: 0.6 * U, p: [sx * 0.2 * U, -0.12 * U, -hd - 0.09 * U], rx: F + 0.4, rz: sx * 0.3, bend: 0.25, flat: 0.5 });
+    }
+    P.push({ r: 0.15 * U, l: 0.62 * U, p: [0, -0.14 * U, -hd - 0.1 * U], rx: F + 0.3, rz: 0, bend: 0.2, flat: 0.5 });
   } else if (st === "haru") {
     // soft fringe swept to one side, covering the brow (not the eyes)
     const fr: [number, number, number][] = [[-0.42, 0.34, 0.6], [-0.26, 0.4, 0.55], [-0.1, 0.44, 0.45], [0.06, 0.46, 0.35], [0.22, 0.44, 0.25], [0.38, 0.4, 0.1], [0.5, 0.36, -0.05]];

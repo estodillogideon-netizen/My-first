@@ -15,6 +15,8 @@ import { FRAMES as COMET_FRAMES } from "./comet/time";
 import { FRAMES } from "./sword/time";
 import { MaskLab } from "./mask/Lab";
 import { MaskShort } from "./mask/MaskShort";
+import { MirrorShort } from "./mirror/MirrorShort";
+import { FRAMES as MIRROR_FRAMES } from "./mirror/time";
 import { FRAMES as MASK_FRAMES } from "./mask/time";
 
 // Sword: the Short (sharp, for stills); SwordSub2: 2 sub-frames per output frame at 60 fps for motion blur
@@ -36,6 +38,10 @@ const CometPick: React.FC = () => {
 const MaskPick: React.FC = () => {
   const f = useCurrentFrame();
   return <MaskShort at={PICK[Math.min(f, PICK.length - 1)] ?? 0} />;
+};
+const MirrorPick: React.FC = () => {
+  const f = useCurrentFrame();
+  return <MirrorShort at={PICK[Math.min(f, PICK.length - 1)] ?? 0} />;
 };
 const SwordPick: React.FC = () => {
   const f = useCurrentFrame();
@@ -65,6 +71,9 @@ export const Root: React.FC = () => (
     <Composition id="MaskSub2" component={MaskShort} durationInFrames={MASK_FRAMES * 2} fps={60} width={1080} height={1920} defaultProps={{ sub: true, subN: 2 }} />
     <Composition id="MaskPick" component={MaskPick} durationInFrames={PICK.length || 1} fps={30} width={1080} height={1920} />
     <Composition id="MaskLab" component={MaskLab} durationInFrames={8} fps={30} width={1080} height={1920} />
+    <Composition id="Mirror" component={MirrorShort} durationInFrames={MIRROR_FRAMES} fps={30} width={1080} height={1920} defaultProps={{ sub: false }} />
+    <Composition id="MirrorSub2" component={MirrorShort} durationInFrames={MIRROR_FRAMES * 2} fps={60} width={1080} height={1920} defaultProps={{ sub: true, subN: 2 }} />
+    <Composition id="MirrorPick" component={MirrorPick} durationInFrames={PICK.length || 1} fps={30} width={1080} height={1920} />
     <Composition id="SwordPick" component={SwordPick} durationInFrames={PICK.length || 1} fps={30} width={1080} height={1920} />
   </>
 );
