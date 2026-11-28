@@ -6,7 +6,7 @@ import { aim } from "../engine/core/rig";
 import { clamp, lerp } from "../blocky/motion";
 import type { V3 } from "../blocky/motion";
 import { facePoint, heldWorld } from "../library/characters";
-import { BIKE_Z, CHAIR_REN, CRASH, DESK_REN, GRASS, GRASS_EYE, HARU_END, humOf, RACK, REN_DESK_EYE, REN_END, REN_EYE, ROOF_Y, SAFE, stageAt, UNDER, YARD_REN } from "./stage";
+import { BIKE_S, BIKE_Z, CHAIR_REN, CRASH, DESK_REN, GRASS, GRASS_EYE, HARU_END, humOf, RACK, REN_DESK_EYE, REN_END, REN_EYE, ROOF_Y, SAFE, stageAt, UNDER, YARD_REN } from "./stage";
 import type { Stage } from "./stage";
 import { HM, WS } from "./Rooms";
 import { groundY, POT, SCH, STREET, TOWER } from "./Town";
@@ -60,7 +60,7 @@ const hand = (key: string, side: "L" | "R"): Subj => (st) => {
 const bikeHandle: Subj = (st) => {
   const b = st.items.find((i) => i.k === "bike");
   if (!b || b.k !== "bike") return [0, 1, 0];
-  return [b.p[0] + Math.sin(b.yaw) * 0.5, b.p[1] + 0.95, b.p[2] + Math.cos(b.yaw) * 0.5];
+  return [b.p[0] + Math.sin(b.yaw) * 0.5 * BIKE_S, b.p[1] + 0.95 * BIKE_S, b.p[2] + Math.cos(b.yaw) * 0.5 * BIKE_S];
 };
 const F = (key: string, az: number, dist: number, dy: number, fov = 40, face = 0.42, o: { push?: number; roll?: number } = {}): Lens => ({ kind: "F", key, az, dist, dy, fov, face, ...o });
 const X = (pos: V3, subj: Subj, fov = 48, face = 0.46, o: { push?: number; roll?: number } = {}): Lens => ({ kind: "X", pos, subj, fov, face, ...o });
@@ -107,7 +107,7 @@ export const LENSES: Record<string, Lens> = {
   G02: X([POT.x - 2.4, 1.3, SCH.front + 6.6], at([POT.x + 0.2, 2.3, SCH.front + 0.8]), 50, 0.5),
   G03: X([POT.x - 1.6, 1.0, SCH.front + 0.6], at([POT.x + 0.6, 0.9, SCH.front + 2.6]), 52, 0.5),
   G04: R(off(head("ren"), [3.2, 0.5, -3.4]), head("ren"), 44),
-  G05: R(off(bikeHandle, [0.85, 0.35, 0.95]), bikeHandle, 40, { push: 0 }),
+  G05: R(off(bikeHandle, [1.35, 0.05, 0.95]), mid(bikeHandle, head("ren"), 0.45), 42, { push: 0 }),
   G06: X([GRASS[0] - 2.2, GY + 1.2, GRASS[1] + 0.4], head("ren"), 44, 0.5),
   G08: R(at(GRASS_EYE()), arc("G08", [GRASS[0], 0, GRASS[1]], 1.5, GY + 1.55, -0.9, 0.5), 62, { push: 0 }),
   H01: X([GRASS[0] - 2.2, GY + 1.1, GRASS[1] + 0.9], mid(head("ren"), head("haru")), 42),

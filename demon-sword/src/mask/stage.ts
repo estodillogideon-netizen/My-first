@@ -24,7 +24,7 @@ export type Hum = {
 export type Item =
   | { k: "mask"; p: V3; rot: V3; kind: MaskKind; glow?: number; s?: number; black?: number }
   | { k: "pot"; p: V3; rot: V3; broken: number }
-  | { k: "bike"; p: V3; yaw: number; pitch: number; roll: number; snap?: number; wheel: number }
+  | { k: "bike"; p: V3; yaw: number; pitch: number; roll: number; snap?: number; wheel: number; crank?: number }
   | { k: "heart"; p: V3; rot: V3; s: number }
   | { k: "petals"; c: V3; n: number; size: [number, number, number] }
   | { k: "smoke"; p: V3; k2: number }
@@ -165,6 +165,8 @@ const HARU_END: [number, number] = [TOWER.p[0] - 4.2, TOWER.p[2] + 8.0];
 const REN_END: [number, number] = [TOWER.p[0] - 2.75, TOWER.p[2] + 8.0];
 const CRASH: V3 = [TOWER.p[0], 0, TOWER.p[2] + 6.5];
 const BIKE_Z = STREET.z + 0.8;
+/** a kid's bike: the bike model is built adult size, scaled down to fit Ren (seat 0.73 m, pedals reachable) */
+export const BIKE_S = 0.78;
 const BIKE_V = 7.5;
 const BIKE_X0 = -52;
 const GRASS: [number, number] = [-36.5, STREET.z + 4.0];
@@ -363,15 +365,16 @@ SHOT.G03 = ({ t, u }) => {
 const bikeX = (t: number) => BIKE_X0 + BIKE_V * (t - ST("G04") + 0.2);
 const riding = (x: number, t: number, o: Partial<Pose> = {}): Pose => {
   const pd = t * 9;
-  return { ...base(x, BIKE_Z, PI / 2, KS), y: 0.86 * KS + 0.55, legL: 0.9 + 0.45 * Math.sin(pd), legR: 0.9 - 0.45 * Math.sin(pd), armL: 1.2, armR: 1.2, outL: -0.12, outR: -0.12, pitch: 0.35 - Math.atan(0.14), ...o };
+  // hips on the saddle, feet on the turning pedals (same phase as the crank), hands on the grips
+  return { ...base(x, BIKE_Z, PI / 2, KS), y: 0.965 * BIKE_S, legL: 0.3 + 0.38 * Math.sin(pd), legR: 0.3 - 0.38 * Math.sin(pd), armL: 1.15, armR: 1.15, outL: -0.1, outR: -0.1, pitch: 0.45 - Math.atan(0.14), headPitch: -0.25, ...o };
 };
 SHOT.G04 = ({ t }) => {
   const x = bikeX(t);
-  return { set: "out", hums: [ren(riding(x, t), "brave", { mask: FOX("side") })], items: [{ k: "bike", p: [x, groundY(x, BIKE_Z), BIKE_Z], yaw: PI / 2, pitch: -Math.atan(0.14), roll: 0, wheel: t * 30 }] };
+  return { set: "out", hums: [ren(riding(x, t), "brave", { mask: FOX("side") })], items: [{ k: "bike", p: [x, groundY(x, BIKE_Z), BIKE_Z], yaw: PI / 2, pitch: -Math.atan(0.14), roll: 0, wheel: t * 30, crank: t * 9 }] };
 };
 SHOT.G05 = ({ t, u }) => {
   const x = bikeX(t);
-  return { set: "out", hums: [ren(riding(x, t), emo(t, [[0, "brave"], [ST("G05") + 0.3, "shock"]]), { mask: FOX("side") })], items: [{ k: "bike", p: [x, groundY(x, BIKE_Z), BIKE_Z], yaw: PI / 2 + 0.15 * Math.sin(t * 20) * ss(0.3, 1, u), pitch: -Math.atan(0.14), roll: 0.06 * Math.sin(t * 17) * ss(0.3, 1, u), snap: ss(0.15, 0.35, u), wheel: t * 30 }] };
+  return { set: "out", hums: [ren(riding(x, t), emo(t, [[0, "brave"], [ST("G05") + 0.3, "shock"]]), { mask: FOX("side") })], items: [{ k: "bike", p: [x, groundY(x, BIKE_Z), BIKE_Z], yaw: PI / 2 + 0.15 * Math.sin(t * 20) * ss(0.3, 1, u), pitch: -Math.atan(0.14), roll: 0.06 * Math.sin(t * 17) * ss(0.3, 1, u), snap: ss(0.15, 0.35, u), wheel: t * 30, crank: t * 9 }] };
 };
 SHOT.G06 = ({ t, u }) => ({
   set: "out",

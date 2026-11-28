@@ -23,7 +23,7 @@ import type { MaskKind } from "./Mask";
 import { moodOfShot } from "./mood";
 import { ClassJ, Hall, HomeM, Workshop } from "./Rooms";
 import { camFor } from "./shots";
-import { humOf, stageAt } from "./stage";
+import { BIKE_S, humOf, stageAt } from "./stage";
 import type { HeldKind, Hum, Item, MaskOn, Stage } from "./stage";
 import { SHOTS, shotAtFrame } from "./time";
 import type { Row } from "./time";
@@ -91,7 +91,7 @@ const HumView: React.FC<{ a: Hum; black: number }> = ({ a, black }) => {
   const held2 = mh && ph ? ph : undefined;
   return <Blocky pose={a.pose} look={a.look} emotion={a.emotion} blink={a.blink} held={held} held2={held2} scale={a.s} face2={a.face2} talk={a.talk ?? 0} headNode={worn} noFringe={m?.wear === "face"} />;
 };
-const Bike: React.FC<{ p: V3; yaw: number; pitch: number; roll: number; snap?: number; wheel: number }> = ({ p, yaw, pitch, roll, snap = 0, wheel }) => {
+const Bike: React.FC<{ p: V3; yaw: number; pitch: number; roll: number; snap?: number; wheel: number; crank?: number }> = ({ p, yaw, pitch, roll, snap = 0, wheel, crank = 0 }) => {
   const frame = plastic("#d82a2a", { rough: 0.3 });
   const dark = plastic("#1a1a1e", { rough: 0.6 });
   const steel = plastic("#b8bcc4", { rough: 0.2 });
@@ -114,7 +114,7 @@ const Bike: React.FC<{ p: V3; yaw: number; pitch: number; roll: number; snap?: n
   );
   return (
     <group position={p} rotation={[0, yaw, 0]}>
-      <group rotation={[pitch, 0, roll]}>
+      <group rotation={[pitch, 0, roll]} scale={BIKE_S}>
         {wheelN(RW, "r")}
         {wheelN(FW, "f")}
         {tube(SEAT, CR, 0.02, frame, "st")}
@@ -130,6 +130,17 @@ const Bike: React.FC<{ p: V3; yaw: number; pitch: number; roll: number; snap?: n
         ))}
         <mesh geometry={rbox(0.12, 0.04, 0.24, 0.02)} material={dark} position={[0, 0.92, -0.02]} castShadow />
         <mesh geometry={geoOf("crank", () => new THREE.CylinderGeometry(0.08, 0.08, 0.02, 16))} material={steel} position={CR} rotation={[0, 0, Math.PI / 2]} />
+        {/* crank arms and pedals, turning with the rider's legs (left pedal on local +x) */}
+        {([[1, 0], [-1, Math.PI]] as [number, number][]).map(([sx, ph]) => {
+          const ang = crank + ph;
+          const pd: V3 = [sx * 0.15, CR[1] - 0.15 * Math.cos(ang), CR[2] + 0.15 * Math.sin(ang)];
+          return (
+            <group key={sx}>
+              {tube([sx * 0.06, CR[1], CR[2]], [sx * 0.15, pd[1], pd[2]], 0.012, steel, `ca${sx}`)}
+              <mesh geometry={rbox(0.1, 0.025, 0.07, 0.008)} material={dark} position={[sx * 0.19, pd[1], pd[2]]} />
+            </group>
+          );
+        })}
         <mesh geometry={rbox(0.14, 0.04, 0.3, 0.01)} material={plastic("#f4f4f0", { rough: 0.5 })} position={[0, 0.69, 0.66]} rotation={[0.2, 0, 0]} />
         {/* the brake cable from the right lever down to the front brake: it snaps */}
         {snap < 0.5 ? tube([0.2, 1.0, 0.5], [0.05, 0.66, 0.62], 0.005, dark, "cable") : (
@@ -179,7 +190,7 @@ const ItemView: React.FC<{ it: Item; t: number; st: Stage }> = ({ it, t, st }) =
     case "pot":
       return <Pot p={it.p} rot={it.rot} broken={it.broken} />;
     case "bike":
-      return <Bike p={it.p} yaw={it.yaw} pitch={it.pitch} roll={it.roll} snap={it.snap} wheel={it.wheel} />;
+      return <Bike p={it.p} yaw={it.yaw} pitch={it.pitch} roll={it.roll} snap={it.snap} wheel={it.wheel} crank={it.crank ?? 0} />;
     case "heart":
       return it.s > 0.01 ? (
         <mesh geometry={geoOf("heartPlane", () => new THREE.PlaneGeometry(0.1, 0.1))} position={it.p} rotation={it.rot} scale={it.s}>
