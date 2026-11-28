@@ -339,20 +339,21 @@ SHOT.F04 = ({ t }) => ({
 // ================================================================== G: the accidents
 const REN_POT: [number, number] = [POT.x - 0.2, SCH.front + 0.75];
 const REN_POT2: [number, number] = [POT.x + 1.0, SCH.front + 3.4];
+const REN_POT_B: [number, number] = [REN_POT[0] - 0.3, REN_POT[1] + 1.2];
 SHOT.G01 = ({ t, u }) => ({
   set: "out",
-  hums: [ren(lookAt(stand(REN_POT[0], REN_POT[1], PI / 2 + 0.3, KS, { armL: 0.1, armR: 0.1, headPitch: 0.25 }), KS, [REN_POT[0] + 2, 0.5, REN_POT[1] + 1]), "gloom", { mask: FOX("side") })],
+  hums: [ren(lookAt(stand(REN_POT[0], REN_POT[1], PI / 2 + 0.3, KS, { armL: 0.1, armR: 0.1, headPitch: 0.25 }), KS, [REN_POT[0] - 1.5, 0.5, REN_POT[1] + 3]), "gloom", { mask: FOX("side") })],
   items: [{ k: "pot", p: [POT.x, POT.y, POT.z], rot: [0, 0, 0.12 * Math.sin(t * 9) * ss(0.2, 1, u)], broken: 0 }],
 });
 SHOT.G02 = ({ t, u }) => ({
   set: "out",
-  hums: [ren(walkAB(REN_POT, [REN_POT[0] + 0.9, REN_POT[1] + 0.9], t, ST("G02"), ST("G02") + 1.0, KS, { headPitch: 0.2 }), "gloom", { mask: FOX("side") })],
+  hums: [ren(walkAB(REN_POT, REN_POT_B, t, ST("G02"), ST("G02") + 1.0, KS, { headPitch: 0.2 }), "gloom", { mask: FOX("side") })],
   items: [{ k: "pot", p: [POT.x, potY(t), POT.z + 0.1 * u], rot: [u * 2.2, 0, 0.6 * u], broken: 0 }],
 });
 SHOT.G03 = ({ t, u }) => {
   const tau = t - ST("G03");
   const jump = ss(0.05, 0.35, u);
-  const p = walkAB([REN_POT[0] + 0.9, REN_POT[1] + 0.9], REN_POT2, t, ST("G03"), ST("G03") + 0.5, KS, {}, 1);
+  const p = walkAB(REN_POT_B, REN_POT2, t, ST("G03"), ST("G03") + 0.5, KS, {}, 1);
   return {
     set: "out",
     hums: [ren(lookAt({ ...p, yaw: lerp(p.yaw, p.yaw + PI * 0.85, ss(0.3, 0.6, u)), y: p.y + 0.35 * Math.sin(PI * jump) * KS, armL: 1.6 * ss(0, 0.3, u), armR: 1.6 * ss(0, 0.3, u), outL: -0.5, outR: -0.5, headYaw: 0, headPitch: 0 }, KS, [POT.x, 0.4, POT.z + 0.3], ss(0.5, 0.8, u)), emo(t, [[0, "shock"], [ST("G03") + 0.8, "nervous"]]), { mask: FOX("side") })],
@@ -399,7 +400,7 @@ SHOT.H02 = ({ t }) => ({
 });
 SHOT.H03 = ({ t, u }) => ({
   set: "out",
-  hums: [ren(lookAt(SITUP_REN({ headPitch: 0.15 * Math.sin(u * PI * 3) }), KS, facePoint(kneel(GRASS[0] - 0.5, GRASS[1] - 0.45, 0.7, KS, 1), KS), 0.8), emo(t, [[0, "sad"], [ST("H03") + 0.5, "smile"]]), { mask: FOX("side") }), haru({ ...kneel(GRASS[0] - 0.5, GRASS[1] - 0.45, 0.7, KS, 1), armR: 1.55, outR: -0.85 }, "smile", { talk: talkAt(t, ...span(9, "You", "me")) })],
+  hums: [ren(lookAt(SITUP_REN({ headPitch: 0.15 * Math.sin(u * PI * 3) }), KS, facePoint(kneel(GRASS[0] - 0.5, GRASS[1] - 0.45, 0.7, KS, 1), KS), 0.4), emo(t, [[0, "sad"], [ST("H03") + 0.5, "smile"]]), { mask: FOX("side") }), haru({ ...kneel(GRASS[0] - 0.5, GRASS[1] - 0.45, 0.7, KS, 1), armR: 1.55, outR: -0.85 }, "smile", { talk: talkAt(t, ...span(9, "You", "me")) })],
 });
 
 // ================================================================== J, K, L: the workshop
@@ -443,7 +444,7 @@ SHOT.L01 = ({ t, u }) => ({ set: "workshop", env: { candle: 0.7 }, hums: [granTa
 SHOT.L01b = ({ u }) => ({ set: "workshop", env: { candle: 0.7, wsGlow: ss(0.3, 0.9, u) } });
 SHOT.L02 = ({ t }) => ({ set: "workshop", env: { candle: 0.7 }, hums: [ren(lookAt(REN_STOOL(), KS, GRAN_WS_FACE()), emo(t, [[0, "curious"], [ST("L02") + 0.25, "shock"]])), granTalk(t, span(14, "are", "watch"), "flat")] });
 SHOT.L03 = ({ t }) => ({ set: "hall", env: { memory: "cold" }, hums: [...withAura(hallKids(t, 3, REN_EYE(-8, 0))), haru(lookAt(stand(-4.6, 0.1, -PI / 2, KS, { armL: 0.1, armR: 0.1 }), KS, REN_EYE(-8, 0)), "smile")] });
-SHOT.L04 = ({ t }) => ({ set: "out", env: { memory: "cold" }, hums: [haru(lookAt({ ...stand(POT.x + 0.2, SCH.front - 0.05, 0, KS, { armL: 0.9, armR: 0.9, outL: -0.1, outR: -0.1 }), y: SCH.fh + 0.12 + L * KS }, KS, [REN_POT[0], 0.8, REN_POT[1]]), "flat", { noGround: true })], items: [{ k: "pot", p: [POT.x, POT.y, POT.z], rot: [0, 0, 0], broken: 0 }] });
+SHOT.L04 = () => ({ set: "out", env: { memory: "cold" }, hums: [haru({ ...stand(POT.x + 0.5, SCH.front - 0.3, 0, KS, { armL: 0.55, armR: 0.55, outL: -0.25, outR: -0.25, headPitch: -0.45, headYaw: -0.15 }), pitch: 0.85, y: POT.y + 0.02 }, "flat", { noGround: true })], items: [{ k: "pot", p: [POT.x, POT.y, POT.z], rot: [0, 0, 0], broken: 0 }] });
 const RACK: [number, number] = [11, 7.1];
 SHOT.L05 = ({ t }) => ({
   set: "out", env: { memory: "cold" },

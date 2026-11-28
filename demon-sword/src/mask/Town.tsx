@@ -524,14 +524,30 @@ export const LanternTower: React.FC<{ night: boolean; fall?: number; dir?: numbe
             return (
               <group key={`rope${i}`}>
                 <Rope a={top} b={end} sag={cut ? 0.1 : 0.6} lanterns={!cut && night} />
-                {cut ? <mesh geometry={geoOf("ropeFray", () => new THREE.ConeGeometry(0.09, 0.22, 8))} material={plastic("#e8d8b0", { rough: 0.9 })} position={[end[0], end[1] - 0.08, end[2]]} rotation={[Math.PI, 0, 0]} /> : null}
-                {cut ? <mesh geometry={geoOf("ropeStub", () => new THREE.ConeGeometry(0.09, 0.22, 8))} material={plastic("#e8d8b0", { rough: 0.9 })} position={[gnd[0], 0.3, gnd[2]]} /> : null}
+                {cut ? <Fray p={end} down /> : null}
+                {cut ? <Fray p={[gnd[0], 0.2, gnd[2]]} /> : null}
               </group>
             );
           })}
         </group>
       </group>
       <Blob p={[0, 0, 0]} sx={w + 2} sz={w + 2} op={0.45} />
+    </group>
+  );
+};
+/** a cut rope end: a short knot of rope, then loose strands splayed out like a brush (down = hanging) */
+const Fray: React.FC<{ p: V3; down?: boolean }> = ({ p, down = false }) => {
+  const m = plastic("#e8d8b0", { rough: 0.9 });
+  const strand = geoOf("frayStrand", () => new THREE.CylinderGeometry(0.014, 0.006, 0.26, 5).translate(0, -0.13, 0));
+  const knot = geoOf("frayKnot", () => new THREE.CylinderGeometry(0.06, 0.05, 0.08, 10));
+  return (
+    <group position={p} rotation={[down ? 0 : Math.PI, 0, 0]}>
+      <mesh geometry={knot} material={m} position={[0, -0.02, 0]} />
+      {Array.from({ length: 9 }, (_, i) => {
+        const a = (i / 9) * Math.PI * 2 + 0.3 * (i % 2);
+        const tilt = 0.35 + 0.25 * ((i * 7) % 3) / 2;
+        return <mesh key={i} geometry={strand} material={m} position={[0.03 * Math.sin(a), -0.05, 0.03 * Math.cos(a)]} rotation={[tilt * Math.cos(a), 0, -tilt * Math.sin(a)]} />;
+      })}
     </group>
   );
 };

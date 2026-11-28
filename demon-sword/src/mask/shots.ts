@@ -103,8 +103,8 @@ export const LENSES: Record<string, Lens> = {
   F03: X([-5.0, ROOF_Y + 0.95, SCH.front - 0.85], mid(head("ren"), head("haru")), 44, 0.46),
   F04: X([-6.0, ROOF_Y + 2.3, SCH.front - 6.6], at([-6, ROOF_Y + 0.6, SCH.front + 1]), 50, 0.62, { push: 0.02 }),
   // G, H: the accidents
-  G01: X([POT.x + 2.6, 0.45, SCH.front + 5.4], at([POT.x, POT.y - 0.9, POT.z]), 46, 0.5),
-  G02: X([POT.x + 3.6, 1.2, SCH.front + 6.0], at([POT.x + 0.3, 2.3, SCH.front + 0.8]), 52, 0.5),
+  G01: X([POT.x - 2.0, 1.3, SCH.front + 6.8], at([POT.x - 0.1, 2.5, SCH.front + 0.4]), 46, 0.5),
+  G02: X([POT.x - 2.4, 1.3, SCH.front + 6.6], at([POT.x + 0.2, 2.3, SCH.front + 0.8]), 50, 0.5),
   G03: X([POT.x - 1.6, 1.0, SCH.front + 0.6], at([POT.x + 0.6, 0.9, SCH.front + 2.6]), 52, 0.5),
   G04: R(off(head("ren"), [3.2, 0.5, -3.4]), head("ren"), 44),
   G05: R(off(bikeHandle, [0.85, 0.35, 0.95]), bikeHandle, 40, { push: 0 }),
@@ -112,7 +112,7 @@ export const LENSES: Record<string, Lens> = {
   G08: R(at(GRASS_EYE()), arc("G08", [GRASS[0], 0, GRASS[1]], 1.5, GY + 1.55, -0.9, 0.5), 62, { push: 0 }),
   H01: X([GRASS[0] - 2.2, GY + 1.1, GRASS[1] + 0.9], mid(head("ren"), head("haru")), 42),
   H02: X([GRASS[0] + 0.55, GY + 1.35, GRASS[1] + 0.5], head("haru"), 38, 0.45),
-  H03: X([GRASS[0] - 1.3, GY + 0.95, GRASS[1] + 0.15], head("ren"), 38, 0.45),
+  H03: X([GRASS[0] - 1.34, GY + 0.85, GRASS[1] + 0.68], head("ren"), 38, 0.45),
   // J, K, L: the workshop
   J01: X([-6, 9, 27], at([10, 3, 12]), 52, 0.5, { push: 0.01 }),
   J02: X([0.6, 1.3, -0.6], head("ren"), 44, 0.5),
@@ -130,7 +130,7 @@ export const LENSES: Record<string, Lens> = {
   L01b: X([0.95, WS.tableH + 0.35, WS.table[1] + 0.75], at([0.62, WS.tableH + 0.27, WS.table[1] - 0.05]), 34, 0.5),
   L02: F("ren", 0, 0.6, 0.0, 30),
   L03: R(at(REN_EYE(-8, 0)), head("haru"), 42, { push: 0 }),
-  L04: X([POT.x + 1.0, 1.2, SCH.front + 4.5], head("haru"), 40, 0.5),
+  L04: X([POT.x + 1.2, 3.2, SCH.front + 5.0], head("haru"), 40, 0.45),
   L05: X([RACK[0] - 1.4, 0.9, RACK[1] - 1.6], head("haru"), 42, 0.5),
   // M, N: the festival, the tower
   M01: X([20, 14, 40], at([42, 3, 13]), 55, 0.5, { push: 0.01 }),
@@ -139,7 +139,7 @@ export const LENSES: Record<string, Lens> = {
   M03: F("haru", 10, 0.9, 0.0, 38),
   M04: X([TP[0] + 3, 0.6, TP[2] + 11], at([TP[0], 6, TP[2]]), 54, 0.5),
   N01: X([UNDER[0] + 1.6, 0.85, UNDER[1] - 1.3], head("ren"), 46, 0.5),
-  N02: X([TP[0] + 4.6, 3.6, TP[2] + 5.0], at([TP[0] + 2.4, 3.6, TP[2] + 2.4]), 40, 0.5),
+  N02: X([TP[0] + 3.75, 3.35, TP[2] + 3.55], at([TP[0] + 2.5, 2.95, TP[2] + 2.5]), 40, 0.5, { push: 0.05 }),
   N03: X([UNDER[0] - 4, 1.2, UNDER[1] + 7], at([TP[0], 4, TP[2]]), 52, 0.5),
   N04: X([UNDER[0] + 0.6, 0.6, UNDER[1] + 2.4], at([TP[0], 4.5, TP[2] + 2]), 60, 0.5),
   // P, Q: everyone runs
